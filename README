@@ -1,1 +1,18 @@
-This is the readme
+To run you will need to have mongodb and npm downloaded globally on your computer. 
+Also you will need install nodemon, which you can do after installing npm with the 
+command "npm install -g nodemon".
+
+To run boilerplate:
+Run server - cd into server folder and run "npm run db" - leave this open in the background.
+Run frontend code - in a new terminal window cd into client folder and and run "npm start".
+
+You'll know it was successfull if it says
+"server started
+successfully connceted to database" in ternminal you ran surver in.
+And if it opens a new web tab on http://localhost:3000 that displays react logo 
+after running frontend.
+
+
+The client folder was created using create-react-app.
+The server folder just has an index.js file (like a main). We will need to add
+sub directories in ./server to organize routes and schemas I think. 
