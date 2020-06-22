@@ -7,6 +7,7 @@ import Header from './components/layout/header';
 import NavBar from './components/layout/navbar';
 import LearnMore from './components/pages/LearnMore';
 import KnowYourRights from './components/pages/KnowYourRights';
+import CreateRootAccount from './components/pages/CreateRootAccount';
 
 function App() {
   return (
@@ -17,6 +18,7 @@ function App() {
           <NavBar />
           <Route path="/learn-more" component={LearnMore}/>
           <Route path="/know-your-rights" component={KnowYourRights}/>
+          <Route path="/create-root-account" component={CreateRootAccount}/>
         </div>
       </div>
     </Router>

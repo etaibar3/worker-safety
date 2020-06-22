@@ -7,6 +7,7 @@ function NavBar() {
             <Link style={linkStyle} to="/"> <li style={navItemStyle}>Home</li> </Link> | 
             <Link style={linkStyle} to="/learn-more"> <li style={navItemStyle}>Learn more</li> </Link> | 
             <Link style={linkStyle} to="/know-your-rights"> <li style={navItemStyle}>Know Your Rights</li> </Link> | 
+            <Link style={linkStyle} to="/create-root-account"> <li style={navItemStyle}>Create Root Account</li> </Link> | 
         </ul>
     )
 }
