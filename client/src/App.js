@@ -7,6 +7,7 @@ import Header from './components/layout/header';
 import NavBar from './components/layout/navbar';
 import LearnMore from './components/pages/LearnMore';
 import KnowYourRights from './components/pages/KnowYourRights';
+import Home from './components/layout/home';
 
 function App() {
   return (
@@ -15,8 +16,10 @@ function App() {
         <div className="container">
           <Header />
           <NavBar />
-          <Route path="/learn-more" component={LearnMore}/>
-          <Route path="/know-your-rights" component={KnowYourRights}/>
+          {/* <Home /> */}
+          <Route exact path="/" component={Home}/>
+          <Route exact path="/learn-more" component={LearnMore}/>
+          <Route exact path="/know-your-rights" component={KnowYourRights}/>
         </div>
       </div>
     </Router>
