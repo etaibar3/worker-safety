@@ -14,18 +14,22 @@ const userValidation = Joi.object ({
     admin: Joi.bool().required()
 });
 
+const loginValidation = Joi.object ({
+    email: Joi.string().email().required(),    
+    password: Joi.string().min(6).required()
+});
+
 /* Post a new user to db - for account creation*/
 router.post('/', async (req, res) => {
-    
-    try {
+    try {//Data Validation
         const { error } = await userValidation.validateAsync(req.body);
     } catch (error){
         return res.status(400).send(error.details[0].message)
     }
 
-    try { 
-        const same_email = await User.findOne( {"email": req.body.email }, {"email": 1}); 
-        if(await same_email != null) { 
+    try { //Create account
+        const emailExists = await User.findOne( {"email": req.body.email }, {"email": 1}); 
+        if(emailExists) { 
             res.status(400).send('A user with this email already exists.');
             return;
         }
@@ -44,6 +48,11 @@ router.post('/', async (req, res) => {
 
 /*Post request to authenticate user */
 router.post('/login', async (req, res) => {
+    try {//Data Validation
+        const { error } = await loginValidation.validateAsync(req.body);
+    } catch (error){
+        return res.status(400).send(error.details[0].message)
+    }
     try {
         const pword = await User.findOne( {"email": req.body.email}, {"password": 1} );
         if(pword === null) {
@@ -58,10 +67,6 @@ router.post('/login', async (req, res) => {
     } catch(err) {
         res.json({message: err});
     }
-
-
-
-
 });
 
 module.exports = router; 
