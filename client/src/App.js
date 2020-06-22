@@ -8,6 +8,8 @@ import NavBar from './components/layout/navbar';
 import LearnMore from './components/pages/LearnMore';
 import KnowYourRights from './components/pages/KnowYourRights';
 import CreateRootAccount from './components/pages/CreateRootAccount';
+import CreateChildAccount from './components/pages/CreateChildAccount';
+import Login from './components/pages/Login';
 
 function App() {
   return (
@@ -19,6 +21,8 @@ function App() {
           <Route path="/learn-more" component={LearnMore}/>
           <Route path="/know-your-rights" component={KnowYourRights}/>
           <Route path="/create-root-account" component={CreateRootAccount}/>
+          <Route path="/create-child-account" component={CreateChildAccount}/>
+          <Route path="/login" component={Login}/>
         </div>
       </div>
     </Router>
