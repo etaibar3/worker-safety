@@ -52,7 +52,6 @@ router.post('/login', async (req, res) => {
     } catch (error){
         return res.status(400).send(error.details[0].message)
     }
-
     try {
         const user = await User.findOne( {"email": req.body.email} );
         if(user === null) {
@@ -62,7 +61,8 @@ router.post('/login', async (req, res) => {
         const validPass = await bcrypt.compare(req.body.password, user.password);
         if(!validPass)  return res.status(403).send('User name and password do not match.');
         
-        res.send('Successful Login');
+        const token = jwt.sign( {_id: user._id }, process.env.ACCESS_TOKEN_SECRET);
+        res.header('auth-toekn',token).send(token);
 
     } catch(err) {
         res.json({message: err});
@@ -70,6 +70,3 @@ router.post('/login', async (req, res) => {
 });
 
 module.exports = router; 
-
-//First thing tomorrow - cut out lines 65-67 replace with res.send('Successfull Login');
-//add, commit, push and make pull request
