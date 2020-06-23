@@ -7,8 +7,7 @@ Run server - cd into server folder and run "npm run db" - leave this open in the
 Run frontend code - in a new terminal window cd into client folder and and run "npm start".
 
 You'll know it was successfull if it says
-"server started
-successfully connceted to database" in ternminal you ran surver in.
+"server started successfully connceted to database" in ternminal you ran surver in.
 And if it opens a new web tab on http://localhost:3000 that displays react logo 
 after running frontend.
 
@@ -16,6 +15,10 @@ after running frontend.
 The client folder was created using create-react-app.
 The server folder just has an index.js file (like a main). We will need to add
 sub directories in ./server to organize routes and schemas I think. 
+
+
+Note as of 6/20/20: need to install react-router-dom package
+'npm i react-router-dom'
 
 Update 6/23:
 Install packages @hapi/joi, bcrypt, jsonwebtoken, dotenv
