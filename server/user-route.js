@@ -26,7 +26,6 @@ router.post('/', async (req, res) => {
     } catch (error){
         return res.status(400).send(error.details[0].message)
     }
-
     try { //Create account
         const emailExists = await User.findOne( {"email": req.body.email }, {"email": 1}); 
         if(emailExists) { 
@@ -53,20 +52,24 @@ router.post('/login', async (req, res) => {
     } catch (error){
         return res.status(400).send(error.details[0].message)
     }
+
     try {
-        const pword = await User.findOne( {"email": req.body.email}, {"password": 1} );
-        if(pword === null) {
+        const user = await User.findOne( {"email": req.body.email} );
+        if(user === null) {
             res.status(404).send('There is no user with this email.');
             return;
         }
-        if(await bcrypt.compare(req.body.password, pword.password)) {
-            res.send('Successful login');
-        } else {
-            res.status(403).send('User name and password do not match.');
-        }
+        const validPass = await bcrypt.compare(req.body.password, user.password);
+        if(!validPass)  return res.status(403).send('User name and password do not match.');
+        
+        res.send('Successful Login');
+
     } catch(err) {
         res.json({message: err});
     }
 });
 
 module.exports = router; 
+
+//First thing tomorrow - cut out lines 65-67 replace with res.send('Successfull Login');
+//add, commit, push and make pull request
