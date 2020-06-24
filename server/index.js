@@ -15,7 +15,14 @@ mongoose.connect(
   }
 );
 
+
 server.listen(port);
+
+/*Add routes created in other files here*/
+const userRoute = require('./user-route.js');
+app.use('/user', userRoute);
+
+
 //React app uses port 3000
 // app.listen(5000, () => {
 //     console.log('server started');

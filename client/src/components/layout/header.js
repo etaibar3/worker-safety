@@ -6,8 +6,8 @@ function Header() {
     // works like the render does
     return(
         <header style={headerStyle}>
-            <Link style={linkStyle} >
-                <h1 to="/">Worker Safety</h1>
+            <Link style={linkStyle}  to="/" >
+                <h1>Worker Safety</h1>
             </Link>
         </header> 
     )
