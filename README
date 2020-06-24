@@ -16,5 +16,10 @@ The client folder was created using create-react-app.
 The server folder just has an index.js file (like a main). We will need to add
 sub directories in ./server to organize routes and schemas I think. 
 
+
 Note as of 6/20/20: need to install react-router-dom package
 'npm i react-router-dom'
+
+Update 6/23:
+Install packages @hapi/joi, bcrypt, jsonwebtoken, dotenv
+run npm i @hapi/joi bcrypt jsonwebtoken dotenv
