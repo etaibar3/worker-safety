@@ -5,6 +5,7 @@ const bodyParser = require("body-parser");
 const mongoose = require("mongoose");
 
 const employeeRoutes = require("./api/routes/employees");
+const reservationRoutes = require("./api/routes/reservations");
 
 mongoose.Promise = global.Promise;
 
@@ -25,6 +26,8 @@ app.use((req, res, next) => {
 });
 
 app.use("/employees", employeeRoutes);
+app.use("/reservations", reservationRoutes);
+
 app.use((req, res, next) => {
   const error = new Error("Not found");
   error.status = 404;
