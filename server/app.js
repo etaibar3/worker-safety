@@ -6,6 +6,10 @@ const mongoose = require("mongoose");
 
 const employeeRoutes = require("./api/routes/employees");
 const reservationRoutes = require("./api/routes/reservations");
+const employeeAccRoutes = require("./api/routes/employee-accs");
+const loginRoutes = require("./api/routes/login");
+const orgRoutes = require("./api/routes/org");
+const adminAccRotues = require("./api/routes/admin");
 
 mongoose.Promise = global.Promise;
 
@@ -27,6 +31,10 @@ app.use((req, res, next) => {
 
 app.use("/employees", employeeRoutes);
 app.use("/reservations", reservationRoutes);
+app.use("/employee", employeeAccRoutes);
+app.use("/login", loginRoutes);
+app.use("/org", orgRoutes);
+app.use("/admin", adminAccRotues);
 
 app.use((req, res, next) => {
   const error = new Error("Not found");
