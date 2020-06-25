@@ -23,7 +23,7 @@ const UserSchema = mongoose.Schema({
     
     org: {
         type: String,
-        require: ture
+        require: true
     }
 
 });

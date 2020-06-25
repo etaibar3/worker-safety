@@ -2,8 +2,8 @@ const express = require('express');
 const router = express.Router();
 const bcrypt = require('bcrypt');
 const Joi = require('@hapi/joi');
-const User = require('./Users.js');
-const Org = require('./Orgs.js');
+const User = require('../models/Users.js');
+const Org = require('../models/Orgs.js');
 
 
 //Validate new admin acount data 
@@ -29,6 +29,10 @@ router.post('/create-account', async (req, res) => {
             return;
         }
         const org = await Org.findOne( {"name": req.body.org });
+        if(await org === null) {
+            res.status(400).send('There is no organization with that name.');
+            return
+        }
         const employee = await org.employees.find(e =>  e  === req.body.email );
         if(await employee === undefined) {
             res.status(401).send('You are not authorized to create an employee account with this organization');

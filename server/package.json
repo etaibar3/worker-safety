@@ -3,6 +3,17 @@
   "version": "1.0.0",
   "description": "",
   "main": "index.js",
+  "dependencies": {
+    "@hapi/joi": "^17.1.1",
+    "bcrypt": "^5.0.0",
+    "dotenv": "^8.2.0",
+    "express": "^4.17.1",
+    "jsonwebtoken": "^8.5.1",
+    "mongoose": "^5.9.20",
+    "mongoose-morgan": "^1.0.15",
+    "nodemon": "^2.0.4"
+  },
+  "devDependencies": {},
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
     "start": "nodemon server.js",
@@ -10,15 +21,5 @@
   },
   "keywords": [],
   "author": "",
-  "license": "ISC",
-  "dependencies": {
-    "@hapi/joi": "^17.1.1",
-    "bcrypt": "^5.0.0",
-    "dotenv": "^8.2.0",
-    "express": "^4.17.1",
-    "nodemon": "^2.0.4",
-    "mongoose-morgan": "^1.0.15",
-    "jsonwebtoken": "^8.5.1",
-    "mongoose": "^5.9.19"
-  }
+  "license": "ISC"
 }

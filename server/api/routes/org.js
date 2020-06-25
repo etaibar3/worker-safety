@@ -1,7 +1,7 @@
 const express = require('express');
 const router = express.Router();
 const Joi = require('@hapi/joi');
-const Org = require('./Orgs.js');
+const Org = require('../models/Orgs.js');
 
 /* All these will need to be restricted to just admin user */
 
@@ -38,13 +38,28 @@ router.post('/employees', async (req, res) => {
 //Returns list of admins
 router.get('/admins/:org', async (req, res) => {
     try {
-        console.log('bruh'); 
         const org = await Org.findOne( {"name": req.params.org} );
-        console.log(org.admins);
+        if(await org === null) {
+            res.status(400).send('There is no organization by this name.');
+            return;
+        }
         res.json(org.admins);
     } catch(err) {
         res.json({message: ""})
     }
 });
 
+//Returns list of employees
+router.get('/employees/:org', async (req, res) => {
+    try {
+        const org = await Org.findOne( {"name": req.params.org} );
+        if(await org === null) {
+            res.status(400).send('There is no organization by this name.');
+            return;
+        }
+        res.json(org.employees);
+    } catch(err) {
+        res.json({message: ""})
+    }
+});
 module.exports = router; 
