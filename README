@@ -23,3 +23,6 @@ Note as of 6/20/20: need to install react-router-dom package
 Update 6/23:
 Install packages @hapi/joi, bcrypt, jsonwebtoken, dotenv
 run npm i @hapi/joi bcrypt jsonwebtoken dotenv
+Update 6/25:
+Install cors in server.
+npm i cors
