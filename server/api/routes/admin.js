@@ -20,7 +20,6 @@ async function getOrg (req, res) {
     try {
         let org = await Org.findOne( {"name": req.body.org });
         if(org === null) {
-            console.log('This gets called correct?');
             org = new Org({
                 name: req.body.org,
                 admins: [req.body.email],

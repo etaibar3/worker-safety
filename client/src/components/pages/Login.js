@@ -6,6 +6,7 @@
 //  --add "forgot password" feature
 //  --add "remember me" feature
 import React from 'react';
+import axios from 'axios';
 
 class Login extends React.Component {
 	constructor() {
@@ -27,7 +28,14 @@ class Login extends React.Component {
 
 	handleSubmit(event) {
 		event.preventDefault()
-		//API fetch for authentications
+		axios
+			.post(`http://localhost:5000/login`, { 'email': this.state.email, 'password': this.state.password })
+			.then(response => {
+				console.log(response)
+			})
+			.catch(error => {
+				console.log(error)
+			})			
 	}
 
 	render() {

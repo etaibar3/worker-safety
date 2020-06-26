@@ -8,7 +8,7 @@
 //  --remove "Create Account" from Navbar and link to this page from "get started" page
 //  --form validation (only allow form submission if adminChecked, min password length)
 import React from 'react';
-//import axios from 'axios';
+import axios from 'axios';
 
 class CreateRootAccount extends React.Component {
 	constructor() {
@@ -30,19 +30,14 @@ class CreateRootAccount extends React.Component {
 
 	handleSubmit(event) {
 		event.preventDefault()
-		alert(`${this.state.company} ${this.state.email} ${this.state.password} ${this.state.adminChecked}`)
-		/* POST REQUEST HERE
 		axios
-			.post(<'URL'>, { “email”: this.state.email, “password”: this.state.password, “org”: this.state.company }
-)
+			.post(`http://localhost:5000/admin/create-account`, { 'email': this.state.email, 'password': this.state.password, 'org': this.state.company })
 			.then(response => {
 				console.log(response)
 			})
 			.catch(error => {
 				console.log(error)
-			})
-		*/
-			
+			})			
 	}
 
 	render() {
