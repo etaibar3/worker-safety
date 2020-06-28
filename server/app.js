@@ -3,10 +3,11 @@ const app = express();
 const morgan = require("morgan");
 const bodyParser = require("body-parser");
 const mongoose = require("mongoose");
-const cors = require('cors');
+const cors = require("cors");
 
 const employeeRoutes = require("./api/routes/employees");
 const reservationRoutes = require("./api/routes/reservations");
+const floorplanRoutes = require("./api/routes/floorplan");
 const employeeAccRoutes = require("./api/routes/employee-accs");
 const loginRoutes = require("./api/routes/login");
 const orgRoutes = require("./api/routes/org");
@@ -15,6 +16,7 @@ const adminAccRotues = require("./api/routes/admin");
 mongoose.Promise = global.Promise;
 
 app.use(morgan("dev"));
+app.use("/uploads", express.static("uploads"));
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: false }));
 app.use((req, res, next) => {
@@ -32,6 +34,7 @@ app.use((req, res, next) => {
 
 app.use("/employees", employeeRoutes);
 app.use("/reservations", reservationRoutes);
+app.use("/floorplan", floorplanRoutes);
 app.use("/employee", employeeAccRoutes);
 app.use("/login", loginRoutes);
 app.use("/org", orgRoutes);
