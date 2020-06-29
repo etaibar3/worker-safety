@@ -3,13 +3,13 @@ const router = express.Router();
 const mongoose = require("mongoose");
 const multer = require("multer");
 //const upload = multer({ dest: "uploads/" });
-
+const Floorplan = require("../models/floorplan");
 const storage = multer.diskStorage({
-  detination: function (req, file, cd) {
+  detination: function (req, file, cb) {
     cb(null, "./uploads/");
   },
   filename: function (req, file, cb) {
-    cb(null, new Date().toISOString() + file.originalname);
+    cb(null, Date.now() + file.originalname);
   },
 });
 
@@ -29,8 +29,6 @@ const upload = multer({
   fileFilter: fileFilter,
 });
 
-const Floorplan = require("../models/floorplan");
-
 router.get("/", (req, res, next) => {
   Floorplan.find()
     .select("name _id floorplanImage")
@@ -42,6 +40,7 @@ router.get("/", (req, res, next) => {
           return {
             name: doc.name,
             _id: doc._id,
+            floorplanImage: doc.floorplanImage,
             request: {
               type: "GET",
               url: "http://localhost:3000/floorplan/" + doc._id,
@@ -74,7 +73,7 @@ router.post("/", upload.single("floorplanImage"), (req, res, next) => {
         message: "Image uploaded successfully",
         createdFloorplan: {
           name: result.name,
-          floorplanImage: doc.floorplanImage,
+          floorplanImage: result.floorplanImage,
           _id: result._id,
           request: {
             type: "GET",
@@ -114,4 +113,27 @@ router.get("/:floorplanId", (req, res, next) => {
       res.status(500).json({ error: err });
     });
 });
+
+router.delete("/:floorplanId", (req, res, next) => {
+  const id = req.params.floorplanId;
+  Floorplan.remove({ _id: id })
+    .exec()
+    .then((result) => {
+      res.status(200).json({
+        message: "Image deleted",
+        request: {
+          type: "POST",
+          url: "http://localhost:5000/floorplan",
+          body: { name: "String" },
+        },
+      });
+    })
+    .catch((err) => {
+      console.log(err);
+      res.status(500).json({
+        error: err,
+      });
+    });
+});
+
 module.exports = router;
