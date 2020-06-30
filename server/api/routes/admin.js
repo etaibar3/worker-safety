@@ -66,13 +66,4 @@ router.post('/create-account', async (req, res) => {
     }
 });
 
-/* 
-    1. Admin for new Org
-        -search for org name, not found, generate new org with email as first admin
-        -create account
-    2. Admin for non-new Org
-        -search for org name, found. Check if they are a valid user
-        - if yes create account, other wise nah
-
-*/
 module.exports = router; 
