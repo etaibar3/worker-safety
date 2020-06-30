@@ -2,6 +2,7 @@ const express = require('express');
 const router = express.Router();
 const Joi = require('@hapi/joi');
 const Org = require('../models/Orgs.js');
+const User = require('../models/Users.js');
 const { authenticateAdmin } = require('../middleware/auth.js');
 
 /* Validate request for adding a user to an organization*/
@@ -39,12 +40,13 @@ router.post('/manageRoster', authenticateAdmin, async (req, res) => {
     }
 });
 
-//Todo replace all req.body.org with req.user.org
+//Delete user form org list and User collection if account was created
 router.delete('/manageRoster', authenticateAdmin, async (req, res) => {
     try{
-        const org = await Org.findOne( {"name": req.user.org });
+        const org = await Org.findOne( {"name": req.user.org } );
         const anAdmin = await org.admins.find(a => a === req.body.email);
         const anEmployee = await org.employees.find(e => e === req.body.email);
+
         if(anAdmin != undefined) {
             await Org.updateOne({name: req.user.org}, {$pull: {admins: req.body.email}})
             res.send(anAdmin);
@@ -55,38 +57,79 @@ router.delete('/manageRoster', authenticateAdmin, async (req, res) => {
             res.status(400).send('User not found: could not delete.');
             return
         }
-        
+        await User.deleteOne( {email: req.body.email } );
+    
     } catch (err) {
         res.status(400).json({message: "Failed to remove user from org"});
     }
 })
 
-//Returns list of admins
-router.get('/admins', authenticateAdmin, async (req, res) => {
+//Returns list of Users - entire roster
+router.get('/manageRoster', authenticateAdmin, async (req, res) => {
     try {
         const org = await Org.findOne( {"name": req.user.org} );
         if(await org === null) {
-            res.status(400).send('There is no organization by this name.');
+            res.status(400).send();
             return;
         }
-        res.json(org.admins);
+        res.json( {admins: org.admins, employees: org.employees} );
     } catch(err) {
         res.status(400).json({message: ""})
     }
 });
 
-//Returns list of employees
-router.get('/employees', authenticateAdmin, async (req, res) => {
+/*For lookup of a single user */
+router.get('/manageRoster/:email', authenticateAdmin, async (req, res) => {
     try {
         const org = await Org.findOne( {"name": req.user.org} );
-        if(await org === null) {
-            res.status(400).send('There is no organization by this name.');
-            return;
+        const anAdmin = await org.admins.find(a => a === req.params.email);
+        const anEmployee = await org.employees.find(e => e === req.params.email);
+
+        if(anAdmin != undefined) {
+            res.send({email: anAdmin, admin: true});
+        } else if (anEmployee != undefined) {
+            res.send({email: anEmployee, admin: false});
+        } else {
+            res.status(400).send('User is not part of roster.');
         }
-        res.json(org.employees);
     } catch(err) {
-        res.status(400).json({message: ""})
+        res.status(500).json({message: " "})
     }
 });
+
+/* Update user access */
+router.patch('/manageRoster', authenticateAdmin, async (req, res) => {
+    try {
+        const { error } = await userValidation.validateAsync(req.body);
+    } catch (error){ 
+        return res.status(400).send(error.details[0].message);
+    }
+
+    try {
+        const org = await Org.findOne( {"name": req.user.org} );
+        const anAdmin = await org.admins.find(a => a === req.body.email);
+        const anEmployee = await org.employees.find(e => e === req.body.email);
+
+        if(await anAdmin === undefined && anEmployee === undefined) {
+            res.status(403).send('User does not exist.');
+            return;
+        }
+        await Org.updateOne({name: req.user.org}, {$pull: {employees: req.body.email}});
+        await Org.updateOne({name: req.user.org}, {$pull: {admins: req.body.email}});
+        
+        if(await req.body.admin === "true")  {
+            await Org.updateOne({name: req.user.org}, {$push: {admins: req.body.email}});
+            await User.updateOne({email: req.body.email}, {$set: {admin: "true"}});
+        }
+        else {
+           await Org.updateOne({name: req.user.org}, {$push: {employees: req.body.email}});
+           await User.updateOne({email: req.body.email}, {$set: {admin: "false"}});
+        }
+        res.json(req.body);
+    } catch (err) {
+        res.status(400).json({message: "Couldn't update user."});
+    }
+});
+
 
 module.exports = router; 
