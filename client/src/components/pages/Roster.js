@@ -26,7 +26,6 @@ class Roster extends React.Component {
 	 		method: " ",     //string--methods to modify roster: add, remove, lookup, change type
 	 		isAdmin: false,  //bool--only used when adding a user or changing account types
 	 		confirmRemove: false,   //bool--used to confirm action for remove method
-	 		HTTPsuccess: false   //bool--used to display whether or not the request was successful
 	 	}
 	 	this.handleChange = this.handleChange.bind(this)
 	 	this.handleSubmit = this.handleSubmit.bind(this)
@@ -41,29 +40,25 @@ class Roster extends React.Component {
 		event.preventDefault()
 		alert(`${this.state.email} ${this.state.method} ${this.state.isAdmin} ${this.state.confirmRemove}`)
 		if (this.state.method === "Add") {
-			// axios
-			// 	.post(`URL`, { 'email': this.state.email, 'isAdmin': this.state.isAdmin})
-			// 	.then(response => {
-			// 		console.log(response)
-			// 		this.setState({HTTPsuccess: event.target.checked})
-			// 		alert('${this.state.email} has been invited to your roster') 
-			// 	})
-			// 	.catch(error => {
-			// 		console.log(error)
-			// 		if (error.response.status === 404) {
-					// 	alert('Error: Page not found')
-					// }
-			// 	})
+			axios
+				.post(`http://localhost:5000/org/manageRoster`, { 'email': this.state.email, 'admin': this.state.isAdmin})
+				.then(response => {
+					console.log(response)
+					alert('${this.state.email} has been invited to your roster') 
+				})
+				.catch(error => {
+					console.log(error)
+				})
 		}
 		else if (this.state.method === "Remove") {
-			// axios
-			// 	.delete(`URL`, {params: {email: 'user@company.com'}})
-			// 	.then(response => {
-			// 		console.log(response)
-			// 	})
-			// 	.catch(error => {
-			// 		console.log(error)
-			// 	})
+			axios
+				.delete(`http://localhost:5000/org/manageRoster`, {data: {email: this.state.email } })
+				.then(response => {
+					console.log(response)
+				})
+				.catch(error => {
+					console.log(error)
+				})
 		}
 		else if (this.state.method === "Lookup") {
 			// axios
