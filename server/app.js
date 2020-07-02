@@ -12,6 +12,7 @@ const employeeAccRoutes = require("./api/routes/employee-accs");
 const loginRoutes = require("./api/routes/login");
 const orgRoutes = require("./api/routes/org");
 const adminAccRotues = require("./api/routes/admin");
+const logooutRoutes = require("./api/routes/logout");
 
 mongoose.Promise = global.Promise;
 
@@ -39,6 +40,7 @@ app.use("/employee", employeeAccRoutes);
 app.use("/login", loginRoutes);
 app.use("/org", orgRoutes);
 app.use("/admin", adminAccRotues);
+app.use("/logout", logooutRoutes);
 
 app.use((req, res, next) => {
   const error = new Error("Not found");
@@ -59,5 +61,5 @@ app.get("/", (req, res) => {
   res.send("test");
 });
 
-app.use(cors());
+app.use(cors()); 
 module.exports = app;

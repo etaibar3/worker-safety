@@ -62,7 +62,7 @@ router.post('/create-account', async (req, res) => {
         const savedUser = await user.save();
         res.json(savedUser);
     } catch(err){ //Unhandled promise rejection
-        res.json({message: "Failed to create account."});
+        res.status(500).json({message: "Failed to create account."});
     }
 });
 

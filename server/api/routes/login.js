@@ -12,6 +12,10 @@ const loginValidation = Joi.object ({
     password: Joi.string().min(6).required()
 });
 
+function generateToken(user) {
+    return jwt.sign(user , process.env.ACCESS_TOKEN_SECRET, {expiresIn: '10m'});
+}
+
 /*Post request to authenticate user */
 router.post('/', async (req, res) => {
     try {//Data Validation
@@ -21,6 +25,7 @@ router.post('/', async (req, res) => {
     }
     try {
         const user = await User.findOne( {"email": req.body.email} );
+        console.log(user);
         if(user === null) {
             res.status(404).send('There is no user with this email.');
             return;
@@ -28,13 +33,12 @@ router.post('/', async (req, res) => {
         const validPass = await bcrypt.compare(req.body.password, user.password);
         if(!validPass)  return res.status(403).send('User name and password do not match.');
         
-
         const serialize = {email: user.email, admin: user.admin, _id: user._id, org: user.org}
-        const token = jwt.sign( serialize , process.env.ACCESS_TOKEN_SECRET);
-        res.header('auth-token',token).send(token);
+        const token = generateToken(serialize);
+        res.header('auth-token', token).send(token);
         
     } catch(err) {
-        res.json({message: err});
+        res.status(500).json({message: err});
     }
 });
 

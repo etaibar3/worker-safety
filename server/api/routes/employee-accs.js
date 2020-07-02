@@ -48,7 +48,7 @@ router.post('/create-account', async (req, res) => {
         const savedUser = await user.save();
         res.json(savedUser);
     } catch(err){
-        res.json({message: err});
+        res.status(500).json({message: err});
     }
 });
 
