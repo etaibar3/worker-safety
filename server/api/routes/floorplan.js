@@ -60,7 +60,9 @@ router.get("/", (req, res, next) => {
 });
 
 router.post("/", upload.single("floorplanImage"), (req, res, next) => {
+  console.log('Test');
   console.log(req.file);
+  console.log('Test2');
   const floorplan = new Floorplan({
     _id: new mongoose.Types.ObjectId(),
     name: req.body.name,
@@ -78,7 +80,7 @@ router.post("/", upload.single("floorplanImage"), (req, res, next) => {
           _id: result._id,
           request: {
             type: "GET",
-            url: "http//localhost:3000/floorplan/" + result._id,
+            url: "http://localhost:3000/floorplan/" + result._id,
           },
         },
       });
