@@ -9,7 +9,6 @@ import LearnMore from './components/pages/LearnMore';
 import KnowYourRights from './components/pages/KnowYourRights';
 import CreateRootAccount from './components/pages/CreateRootAccount';
 import CreateChildAccount from './components/pages/CreateChildAccount';
-import UploadFloorPlan from './components/pages/UploadFloorPlan';
 import Login from './components/pages/Login';
 import Home from './components/layout/home';
 
@@ -26,7 +25,6 @@ function App() {
           <Route exact path="/create-root-account" component={CreateRootAccount}/>
           <Route exact path="/create-child-account" component={CreateChildAccount}/>
           <Route exact path="/upload-floor-plan" component={UploadFloorPlan}/>
-          <Route exact path="/login" component={Login}/>
         </div>
       </div>
     </Router>
