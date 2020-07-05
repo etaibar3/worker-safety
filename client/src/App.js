@@ -25,6 +25,7 @@ function App() {
           <Route exact path="/create-root-account" component={CreateRootAccount}/>
           <Route exact path="/create-child-account" component={CreateChildAccount}/>
           <Route exact path="/upload-floor-plan" component={UploadFloorPlan}/>
+          <Route exact path="/login" component={Login}/>
         </div>
       </div>
     </Router>
