@@ -29,3 +29,8 @@ npm i cors
 
 Install axios in client.
 npm install axios --save
+
+Update 7/4:
+Install Docker Desktop on you computer.
+Keep Docker running.
+Run `docker-compose up -d`, this will start and run all services for mongodb and neo4j
