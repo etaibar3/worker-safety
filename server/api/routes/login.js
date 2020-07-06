@@ -31,7 +31,8 @@ router.post('/', async (req, res) => {
 
         const serialize = {email: user.email, admin: user.admin, _id: user._id, org: user.org}
         const token = jwt.sign( serialize , process.env.ACCESS_TOKEN_SECRET);
-        res.header('auth-token',token).send(token);
+        res.send(token)
+        //res.header('auth-token',token).send(token);
         
     } catch(err) {
         res.json({message: err});
