@@ -25,7 +25,6 @@ router.post('/', async (req, res) => {
     }
     try {
         const user = await User.findOne( {"email": req.body.email} );
-        console.log(user);
         if(user === null) {
             res.status(404).send('There is no user with this email.');
             return;
@@ -35,7 +34,7 @@ router.post('/', async (req, res) => {
         
         const serialize = {email: user.email, admin: user.admin, _id: user._id, org: user.org}
         const token = generateToken(serialize);
-        res.header('auth-token', token).send(token);
+        res.header('auth-token',token).send(token);
         
     } catch(err) {
         res.status(500).json({message: err});
