@@ -2,6 +2,7 @@
  * Holds model for User schema in db
  */
 
+
 const mongoose = require("mongoose");
 
 const UserSchema = mongoose.Schema({
@@ -22,6 +23,12 @@ const UserSchema = mongoose.Schema({
     default: true,
     require: true,
   },
+  
+  org: {
+    type: String,
+    require: true
+  }
+  
 });
 
 module.exports = mongoose.model("Users", UserSchema);
