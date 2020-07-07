@@ -24,6 +24,11 @@ const UserSchema = mongoose.Schema({
     org: {
         type: String,
         require: true
+    },
+    
+    resetLink: {
+        data: String,
+        default: ''
     }
 
 });
