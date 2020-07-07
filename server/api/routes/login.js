@@ -26,11 +26,11 @@ router.post('/', async (req, res) => {
     try {
         const user = await User.findOne( {"email": req.body.email} );
         if(user === null) {
-            res.status(404).send('There is no user with this email.');
+            res.status(404).json({error: 'There is no user with this email.'});
             return;
         }
         const validPass = await bcrypt.compare(req.body.password, user.password);
-        if(!validPass)  return res.status(403).send('User name and password do not match.');
+        if(!validPass)  return res.status(403).json({error: 'User name and password do not match.'});
         
         const serialize = {email: user.email, admin: user.admin, _id: user._id, org: user.org}
         const token = generateToken(serialize);

@@ -18,7 +18,7 @@ router.delete('/', authenticateUser, async (req, res) => {
         res.json({expiresAt: exp});
 
     } catch(err){
-        res.status(500).json({message: err} );
+        res.status(500).json({error: err} );
     }
 
 })

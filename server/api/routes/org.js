@@ -11,12 +11,13 @@ const userValidation = Joi.object ({
     admin: Joi.bool().required()
 });
 
+
 //Adds an admin to an organization so they can create an account
 router.post('/manageRoster', authenticateAdmin, async (req, res) => {
     try {//Data Validation
         const { error } = await userValidation.validateAsync(req.body);
     } catch (error){ 
-        return res.status(400).send(error.details[0].message);
+        return res.status(400).json({error: error.details[0].message});
     }
     try {
         const org = await Org.findOne( {"name": req.user.org });
@@ -24,14 +25,14 @@ router.post('/manageRoster', authenticateAdmin, async (req, res) => {
         const alreadyEmployee = await org.employees.find(e => e === req.body.email);
 
         if(alreadyAdmin != undefined || alreadyEmployee != undefined) {
-            res.status(400).send('This email has already been added to the organization.');
+            res.status(400).json({error: 'This email has already been added to the organization.'});
             return;
         }
-        if(await req.body.admin === "true")  {
+        if(await req.body.admin === true)  {
             await Org.updateOne({_id: org._id}, {$push: {admins: req.body.email}});
             res.json(org.admins);
         }
-         else {
+        else {
            await Org.updateOne({_id: org._id}, {$push: {employees: req.body.email}});
            res.json(org.employees);
         }
@@ -54,13 +55,13 @@ router.delete('/manageRoster', authenticateAdmin, async (req, res) => {
             await Org.updateOne({name: req.user.org}, {$pull: {employees: req.body.email}});
             res.send(anEmployee);
         } else {
-            res.status(400).send('User not found: could not delete.');
+            res.status(400).json({error: 'User not found: could not delete.'});
             return
         }
         await User.deleteOne( {email: req.body.email } );
     
     } catch (err) {
-        res.status(400).json({message: "Failed to remove user from org"});
+        res.status(400).json({error: "Failed to remove user from org"});
     }
 })
 
@@ -69,12 +70,12 @@ router.get('/manageRoster', authenticateAdmin, async (req, res) => {
     try {
         const org = await Org.findOne( {"name": req.user.org} );
         if(await org === null) {
-            res.status(400).send();
+            res.sendStatus(400);
             return;
         }
         res.json( {admins: org.admins, employees: org.employees} );
     } catch(err) {
-        res.status(400).json({message: ""})
+        res.status(400).json({error: "Couldn't return roster."})
     }
 });
 
@@ -90,10 +91,10 @@ router.get('/manageRoster/:email', authenticateAdmin, async (req, res) => {
         } else if (anEmployee != undefined) {
             res.send({email: anEmployee, admin: false});
         } else {
-            res.status(400).send('User is not part of roster.');
+            res.status(400).json({error: 'User is not part of roster.'});
         }
     } catch(err) {
-        res.status(500).json({message: " "})
+        res.status(500).json({message: "Could not retrieve user."})
     }
 });
 
@@ -104,26 +105,25 @@ router.patch('/manageRoster', authenticateAdmin, async (req, res) => {
     } catch (error){ 
         return res.status(400).send(error.details[0].message);
     }
-
     try {
         const org = await Org.findOne( {"name": req.user.org} );
         const anAdmin = await org.admins.find(a => a === req.body.email);
         const anEmployee = await org.employees.find(e => e === req.body.email);
 
         if(await anAdmin === undefined && anEmployee === undefined) {
-            res.status(403).send('User does not exist.');
+            res.status(403).json({error: 'User does not exist.'});
             return;
         }
         await Org.updateOne({name: req.user.org}, {$pull: {employees: req.body.email}});
         await Org.updateOne({name: req.user.org}, {$pull: {admins: req.body.email}});
         
-        if(await req.body.admin === "true")  {
+        if(await req.body.admin === true)  {
             await Org.updateOne({name: req.user.org}, {$push: {admins: req.body.email}});
-            await User.updateOne({email: req.body.email}, {$set: {admin: "true"}});
+            await User.updateOne({email: req.body.email}, {$set: {admin: true}});
         }
         else {
            await Org.updateOne({name: req.user.org}, {$push: {employees: req.body.email}});
-           await User.updateOne({email: req.body.email}, {$set: {admin: "false"}});
+           await User.updateOne({email: req.body.email}, {$set: {admin: false}});
         }
         res.json(req.body);
     } catch (err) {

@@ -29,7 +29,7 @@ async function getOrg (req, res) {
         }
         return org;
     } catch (err) {
-        res.json({message: "Failed to get org"});
+        res.json({error: "Failed to get org."});
     }
 }
 
@@ -38,18 +38,18 @@ router.post('/create-account', async (req, res) => {
     try {//Data Validation
         const { error } = await adminValidation.validateAsync(req.body);
     } catch (error){
-        return res.status(400).send(error.details[0].message)
+        return res.status(400).json({error: error.details[0].message});
     }
     try { //Create account
         const emailExists = await User.findOne( {"email": req.body.email }, {"email": 1}); 
         if(emailExists) { 
-            res.status(400).send('A user with this email already exists.');
+            res.status(400).json({error: 'A user with this email already exists.'});
             return;
         }
         const org = await getOrg(req, res);
         const admin = await org.admins.find(a =>  a === req.body.email );
         if(await admin === undefined) {
-            res.status(401).send('You are not authorized to create an admin account with this organization');
+            res.status(401).json({error: 'You are not authorized to create an admin account with this organization'});
             return;
         }
         const hashedPassword = await bcrypt.hash(req.body.password, 10);
@@ -61,8 +61,8 @@ router.post('/create-account', async (req, res) => {
         })
         const savedUser = await user.save();
         res.json(savedUser);
-    } catch(err){ //Unhandled promise rejection
-        res.status(500).json({message: "Failed to create account."});
+    } catch(err){ 
+        res.status(500).json({error: "Failed to create account."});
     }
 });
 
