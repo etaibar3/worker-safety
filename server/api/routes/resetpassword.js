@@ -3,20 +3,39 @@ const express = require('express');
 const router = express.Router();
 const jwt = require('jsonwebtoken');
 const bcrypt = require('bcrypt');
+const sgMail = require('@sendgrid/mail');
 const User = require('../models/Users.js');
 
 
+sgMail.setApiKey(process.env.SENDGRID_API_KEY);
+
+let msg = {
+    to: '',
+    from: 'benjamin.bodine@tufts.edu',
+    subject: 'Safe Return Password Reset',
+    html: ''
+  };
+
 router.patch('/', async (req, res) => {
     try {
-        const user = await User.findOne({email: req.body.email});
+        const { email } = req.body;
+
+        const user = await User.findOne({email: email});
         if(user === null) return res.status(400).json({error: 'There is no user with the given email.'});
       
         //Change secret
         const reset_token = await jwt.sign({_id: user._id} , process.env.RESET_TOKEN_SECRET, {expiresIn: '10m'});
-        await user.updateOne({resetLink: reset_token}, (err, succ) => {
+        await user.updateOne({resetLink: reset_token}, (err) => {
             if(err) return res.status(400).json({error: "Couldn't store token."});
             else {
-                res.send(reset_token);
+                msg.to = email;
+                msg.html = `
+                            <h2>Follow the link below to reset your password.</h2>
+                            <p>http://localhost:3000/resetpassword/${reset_token}</p>
+                           `
+                token = reset_token;
+                sgMail.send(msg);
+                res.json({message: 'Please check your email for your password reset link.'});
             }
         });
     } catch {
@@ -29,10 +48,10 @@ router.patch('/', async (req, res) => {
 */
 router.patch('/reset', async (req, res) => {
     try {
-        const {resetToken, newPass } = req.body;
+        const {resetToken, newPass} = req.body;
         const hashedPassword = await bcrypt.hash(newPass, 10);
         if(resetToken) {
-            await jwt.verify(resetToken, process.env.RESET_TOKEN_SECRET)
+            await jwt.verify(resetToken, process.env.RESET_TOKEN_SECRET);
 
             const user = await User.findOne({resetLink: resetToken});
             if(user === null) return res.status(400).json({error: 'Invalid reset token.'});
