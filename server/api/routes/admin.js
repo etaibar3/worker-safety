@@ -52,11 +52,7 @@ router.post("/create-account", async (req, res) => {
     const org = await getOrg(req, res);
     const admin = await org.admins.find((a) => a === req.body.email);
     if ((await admin) === undefined) {
-      res
-        .status(401)
-        .send(
-          "You are not authorized to create an admin account with this organization"
-        );
+      res.status(401).send("You are not authorized to create an admin account with this organization.");
       return;
     }
     const hashedPassword = await bcrypt.hash(req.body.password, 10);
@@ -69,18 +65,9 @@ router.post("/create-account", async (req, res) => {
     const savedUser = await user.save();
     res.json(savedUser);
   } catch (err) {
-    //Unhandled promise rejection
     res.json({ message: "Failed to create account." });
   }
 });
 
-/* 
-    1. Admin for new Org
-        -search for org name, not found, generate new org with email as first admin
-        -create account
-    2. Admin for non-new Org
-        -search for org name, found. Check if they are a valid user
-        - if yes create account, other wise nah
 
-*/
 module.exports = router;
