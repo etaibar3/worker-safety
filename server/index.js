@@ -15,6 +15,7 @@ mongoose.connect(
   }
 );
 
+//app.get("/", function (req, res) {});
 server.listen(port);
 
 /*Add routes created in other files here*/
