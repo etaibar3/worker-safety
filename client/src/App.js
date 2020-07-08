@@ -1,18 +1,18 @@
-//Must npm i react-router-dom
+// Must npm i react-router-dom
 
 import React from 'react';
-import { BrowserRouter as Router, Route } from 'react-router-dom';
-import './App.css';
-import Header from './components/layout/header';
-import NavBar from './components/layout/navbar';
-import LearnMore from './components/pages/LearnMore';
-import KnowYourRights from './components/pages/KnowYourRights';
-import CreateRootAccount from './components/pages/CreateRootAccount';
-import CreateChildAccount from './components/pages/CreateChildAccount';
-import Login from './components/pages/Login';
-import Home from './components/layout/home';
+import { BrowserRouter as Router, Route } from 'react-router-dom'
+import './App.css'
+import Header from './components/layout/header'
+import NavBar from './components/layout/navbar'
+import LearnMore from './components/pages/LearnMore'
+import KnowYourRights from './components/pages/KnowYourRights'
+import CreateRootAccount from './components/pages/CreateRootAccount'
+import CreateChildAccount from './components/pages/CreateChildAccount'
+import Login from './components/pages/Login'
+import Home from './components/layout/home'
 
-function App() {
+function App () {
   return (
     <Router>
       <div className="App">
