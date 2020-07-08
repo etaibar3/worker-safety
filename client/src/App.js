@@ -10,7 +10,10 @@ import KnowYourRights from './components/pages/KnowYourRights';
 import CreateRootAccount from './components/pages/CreateRootAccount';
 import CreateChildAccount from './components/pages/CreateChildAccount';
 import Login from './components/pages/Login';
+import RootMenu from './components/pages/RootMenu';
 import Home from './components/layout/home';
+import Roster from './components/pages/Roster';
+import Floorplan from './components/pages/Floorplan';
 
 function App() {
   return (
@@ -25,6 +28,9 @@ function App() {
           <Route exact path="/create-root-account" component={CreateRootAccount}/>
           <Route exact path="/create-child-account" component={CreateChildAccount}/>
           <Route exact path="/login" component={Login}/>
+          <Route exact path="/root-menu" component={RootMenu}/>
+          <Route exact path="/roster" component={Roster}/>
+          <Route exact path="/floorplan" component={Floorplan}/>
         </div>
       </div>
     </Router>

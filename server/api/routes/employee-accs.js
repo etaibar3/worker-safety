@@ -6,7 +6,7 @@ const User = require('../models/Users.js');
 const Org = require('../models/Orgs.js');
 
 
-//Validate new admin acount data 
+//Validate new employee acount data 
 const employeeValidation = Joi.object ({
     email: Joi.string().email().required(),    
     password: Joi.string().min(6).required(),
@@ -31,7 +31,7 @@ router.post('/create-account', async (req, res) => {
         const org = await Org.findOne( {"name": req.body.org });
         if(await org === null) {
             res.status(400).send('There is no organization with that name.');
-            return
+            return;
         }
         const employee = await org.employees.find(e =>  e  === req.body.email );
         if(await employee === undefined) {
