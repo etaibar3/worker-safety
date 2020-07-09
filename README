@@ -30,6 +30,11 @@ npm i cors
 Install axios in client.
 npm install axios --save
 
+
+Update 7/8
+Installed sendgrid in server to enable email sending.
+npm install --save @sendgrid/mail
+
 Update 7/4:
 Install Docker Desktop on you computer.
 Keep Docker running.

@@ -20,22 +20,22 @@ router.post('/create-account', async (req, res) => {
     try {//Data Validation
         const { error } = await employeeValidation.validateAsync(req.body);
     } catch (error){
-        return res.status(400).send(error.details[0].message)
+        return res.status(400).json({error: error.details[0].message});
     }
     try { //Create account 
         const emailExists = await User.findOne( {"email": req.body.email }, {"email": 1}); 
         if(emailExists) { 
-            res.status(400).send('A user with this email already exists.');
+            res.status(400).send({error: 'A user with this email already exists.'});
             return;
         }
         const org = await Org.findOne( {"name": req.body.org });
         if(await org === null) {
-            res.status(400).send('There is no organization with that name.');
+            res.status(400).json({error: 'There is no organization with that name.'});
             return;
         }
         const employee = await org.employees.find(e =>  e  === req.body.email );
         if(await employee === undefined) {
-            res.status(401).send('You are not authorized to create an employee account with this organization');
+            res.status(401).json({error: 'You are not authorized to create an employee account with this organization'});
             return;
         }
         const hashedPassword = await bcrypt.hash(req.body.password, 10);
@@ -48,7 +48,7 @@ router.post('/create-account', async (req, res) => {
         const savedUser = await user.save();
         res.json(savedUser);
     } catch(err){
-        res.json({message: err});
+        res.status(500).json({error: err});
     }
 });
 

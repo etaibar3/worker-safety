@@ -21,10 +21,16 @@ const UserSchema = mongoose.Schema({
     require: true
   },
 
+                                  
   org: {
     type: String,
     require: true
-  }
+  },
+                                   
+  resetLink: {
+        data: String,
+        default: ''
+    }
 });
 
 module.exports = mongoose.model("Users", UserSchema);
