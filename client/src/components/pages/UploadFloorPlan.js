@@ -1,17 +1,16 @@
 // The page for uploading the floor plan
 // Passes the image source to the HandleFloorPlan component where
 // the image is rendered and desks are marked
+
 import React, { useState } from 'react';
 import HandleFloorPlan from '../functionality/HandleFloorPlan'
 import axios from 'axios';
 
 export const UploadFloorPlan = () => {
     const [file, setFile] = useState('');
-    const [imgSrc, setImg] = useState('');
     const [filename, setFilename] = useState('Choose File');
-    // const [fileURL, setFileUrl] = useState('');
-    // const [uploadedFile, setUploadedFile] = useState({});
-
+    const [imgSrc, setImg] = useState('');
+    
     const onChange = (e) => {
         setFile(e.target.files[0]);
         setFilename(e.target.files[0].name);
@@ -20,12 +19,9 @@ export const UploadFloorPlan = () => {
         var url = reader.readAsDataURL(e.target.files[0]);
 
         reader.onloadend = function (e) {
-            setImg(reader.result);
+            setImg(reader.result); // imgSrc set here
         }.bind(this);
     };
-
-// I will need to create an object with a field: name, and file.path
-// async vs sync
 
     const onSubmit = /*async*/ e => {
         e.preventDefault();
@@ -71,10 +67,10 @@ export const UploadFloorPlan = () => {
                     <label style={uploadStyle} htmlFor="file-upload"> {filename}
                     </label>
                     <input id="file-upload" type="file" style={hide} onChange={onChange}/>
-                    <HandleFloorPlan imageSrc={imgSrc}/>
+                    <HandleFloorPlan imageSrc={imgSrc} />  
                 </div>
                 <input type="submit" value="Upload"/>
-            </form>           
+            </form>       
         </div>
     )
 }
@@ -92,8 +88,11 @@ const uploadStyle = {
     marginLeft: '50px',
     marginRight: '50px',
     marginTop: '20px',
-    marginBottom: '20px',
-    border: 'double',
+    marginBottom: '10px',
+    border: 'solid',
+    borderColor: 'black',
+    borderWidth: '1px',
+    borderRadius: '25px'
 }
 
 export default UploadFloorPlan;
