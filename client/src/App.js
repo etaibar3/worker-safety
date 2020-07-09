@@ -1,6 +1,7 @@
-//Must npm i react-router-dom
+// Must npm i react-router-dom
 
 import React from 'react';
+
 import { BrowserRouter as Router, Route } from 'react-router-dom';
 import './App.css';
 import Header from './components/layout/header';
@@ -15,7 +16,8 @@ import Home from './components/layout/home';
 import Roster from './components/pages/Roster';
 import Floorplan from './components/pages/Floorplan';
 
-function App() {
+
+function App () {
   return (
     <Router>
       <div className="App">
