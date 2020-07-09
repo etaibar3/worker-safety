@@ -12,6 +12,8 @@ const employeeAccRoutes = require("./api/routes/employee-accs");
 const loginRoutes = require("./api/routes/login");
 const orgRoutes = require("./api/routes/org");
 const adminAccRotues = require("./api/routes/admin");
+const logoutRoutes = require("./api/routes/logout");
+const resetPassRoutes = require("./api/routes/resetpassword");
 
 mongoose.Promise = global.Promise;
 
@@ -23,7 +25,7 @@ app.use((req, res, next) => {
   res.header("Access-Control-Allow-Origin", "*");
   res.header(
     "Access-Control-Allow-Headers",
-    "Origin, X-Requested-With,Content-Type, Accept, Authorization"
+    "Origin, X-Requested-With,Content-Type, Accept, Authorization, auth"
   );
   if (req.method === "OPTIONS") {
     res.header("Access-Control-Allow-Methods", "PUT,POST,PATCH,DELETE,Get");
@@ -39,6 +41,8 @@ app.use("/employee", employeeAccRoutes);
 app.use("/login", loginRoutes);
 app.use("/org", orgRoutes);
 app.use("/admin", adminAccRotues);
+app.use("/logout", logoutRoutes);
+app.use("/forgot-password", resetPassRoutes);
 
 app.use((req, res, next) => {
   const error = new Error("Not found");
@@ -59,5 +63,6 @@ app.get("/", (req, res) => {
   res.send("test");
 });
 
-app.use(cors());
+app.use(cors()); 
+
 module.exports = app;

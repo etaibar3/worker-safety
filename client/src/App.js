@@ -1,16 +1,21 @@
 // Must npm i react-router-dom
 
 import React from 'react';
-import { BrowserRouter as Router, Route } from 'react-router-dom'
-import './App.css'
-import Header from './components/layout/header'
-import NavBar from './components/layout/navbar'
-import LearnMore from './components/pages/LearnMore'
-import KnowYourRights from './components/pages/KnowYourRights'
-import CreateRootAccount from './components/pages/CreateRootAccount'
-import CreateChildAccount from './components/pages/CreateChildAccount'
-import Login from './components/pages/Login'
-import Home from './components/layout/home'
+
+import { BrowserRouter as Router, Route } from 'react-router-dom';
+import './App.css';
+import Header from './components/layout/header';
+import NavBar from './components/layout/navbar';
+import LearnMore from './components/pages/LearnMore';
+import KnowYourRights from './components/pages/KnowYourRights';
+import CreateRootAccount from './components/pages/CreateRootAccount';
+import CreateChildAccount from './components/pages/CreateChildAccount';
+import Login from './components/pages/Login';
+import RootMenu from './components/pages/RootMenu';
+import Home from './components/layout/home';
+import Roster from './components/pages/Roster';
+import Floorplan from './components/pages/Floorplan';
+
 
 function App () {
   return (
@@ -25,6 +30,9 @@ function App () {
           <Route exact path="/create-root-account" component={CreateRootAccount}/>
           <Route exact path="/create-child-account" component={CreateChildAccount}/>
           <Route exact path="/login" component={Login}/>
+          <Route exact path="/root-menu" component={RootMenu}/>
+          <Route exact path="/roster" component={Roster}/>
+          <Route exact path="/floorplan" component={Floorplan}/>
         </div>
       </div>
     </Router>

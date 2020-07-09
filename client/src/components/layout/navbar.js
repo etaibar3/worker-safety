@@ -10,6 +10,7 @@ function NavBar() {
             <Link style={linkStyle} to="/create-root-account"> <li style={navItemStyle}>Create Root Account</li> </Link> | 
             <Link style={linkStyle} to="/create-child-account"> <li style={navItemStyle}>Create Child Account</li> </Link> | 
             <Link style={linkStyle} to="/login"> <li style={navItemStyle}>Login</li> </Link> | 
+            <Link style={linkStyle} to="/root-menu"> <li style={navItemStyle}>Root Menu</li> </Link> | 
         </ul>
     )
 }
