@@ -6,10 +6,10 @@
 //  --don't accept form submission unless confirm==true
 //  --lookup and change type methods--also consider what happens when no method is selected
 //  --all admins rosters need to be synched up
-//  --more specific error messages (make http success string instead of bool?)
 //  --remove from roster
 //      ->does this delete child account or detach from parent?
 //      ->are future reservations for child account canceled? delete acct from db?
+//  -- display results from lookup user
 
 import React from 'react'
 import { Link } from "react-router-dom"
@@ -24,9 +24,13 @@ class Roster extends React.Component {
             method: " ",     //string--methods to modify roster: add, remove, lookup, change type
             isAdmin: false,  //bool--only used when adding a user or changing account types
             confirmRemove: false,   //bool--used to confirm action for remove method
-            users: [],      //array of user objects for view roster
+            admins: [],      //array of admin emails for view roster
+            employees: [],
+            permissions: "administrator"
         }
+        this.initialState = this.state
         this.handleChange = this.handleChange.bind(this)
+        this.handleMethodChange = this.handleMethodChange.bind(this)
         this.handleSubmit = this.handleSubmit.bind(this)
     }
 
@@ -35,15 +39,20 @@ class Roster extends React.Component {
         type === "checkbox" ? this.setState ({ [name]: checked }) : this.setState({ [name] : value })
     }
 
+    handleMethodChange(event) {
+        this.setState(this.initialState)
+        const {name, value, type, checked} = event.target
+        type === "checkbox" ? this.setState ({ [name]: checked }) : this.setState({ [name] : value })
+    }
+
     handleSubmit(event) {
         event.preventDefault()
-        alert(`${this.state.email} ${this.state.method} ${this.state.isAdmin} ${this.state.confirmRemove}`)
+        alert(`${this.state.email} ${this.state.method} ${this.state.isAdmin} ${this.state.confirmRemove} ${this.state.permissions}`)
         if (this.state.method === "Add") {
             axios
                 .post(`http://localhost:5000/org/manageRoster`, { 'email': this.state.email, 'admin': this.state.isAdmin})
                 .then(response => {
                     console.log(response)
-                    alert('${this.state.email} has been invited to your roster') 
                 })
                 .catch(error => {
                     console.log(error)
@@ -60,18 +69,14 @@ class Roster extends React.Component {
                 })
         }
         else if (this.state.method === "Lookup") {
-            // axios
-            //  .get('/user', {
-            //      params: {
-            //          ID: 12345
-            //      }
-            //  })
-            //  .then(response => {
-            //      console.log(response)
-            //  })
-            //  .catch(error => {
-            //      console.log(error)
-            //  })
+            axios
+             .get('http://localhost:5000/org/manageRoster' + '/' + this.state.email)
+             .then(response => {
+                 console.log(response)
+             })
+             .catch(error => {
+                 console.log(error)
+             })
         }
         else if (this.state.method === "Change type") {
             // axios
@@ -91,24 +96,34 @@ class Roster extends React.Component {
 
     componentDidMount() {
         axios
-            .get(`URL HERE`)
+            .get(`http://localhost:5000/org/manageRoster`)
             .then(response => {
-                const newUser = {
-                    email: response.data.email,
-                    admin: response.data.admin
-                };
-                this.state.users.push(newUser);
+                response.data.admins.map(a_email => {
+                    const newAdmin = {
+                        email: a_email,
+                        admin: true
+                    };
+                this.state.admins.push(newAdmin);
+                })
+
+                response.data.employees.map(e_email => {
+                    const newEmployee = {
+                        email: e_email,
+                        admin: false
+                    };
+                    this.state.employees.push(newEmployee);
+                })
             })
     }
 
     render() {
-        const { email, method, isAdmin, confirmRemove, users} = this.state
+        const { email, method, isAdmin, confirmRemove, admins, employees, permissions } = this.state
         return (
             <div>
                 <h1> Company Roster </h1>
                 <p> What would you like to do? </p>
                 <form onSubmit={this.handleSubmit} value={method}>
-                    <select name="method" onChange={this.handleChange}>
+                    <select name="method" onChange={this.handleMethodChange}>
                         <option value=" "> </option>
                         <option value="Add">Add a user</option>
                         <option value="Remove">Remove a user</option>
@@ -186,16 +201,26 @@ class Roster extends React.Component {
                     {(method === "View") ?
                         <div>
                         {/* Print roster from users array */}
-                            { (users.length > 0) ? 
-                                <ul>
-                                    {users.map(user => (
-                                        <li key={user.email}>
-                                            Email: {user.email} 
-                                            Admin: {user.admin}
-                                        </li>
-                                    ))}
-                                </ul>
-                             : <p> Your organization's roster is empty </p>}
+                            { (admins.length > 0 || employees.length > 0) ? 
+                                <div>
+                                    <ul>
+                                        {admins.map(user => (
+                                            <li key={user.email}>
+                                                Email: {user.email} 
+                                                Admin: {user.admin}
+                                            </li>
+                                        ))}
+                                    </ul>
+                                    <ul>
+                                        {employees.map(user => (
+                                            <li key={user.email}>
+                                                Email: {user.email} 
+                                                Admin: {user.admin}
+                                            </li>
+                                        ))}
+                                    </ul>
+                                </div>
+                             : <p> You cannot currently view your organization's roster. Make sure you are logged in. </p>}
                         </div>
                     : null}
 
@@ -228,6 +253,27 @@ class Roster extends React.Component {
                                     placeholder="employee@company.com" 
                                     onChange={this.handleChange}
                                 />
+                            </label>
+                            <br/>
+                            <p> Set account type to... </p>
+                            <label>
+                                <input 
+                                    type="radio" 
+                                    name="permissions"
+                                    value="employee"
+                                    checked={permissions === "employee"}
+                                    onChange={this.handleChange}
+                                    /> Employee
+                            </label>
+                            <br />
+                            <label>
+                                <input 
+                                    type="radio" 
+                                    name="permissions"
+                                    value="administrator"
+                                    checked={permissions === "administrator"}
+                                    onChange={this.handleChange}
+                                    /> Administrator
                             </label>
                             <br/>
                         </div>

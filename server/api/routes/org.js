@@ -27,7 +27,7 @@ router.post('/manageRoster', authenticateAdmin, async (req, res) => {
             res.status(400).send('This email has already been added to the organization.');
             return;
         }
-        if(await req.body.admin === "true")  {
+        if(await req.body.admin === true)  {
             await Org.updateOne({_id: org._id}, {$push: {admins: req.body.email}});
             res.json(org.admins);
         }
