@@ -45,7 +45,7 @@ class CreateRootAccount extends React.Component {
 		return (
 		<div>
 			<h1> Create Root Account </h1>
-			<p align="left"> By filling out this form, you will be creating the first account for your organization.
+			<p align="left"> By filling out this form, you are creating an administrative account within your organization.
 			All other accounts for your organization should be created through this account or other administrative
 			accounts by adding employees to the company roster. If you would like to be added
 			to an organization's roster, please reach out to your company representative, and you will be emailed a 

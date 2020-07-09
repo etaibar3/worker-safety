@@ -5,11 +5,13 @@
 //  --make formatting/styling compatible with rest of site 
 //  --fill in all caps fields with appropriate info 
 import React from 'react';
+import axios from 'axios'
 
 class CreateChildAccount extends React.Component {
     constructor() {
         super()
         this.state = {
+            company: "",
             email: "",
             password: "",
         }
@@ -23,16 +25,17 @@ class CreateChildAccount extends React.Component {
     }   
 
     handleSubmit(event) {
-        //alert(`${this.state.email} ${this.state.password}`)
+        alert(`${this.state.email} ${this.state.password} ${this.state.company}`)
         event.preventDefault()
-        // axios
-        //  .post(`URL HERE`, { 'email': this.state.email, 'password': this.state.password, 'org': this.state.company })
-        //  .then(response => {
-        //      console.log(response)
-        //  })
-        //  .catch(error => {
-        //      console.log(error)
-        //  })          
+        axios
+         .post(`http://localhost:5000/employee/create-account`, { 'email': this.state.email, 'password': this.state.password, 'org': this.state.company })
+         .then(response => {
+             console.log(response)
+             {/*401 means theyre not invited by an admin OR they are an admin so must create THROUGH CREATE ROOT ACCT*/}
+         })
+         .catch(error => {
+             console.log(error)
+         })          
     }
 
     render() {
@@ -43,6 +46,17 @@ class CreateChildAccount extends React.Component {
                  has added you as an EMPLOYEE/ADMIN at COMPANYNAME. Please create a password
                  to finish setting up your account. </p>
             <form onSubmit={this.handleSubmit}>
+                <label> 
+                    Company
+                    <input 
+                        type="text"
+                        value={this.state.company}
+                        name="company" 
+                        placeholder="Company" 
+                        onChange={this.handleChange}
+                    />   
+                </label>
+                    <br/><br/>
                 <label> 
                     Work Email 
                     <input 

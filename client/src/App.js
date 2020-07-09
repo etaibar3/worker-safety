@@ -15,6 +15,7 @@ import RootMenu from './components/pages/RootMenu';
 import Home from './components/layout/home';
 import Roster from './components/pages/Roster';
 import Floorplan from './components/pages/Floorplan';
+import ReportACase from './components/pages/ReportACase';
 
 
 function App () {
@@ -33,6 +34,7 @@ function App () {
           <Route exact path="/root-menu" component={RootMenu}/>
           <Route exact path="/roster" component={Roster}/>
           <Route exact path="/floorplan" component={Floorplan}/>
+          <Route exact path="/report-a-case" component={ReportACase}/>
         </div>
       </div>
     </Router>

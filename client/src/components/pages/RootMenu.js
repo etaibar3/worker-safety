@@ -8,10 +8,12 @@ import { Link } from "react-router-dom"
 function RootMenu() {
 	return (
 		<div>
-			<h3> Administrative Menu </h3>
+			<h2> Administrative Menu </h2>
 			<Link to='/roster'> View Company Roster </Link>
 			<br/><br/>
 			<Link to='/floorplan'> View Floor Plan </Link>
+			<br/><br/>
+			<Link to='/report-a-case'> Report a Case </Link>
 		</div>
 	)
 }
