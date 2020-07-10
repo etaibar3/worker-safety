@@ -63,7 +63,6 @@ router.post("/", (req, res, next) => {
     _id: new mongoose.Types.ObjectId(),
     name: req.body.name,
     employee_id: req.body.employee_id,
-    currentSeat: req.body.currentSeat,
   });
   employee
     .save()
@@ -74,10 +73,9 @@ router.post("/", (req, res, next) => {
         createdEmployee: {
           name: result.name,
           employee_id: result.employee_id,
-          currentSeat: result.currentSeat,
           request: {
             type: "GET",
-            url: "http//localhost:3000/employees/" + result.employee_id,
+            url: "http//localhost:3000/employees/" + result._id,
           },
         },
       });
@@ -117,8 +115,9 @@ router.patch("/:employee_id", (req, res, next) => {
 
 router.delete("/:employee_id", (req, res, next) => {
   const id = req.params.employee_id;
-  Employee.remove({ _id: id })
+  Employee.findById(id)
     .exec()
+    .then((employee) => employee.remove()) // Employee.remove({_id:id})
     .then((result) => {
       res.status(200).json({
         message: "Employee account deleted",
