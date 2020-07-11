@@ -30,10 +30,6 @@ async function getOrg (req, res) {
     } catch (err) {
         res.json({error: "Failed to get org."});
     }
-    return org;
-  } catch (err) {
-    res.json({ message: "Failed to get org" });
-  }
 }
 
 /* Post a new admin to db - for account creation*/
