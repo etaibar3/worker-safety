@@ -2,9 +2,9 @@
 // Description: This component handles the front end login functionality. 
 
 // TODO: 
-//  --make formatting/styling compatible with rest of site
 //  --add "forgot password" feature
 //  --add "remember me" feature
+//  --token handling so that logged in bool is traced throughout pages
 import React from 'react';
 import axios from 'axios';
 
@@ -31,6 +31,7 @@ class Login extends React.Component {
 		axios
 			.post(`http://localhost:5000/login`, { 'email': this.state.email, 'password': this.state.password })
 			.then(response => {
+				axios.defaults.headers.common['auth'] = response.data
 				console.log(response)
 			})
 			.catch(error => {

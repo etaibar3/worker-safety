@@ -1,18 +1,18 @@
-require('dotenv').config();
-const express = require('express');
+require("dotenv").config();
+const express = require("express");
 const router = express.Router();
-const bcrypt = require('bcrypt');
-const jwt = require('jsonwebtoken');
-const Joi = require('@hapi/joi');
-const User = require('../models/Users.js');
+const bcrypt = require("bcrypt");
+const jwt = require("jsonwebtoken");
+const Joi = require("@hapi/joi");
+const User = require("../models/Users.js");
 
-
-const loginValidation = Joi.object ({
-    email: Joi.string().email().required(),    
-    password: Joi.string().min(6).required()
+const loginValidation = Joi.object({
+  email: Joi.string().email().required(),
+  password: Joi.string().min(6).required(),
 });
 
 function generateToken(user) {
+  /* TODO: 2nd argument of the follwing line should produce a token. Must be a hex value as a string */
     return jwt.sign(user , process.env.ACCESS_TOKEN_SECRET, {expiresIn: '10m'});
 }
 
@@ -39,6 +39,7 @@ router.post('/', async (req, res) => {
     } catch(err) {
         res.status(500).json({message: err});
     }
+
 });
 
-module.exports = router; 
+module.exports = router;

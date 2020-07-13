@@ -1,21 +1,20 @@
-const express = require('express');
+const express = require("express");
 const router = express.Router();
-const bcrypt = require('bcrypt');
-const Joi = require('@hapi/joi');
-const User = require('../models/Users.js');
-const Org = require('../models/Orgs.js');
+const bcrypt = require("bcrypt");
+const Joi = require("@hapi/joi");
+const User = require("../models/Users.js");
+const Org = require("../models/Orgs.js");
 
-
-//Validate new admin acount data 
-const adminValidation = Joi.object ({
-    email: Joi.string().email().required(),    
-    password: Joi.string().min(6).required(),
-    admin: Joi.bool(),
-    org: Joi.string().required()
+//Validate new admin acount data
+const adminValidation = Joi.object({
+  email: Joi.string().email().required(),
+  password: Joi.string().min(6).required(),
+  admin: Joi.bool(),
+  org: Joi.string().required(),
 });
 
-
 /* Returns admins organization - or creates a new one */
+
 async function getOrg (req, res) { 
     try {
         let org = await Org.findOne( {"name": req.body.org });
@@ -31,9 +30,14 @@ async function getOrg (req, res) {
     } catch (err) {
         res.json({error: "Failed to get org."});
     }
+    return org;
+  } catch (err) {
+    res.json({ message: "Failed to get org" });
+  }
 }
 
 /* Post a new admin to db - for account creation*/
+
 router.post('/create-account', async (req, res) => {
     try {//Data Validation
         const { error } = await adminValidation.validateAsync(req.body);
@@ -63,7 +67,11 @@ router.post('/create-account', async (req, res) => {
         res.json(savedUser);
     } catch(err){ 
         res.status(500).json({error: "Failed to create account."});
+
     }
+
 });
 
 module.exports = router; 
+
+
