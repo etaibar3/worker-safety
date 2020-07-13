@@ -16,11 +16,11 @@ export const UploadFloorPlan = () => {
         setFilename(e.target.files[0].name);
 
         var reader = new FileReader();
-        var url = reader.readAsDataURL(e.target.files[0]);
+        reader.readAsDataURL(e.target.files[0]);
 
         reader.onloadend = function (e) {
             setImg(reader.result); // imgSrc set here
-        }.bind(this);
+        };
     };
 
     const onSubmit = /*async*/ e => {
@@ -64,12 +64,12 @@ export const UploadFloorPlan = () => {
         <div>
             <form onSubmit={onSubmit} encType="multipart/form-data">
                 <div className="custom-file wrapper" style={wrapperStyle}>
-                    <label style={uploadStyle} htmlFor="file-upload"> {filename}
+                    <label style={fileStyle} htmlFor="file-upload"> {filename}
                     </label>
                     <input id="file-upload" type="file" style={hide} onChange={onChange}/>
                     <HandleFloorPlan imageSrc={imgSrc} />  
                 </div>
-                <input type="submit" value="Upload"/>
+                <input type="submit" value="Upload" style={uploadStyle}/>
             </form>       
         </div>
     )
@@ -83,12 +83,28 @@ const hide = {
     display: 'none'
 }
 
-const uploadStyle = {
+const fileStyle = {
     padding: '10px',
     marginLeft: '50px',
     marginRight: '50px',
     marginTop: '20px',
     marginBottom: '10px',
+    background: '#eee',
+    fontSize: '16px',
+    border: 'solid',
+    borderColor: 'black',
+    borderWidth: '1px',
+    borderRadius: '25px'
+}
+
+const uploadStyle = {
+    margin: '20px',
+    paddingTop: '5px',
+    paddingBottom: '5px',
+    paddingRight: '20px',
+    paddingLeft: '20px',
+    background: '#eee',
+    fontSize: '14px',
     border: 'solid',
     borderColor: 'black',
     borderWidth: '1px',
