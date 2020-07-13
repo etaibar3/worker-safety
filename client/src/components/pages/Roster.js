@@ -84,14 +84,14 @@ class Roster extends React.Component {
         else if (this.state.method === "Change type") {
             let admin
             {(this.state.permissions === "administrator") ? admin = true : admin = false}
-            // axios
-            //  .patch('URL/IDNUMBER', 'isAdmin': admin)
-            //  .then(response => {
-            //      console.log(response)
-            //  })
-            //  .catch(error => {
-            //      console.log(error)
-            //  })
+            axios
+             .patch(`http://localhost:5000/org/manageRoster`, { 'email': this.state.email, 'admin': admin })
+             .then(response => {
+                 console.log(response)
+             })
+             .catch(error => {
+                 console.log(error)
+             })
         }
         else {
             alert('Error: No roster action selected.')

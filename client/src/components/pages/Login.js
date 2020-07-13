@@ -13,7 +13,8 @@ class Login extends React.Component {
             email: "",
             password: "",
             status: 400,
-            forgotPass: false
+            forgotPass: false,
+            isAdmin: false
         }
         this.handleChange=this.handleChange.bind(this)
         this.handleSubmit=this.handleSubmit.bind(this)
@@ -31,10 +32,11 @@ class Login extends React.Component {
         axios
             .post(`http://localhost:5000/login`, { 'email': this.state.email, 'password': this.state.password })
             .then(response => {
-                axios.defaults.headers.common['auth'] = response.data
+                axios.defaults.headers.common['auth'] = response.data.token
                 console.log(response)
                 this.setState({ 
-                    status: response.status 
+                    status: response.status,
+                    isAdmin: response.data.isAdmin
                 })
             })
             .catch(error => {

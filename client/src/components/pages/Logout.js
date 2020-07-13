@@ -14,9 +14,9 @@ class Logout extends React.Component {
     handleSubmit(event) {
         event.preventDefault()
         axios
-            .post(`http://localhost:5000/login`, { 'email': this.state.email, 'password': this.state.password })
+            .delete(`http://localhost:5000/logout`)
             .then(response => {
-                axios.defaults.headers.common['auth'] = response.data
+                axios.defaults.headers.common['auth'] = ''
                 console.log(response)
                 this.setState({ 
                     status: response.status 

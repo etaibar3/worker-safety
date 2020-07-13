@@ -34,7 +34,7 @@ router.post('/', async (req, res) => {
         
         const serialize = {email: user.email, admin: user.admin, _id: user._id, org: user.org}
         const token = generateToken(serialize);
-        res.header('auth-token',token).send(token);
+        res.header('auth-token',token).send({ token: token, isAdmin: user.admin });
         
     } catch(err) {
         res.status(500).json({message: err});
