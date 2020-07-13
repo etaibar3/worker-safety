@@ -1,4 +1,5 @@
 const express = require("express");
+const path = require("path");
 const app = express();
 const morgan = require("morgan");
 const bodyParser = require("body-parser");
@@ -14,6 +15,18 @@ const orgRoutes = require("./api/routes/org");
 const adminAccRotues = require("./api/routes/admin");
 const logoutRoutes = require("./api/routes/logout");
 const resetPassRoutes = require("./api/routes/resetpassword");
+
+app.set("view", path.join(__dirname, "views"));
+app.set("view engin", "ejs");
+const neo4j = require("neo4j-driver");
+const driver = neo4j.driver(
+  "bolt://localhost",
+  neo4j.auth.basic("neo4j", "123456")
+);
+
+const session = driver.session();
+const mongo4j = require("mongo4j");
+mongo4j.init("neo4j://localhost", { user: "neo4j", pass: "123456" });
 
 mongoose.Promise = global.Promise;
 
@@ -63,6 +76,6 @@ app.get("/", (req, res) => {
   res.send("test");
 });
 
-app.use(cors()); 
+app.use(cors());
 
 module.exports = app;

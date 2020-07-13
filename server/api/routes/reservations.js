@@ -41,8 +41,9 @@ router.post("/", (req, res, next) => {
         });
       }
       const reservation = new Reservation({
-        _id: mongoose.Types.ObjectId(),
-        employee_id: req.body.employee_id,
+        _id: new mongoose.Types.ObjectId(),
+        employee: req.body.employee_id,
+        seat_number: req.body.seat_number,
       });
       return reservation.save();
     })
@@ -52,11 +53,12 @@ router.post("/", (req, res, next) => {
         message: "Order stored",
         createdReservation: {
           _id: result._id,
-          employee: result.employee,
+          employee: result.employee_id,
+          seat_number: result.seat_number,
         },
         request: {
           type: "GET",
-          url: "http://localhost:3000/reservations/" + result._id,
+          url: "http://localhost:5000/reservations/" + result._id,
         },
       });
     })
