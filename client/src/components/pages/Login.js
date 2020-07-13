@@ -1,19 +1,19 @@
 // Component: Login
 // Description: This component handles the front end login functionality. 
 
-// TODO: 
-//  --add "forgot password" feature
-//  --add "remember me" feature
-//  --token handling so that logged in bool is traced throughout pages
 import React from 'react';
 import axios from 'axios';
+import { Redirect } from 'react-router';
+import { Link } from "react-router-dom"
 
 class Login extends React.Component {
     constructor() {
         super()
         this.state = {
             email: "",
-            password: ""
+            password: "",
+            status: 400,
+            forgotPass: false
         }
         this.handleChange=this.handleChange.bind(this)
         this.handleSubmit=this.handleSubmit.bind(this)
@@ -33,6 +33,9 @@ class Login extends React.Component {
             .then(response => {
                 axios.defaults.headers.common['auth'] = response.data
                 console.log(response)
+                this.setState({ 
+                    status: response.status 
+                })
             })
             .catch(error => {
                 console.log(error)
@@ -40,35 +43,42 @@ class Login extends React.Component {
     }
 
     render() {
-        const { email, password } = this.state
+        const { email, password, status, forgotPass } = this.state
         return (
             <div>
-                <h1> Login</h1>
-                <form onSubmit={this.handleSubmit}>
-                    <label> 
-                        Work Email 
-                        <input
-                            type="email"
-                            name="email"
-                            value={email}
-                            placeholder="example@company.com"
-                            onChange={this.handleChange}
-                        />
-                    </label>
-                        <br/><br/>
-                    <label> 
-                        Password 
-                        <input
-                            type="password"
-                            name="password"
-                            value={password}
-                            placeholder="Password"
-                            onChange={this.handleChange}
-                        />
-                    </label>
-                        <br/><br/>
-                    <button type="submit">Login </button>
-                </form>
+            {( status === 200 ) ?
+                <Redirect to = {{ pathname: "/root-menu" }} />
+            :   <div>
+                    <h1> Login</h1>
+                    <form onSubmit={this.handleSubmit}>
+                        <label> 
+                            Work Email
+                            {" "} 
+                            <input
+                                type="email"
+                                name="email"
+                                value={email}
+                                placeholder="example@company.com"
+                                onChange={this.handleChange}
+                            />
+                        </label>
+                            <br/><br/>
+                        <label> 
+                            Password
+                            {" "} 
+                            <input
+                                type="password"
+                                name="password"
+                                value={password}
+                                placeholder="Password"
+                                onChange={this.handleChange}
+                            />
+                        </label>
+                            <br/><br/>
+                        <button type="submit">Login </button>
+                    </form>
+                </div>}
+            <Link to='/forgotyourpassword' style={{ fontSize:"65%" }}> Forgot your password? </Link>
             </div>
         )
     }

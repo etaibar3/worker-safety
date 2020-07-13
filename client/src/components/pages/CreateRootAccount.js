@@ -53,6 +53,7 @@ class CreateRootAccount extends React.Component {
 			<form onSubmit={this.handleSubmit}>
 				<label> 
 					Company
+					{" "}
 					<input 
 						type="text"
 						value={company}
@@ -63,7 +64,8 @@ class CreateRootAccount extends React.Component {
 				</label>
 					<br/><br/>
 				<label> 
-					Work Email 
+					Work Email
+					{" "} 
 					<input 
 						type="email" 
 						name="email"
@@ -74,7 +76,8 @@ class CreateRootAccount extends React.Component {
 				</label>
 					<br/><br/>
 				<label> 
-					Password 
+					Password
+					{" "} 
 					<input 
 						type="password" 
 						name= "password" 						
