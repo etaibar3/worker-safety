@@ -3,14 +3,13 @@
 
 // TODO:
 //  --don't accept form submission unless confirm==true
-//  --all admins rosters need to be synched up
 //  --remove from roster
 //      ->does this delete child account or detach from parent?
 //      ->are future reservations for child account canceled? delete acct from db?
 
 import React from 'react'
 import axios from 'axios'
-import './Roster.css'
+import ViewRosterTable from './ViewRosterTable';
 
 
 class Roster extends React.Component {
@@ -20,9 +19,7 @@ class Roster extends React.Component {
             email: "",       //string--required for all methods
             method: " ",     //string--methods to modify roster: add, remove, lookup, change type
             isAdmin: false,  //bool--only used when adding a user or changing account types
-            confirmRemove: false,   //bool--used to confirm action for remove method
-            admins: [],      //array of admin emails for view roster
-            employees: [],
+            submitClicked: false,
             permissions: "employee",
             status: 400
         }
@@ -33,7 +30,7 @@ class Roster extends React.Component {
     }
 
     handleChange(event) {
-        this.setState({ confirmRemove: false });   {/* Admin clicked submit */}
+        this.setState({ submitClicked: false });   
         const {name, value, type, checked} = event.target
         type === "checkbox" ? this.setState ({ [name]: checked }) : this.setState({ [name] : value })
     }
@@ -46,7 +43,6 @@ class Roster extends React.Component {
 
     handleSubmit(event) {
         event.preventDefault()
-        {/*alert(`${this.state.email} ${this.state.method} ${this.state.isAdmin} ${this.state.confirmRemove} ${this.state.permissions}`)*/}
         if (this.state.method === "Add") {
             axios
                 .post(`http://localhost:5000/org/manageRoster`, { 'email': this.state.email, 'admin': this.state.isAdmin})
@@ -68,7 +64,7 @@ class Roster extends React.Component {
                 })
         }
         else if (this.state.method === "Lookup") {
-            this.setState({ confirmRemove: true });   {/* Admin clicked submit */}
+            this.setState({ submitClicked: true });   {/* Admin clicked submit */}
             axios
              .get('http://localhost:5000/org/manageRoster/' + this.state.email)
              .then(response => {
@@ -86,8 +82,10 @@ class Roster extends React.Component {
              })
         }
         else if (this.state.method === "Change type") {
+            let admin
+            {(this.state.permissions === "administrator") ? admin = true : admin = false}
             // axios
-            //  .patch('URL/IDNUMBER', 'isAdmin': this.state.isAdmin)
+            //  .patch('URL/IDNUMBER', 'isAdmin': admin)
             //  .then(response => {
             //      console.log(response)
             //  })
@@ -101,30 +99,8 @@ class Roster extends React.Component {
     }
 
 
-    componentDidMount() {
-        axios
-            .get(`http://localhost:5000/org/manageRoster`)
-            .then(response => {
-                response.data.admins.map(a_email => {
-                    const newAdmin = {
-                        email: a_email,
-                        admin: true
-                    };
-                this.state.admins.push(newAdmin);
-                })
-
-                response.data.employees.map(e_email => {
-                    const newEmployee = {
-                        email: e_email,
-                        admin: false
-                    };
-                    this.state.employees.push(newEmployee);
-                })
-            })
-    }
-
     render() {
-        const { email, method, isAdmin, confirmRemove, admins, employees, permissions, status } = this.state
+        const { email, method, isAdmin, submitClicked, permissions, status } = this.state
         return (
             <div>
                 <h1> Company Roster </h1>
@@ -145,6 +121,7 @@ class Roster extends React.Component {
                         <div>
                         <label> 
                             Employee email
+                            {" "}
                             <input 
                                 type="email"
                                 name="email"
@@ -161,6 +138,7 @@ class Roster extends React.Component {
                         </p>
                         <label> 
                             Add as administrator
+                            {" "}
                             <input 
                                 type="checkbox"
                                 name="isAdmin"
@@ -178,6 +156,7 @@ class Roster extends React.Component {
                         <div>
                             <label> 
                                 Employee email
+                                {" "}
                                 <input 
                                     type="email"
                                     name="email"
@@ -187,65 +166,18 @@ class Roster extends React.Component {
                                 />
                             </label>
                             <br/><br/>
-                            <p style={{ fontSize: "75%"}}> 
-                                I confirm that I would like to remove {email} from my company roster and understand 
-                                that this will prevent them from making future workspace reservations at my company.                    
-                            </p>
-                            <label>
-                                Confirm
-                                <input 
-                                    type="checkbox"
-                                    name="confirmRemove"
-                                    value="confirmRemove"
-                                    checked={confirmRemove}
-                                    onChange={this.handleChange}
-                                />
-                        </label>
                         </div>
                     : null}
 
                     {/* To view the company roster, admin just selects "view roster" from drop down*/}
-                    {(method === "View") ?
-                        <div>
-                        {/* Print roster from users array */}
-                            { (admins.length > 0 || employees.length > 0) ? 
-                                <div>
-                                    <table align="center">
-                                        <tr>
-                                            <th> Email </th>
-                                            <th> Account Type </th>
-                                        </tr>
-                                        {admins.map(user => (
-                                            <tr align="center">
-                                                <td key={user.email}>
-                                                    {user.email}
-                                                </td>
-                                                <td>
-                                                    Administrator
-                                                </td>
-                                            </tr>
-                                        ))}
-                                        {employees.map(user => (
-                                            <tr align="center">
-                                                <td key={user.email}>
-                                                    {user.email}
-                                                </td>
-                                                <td>
-                                                    Employee
-                                                </td>
-                                            </tr>
-                                        ))}
-                                    </table>
-                                </div>
-                             : <p> You cannot currently view your organization's roster. Make sure you are logged in. </p>}
-                        </div>
-                    : null}
+                    {(method === "View") ? <ViewRosterTable />: null}      
 
                     {/* To view the company roster, admin must enter user's email*/}
                     {(method === "Lookup") ?
                         <div>
                             <label> 
                                 Employee email
+                                {" "}
                                 <input 
                                     type="email"
                                     name="email"
@@ -256,17 +188,18 @@ class Roster extends React.Component {
                             </label>
                             <br/> <br/>
                             {/* Display response from database */}
-                            {(confirmRemove && status !== 200) ? <div> <p> {email} is not currently on your company roster. </p> <p>You can add them through the "Add a user" option above.</p> </div>: null }
-                            {(confirmRemove && status === 200) ? 
+                            {(submitClicked && status !== 200) ? <div> <p> {email} is not currently on your company roster. </p> <p>You can add them through the "Add a user" option above.</p> </div>: null }
+                            {(submitClicked && status === 200) ? 
                                 <p> {email} is on your roster. {(isAdmin) ? <p>Account type: Administrator </p> : <p> Account type: Employee </p>} </p> : null }
                         </div>
                     : null}
 
-                    {/*To change account type, admin will see what user's current account type is, and then can change it*/}
+                    {/*To change account type, admin will set it to administrator or employee*/}
                     {(method === "Change type") ?
                         <div>
                             <label> 
                                 Employee email
+                                {" "}
                                 <input 
                                     type="email"
                                     name="email"
@@ -278,6 +211,7 @@ class Roster extends React.Component {
                             <br/>
                             <p> Set account type to... </p>
                             <label>
+                                {" "}
                                 <input 
                                     type="radio" 
                                     name="permissions"
@@ -288,6 +222,7 @@ class Roster extends React.Component {
                             </label>
                             <br />
                             <label>
+                                {" "}
                                 <input 
                                     type="radio" 
                                     name="permissions"

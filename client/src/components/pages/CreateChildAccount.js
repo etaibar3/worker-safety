@@ -25,7 +25,6 @@ class CreateChildAccount extends React.Component {
     }   
 
     handleSubmit(event) {
-        alert(`${this.state.email} ${this.state.password} ${this.state.company}`)
         event.preventDefault()
         axios
          .post(`http://localhost:5000/employee/create-account`, { 'email': this.state.email, 'password': this.state.password, 'org': this.state.company })
@@ -48,6 +47,7 @@ class CreateChildAccount extends React.Component {
             <form onSubmit={this.handleSubmit}>
                 <label> 
                     Company
+                    {" "}
                     <input 
                         type="text"
                         value={this.state.company}
@@ -58,7 +58,8 @@ class CreateChildAccount extends React.Component {
                 </label>
                     <br/><br/>
                 <label> 
-                    Work Email 
+                    Work Email
+                    {" "} 
                     <input 
                         type="email" 
                         name="email"
@@ -69,7 +70,8 @@ class CreateChildAccount extends React.Component {
                 </label>
                     <br/><br/>
                 <label> 
-                    Password 
+                    Password
+                    {" "} 
                     <input 
                         type="password" 
                         name= "password"                        
