@@ -6,7 +6,9 @@ const User = require('../models/Users.js');
 const { authenticateAdmin } = require('../middleware/auth.js');
 
 const sgMail = require('@sendgrid/mail');
-sgMail.setApiKey(process.env.SENDGRID_API_KEY);
+
+var SENDGRID_API_KEY= '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'
+sgMail.setApiKey(SENDGRID_API_KEY);
 
 function generateEmail(email, isAdmin, org) {
     let msg = {
@@ -56,14 +58,14 @@ router.post('/manageRoster', authenticateAdmin, async (req, res) => {
         }
         if(await req.body.admin === true || req.body.admin === "true")  {
             await Org.updateOne({_id: org._id}, {$push: {admins: req.body.email}});
-            //const msg = generateEmail(req.body.email, true, req.user.org);
-            //sgMail.send(msg);
+            const msg = generateEmail(req.body.email, true, req.user.org);
+            sgMail.send(msg);
             res.json(org.admins);
         }
         else {
            await Org.updateOne({_id: org._id}, {$push: {employees: req.body.email}});
-           //const msg = generateEmail(req.body.email, false, req.user.org);
-           //sgMail.send(msg);
+           const msg = generateEmail(req.body.email, false, req.user.org);
+           sgMail.send(msg);
            res.json(org.employees);
         }
     } catch (err){
