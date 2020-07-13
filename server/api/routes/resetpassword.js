@@ -16,6 +16,9 @@ let msg = {
     html: ''
   };
 
+/* 
+    expects in req.body: email
+*/
 router.patch('/', async (req, res) => {
     try {
         const { email } = req.body;
@@ -23,7 +26,6 @@ router.patch('/', async (req, res) => {
         const user = await User.findOne({email: email});
         if(user === null) return res.status(400).json({error: 'There is no user with the given email.'});
       
-        //Change secret
         const reset_token = await jwt.sign({_id: user._id} , process.env.RESET_TOKEN_SECRET, {expiresIn: '10m'});
         await user.updateOne({resetLink: reset_token}, (err) => {
             if(err) return res.status(400).json({error: "Couldn't store token."});
@@ -33,7 +35,6 @@ router.patch('/', async (req, res) => {
                             <h2>Follow the link below to reset your password.</h2>
                             <p>http://localhost:3000/resetpassword/${reset_token}</p>
                            `
-                token = reset_token;
                 sgMail.send(msg);
                 res.json({message: 'Please check your email for your password reset link.'});
             }
@@ -44,7 +45,7 @@ router.patch('/', async (req, res) => {
 });
 
 /* 
-    expects: in req.body resetToken, newPass
+    expects in req.body: resetToken, newPass
 */
 router.patch('/reset', async (req, res) => {
     try {

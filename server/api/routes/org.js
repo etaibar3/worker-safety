@@ -5,6 +5,32 @@ const Org = require('../models/Orgs.js');
 const User = require('../models/Users.js');
 const { authenticateAdmin } = require('../middleware/auth.js');
 
+const sgMail = require('@sendgrid/mail');
+sgMail.setApiKey(process.env.SENDGRID_API_KEY);
+
+function generateEmail(email, isAdmin, org) {
+    let msg = {
+        to: email,
+        from: 'benjamin.bodine@tufts.edu',
+        subject: 'Safe Return Account Creation',
+        html: ''
+    };
+    if(isAdmin) {
+        msg.html = `
+                 <h2>You have been invited to join the organization ${org} on Safe Return.</h2>
+                 <p>Please follow the link below to create your admin account.</p>
+                 <p>http://localhost:3000/create-root-account</p>
+                `
+    } else {
+        msg.html = `
+                 <h2>You have been invited to join the organization ${org} on Safe Return.</h2>
+                 <p>Please follow the link below to create your employee account.</p>
+                 <p>http://localhost:3000/create-child-account</p>
+                 `
+    }
+    return msg;
+}
+
 /* Validate request for adding a user to an organization*/
 const userValidation = Joi.object ({
     email: Joi.string().email().required(),    
@@ -12,7 +38,7 @@ const userValidation = Joi.object ({
 });
 
 
-//Adds an admin to an organization so they can create an account
+//Adds a user to organization so they can create an account
 router.post('/manageRoster', authenticateAdmin, async (req, res) => {
     try {//Data Validation
         const { error } = await userValidation.validateAsync(req.body);
@@ -28,12 +54,16 @@ router.post('/manageRoster', authenticateAdmin, async (req, res) => {
             res.status(400).json({error: 'This email has already been added to the organization.'});
             return;
         }
-        if(await req.body.admin === true)  {
+        if(await req.body.admin === true || req.body.admin === "true")  {
             await Org.updateOne({_id: org._id}, {$push: {admins: req.body.email}});
+            //const msg = generateEmail(req.body.email, true, req.user.org);
+            //sgMail.send(msg);
             res.json(org.admins);
         }
         else {
            await Org.updateOne({_id: org._id}, {$push: {employees: req.body.email}});
+           //const msg = generateEmail(req.body.email, false, req.user.org);
+           //sgMail.send(msg);
            res.json(org.employees);
         }
     } catch (err){
