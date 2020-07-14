@@ -13,7 +13,6 @@ class Login extends React.Component {
             email: "",
             password: "",
             status: 400,
-            forgotPass: false,
             isAdmin: false
         }
         this.handleChange=this.handleChange.bind(this)
@@ -45,12 +44,11 @@ class Login extends React.Component {
     }
 
     render() {
-        const { email, password, status, forgotPass } = this.state
+        const { email, password, status, isAdmin } = this.state
         return (
             <div>
-            {( status === 200 ) ?
-                <Redirect to = {{ pathname: "/root-menu" }} />
-            :   <div>
+            {( status !== 200) ?
+                <div>
                     <h1> Login</h1>
                     <form onSubmit={this.handleSubmit}>
                         <label> 
@@ -79,8 +77,13 @@ class Login extends React.Component {
                             <br/><br/>
                         <button type="submit">Login </button>
                     </form>
-                </div>}
             <Link to='/forgotyourpassword' style={{ fontSize:"65%" }}> Forgot your password? </Link>
+            </div> : null}
+
+            {( status === 200 && isAdmin) ?
+                <Redirect to = {{ pathname: "/root-menu" }} /> : null }
+            {( status === 200 && isAdmin === false) ?
+                <Redirect to = {{ pathname: "/employee-menu" }} /> : null}
             </div>
         )
     }
