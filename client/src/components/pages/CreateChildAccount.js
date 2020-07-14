@@ -14,6 +14,7 @@ class CreateChildAccount extends React.Component {
             company: "",
             email: "",
             password: "",
+            errorMessage: "",
         }
         this.handleChange=this.handleChange.bind(this)
         this.handleSubmit=this.handleSubmit.bind(this)
@@ -34,12 +35,18 @@ class CreateChildAccount extends React.Component {
          })
          .catch(error => {
              console.log(error)
+             this.setState({
+                status: error.response.status,
+                errorMessage: error.response.data.error
+            })
          })          
     }
 
     render() {
         return (
             <div>
+                {this.state.errorMessage &&
+                    <h3 className="error"> { this.state.errorMessage } </h3> }
                 <h1> Create Child Account </h1>
                 <p align="left"> Your company representative, COMPANYREP@COMPANY.COM,
                  has added you as an EMPLOYEE/ADMIN at COMPANYNAME. Please create a password

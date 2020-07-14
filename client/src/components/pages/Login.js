@@ -14,7 +14,8 @@ class Login extends React.Component {
             password: "",
             status: 400,
             forgotPass: false,
-            isAdmin: false
+            isAdmin: false,
+            errorMessage: "",
         }
         this.handleChange=this.handleChange.bind(this)
         this.handleSubmit=this.handleSubmit.bind(this)
@@ -32,15 +33,21 @@ class Login extends React.Component {
         axios
             .post(`http://localhost:5000/login`, { 'email': this.state.email, 'password': this.state.password })
             .then(response => {
+                (response.status !== 200) ? console.log(response.data.error) : console.log(response.data.message)
                 axios.defaults.headers.common['auth'] = response.data.token
                 console.log(response)
                 this.setState({ 
                     status: response.status,
                     isAdmin: response.data.isAdmin
                 })
+                
             })
-            .catch(error => {
+            .catch(error  => {
                 console.log(error)
+                this.setState({
+                    status: error.response.status,
+                    errorMessage: error.response.data.error
+                })
             })          
     }
 
@@ -51,6 +58,8 @@ class Login extends React.Component {
             {( status === 200 ) ?
                 <Redirect to = {{ pathname: "/root-menu" }} />
             :   <div>
+                    {this.state.errorMessage &&
+                        <h3 className="error"> { this.state.errorMessage } </h3> }
                     <h1> Login</h1>
                     <form onSubmit={this.handleSubmit}>
                         <label> 

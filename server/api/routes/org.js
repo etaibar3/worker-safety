@@ -53,23 +53,23 @@ router.post('/manageRoster', authenticateAdmin, async (req, res) => {
         const alreadyEmployee = await org.employees.find(e => e === req.body.email);
 
         if(alreadyAdmin != undefined || alreadyEmployee != undefined) {
-            res.status(400).json({error: 'This email has already been added to the organization.'});
+            res.status(400).json({error: 'This email has already been added to the organization'});
             return;
         }
         if(await req.body.admin === true || req.body.admin === "true")  {
             await Org.updateOne({_id: org._id}, {$push: {admins: req.body.email}});
-            const msg = generateEmail(req.body.email, true, req.user.org);
-            sgMail.send(msg);
+            //const msg = generateEmail(req.body.email, true, req.user.org);
+            //sgMail.send(msg);
             res.json(org.admins);
         }
         else {
            await Org.updateOne({_id: org._id}, {$push: {employees: req.body.email}});
-           const msg = generateEmail(req.body.email, false, req.user.org);
-           sgMail.send(msg);
+           //const msg = generateEmail(req.body.email, false, req.user.org);
+           //sgMail.send(msg);
            res.json(org.employees);
         }
     } catch (err){
-        res.status(400).json({message: "Failed to add user to org."});
+        res.status(400).json({error: "Unable to add user to org"});
     }
 });
 
@@ -87,13 +87,13 @@ router.delete('/manageRoster', authenticateAdmin, async (req, res) => {
             await Org.updateOne({name: req.user.org}, {$pull: {employees: req.body.email}});
             res.send(anEmployee);
         } else {
-            res.status(400).json({error: 'User not found: could not delete.'});
+            res.status(400).json({error: 'User not found: could not delete'});
             return
         }
         await User.deleteOne( {email: req.body.email } );
     
     } catch (err) {
-        res.status(400).json({error: "Failed to remove user from org."});
+        res.status(400).json({error: "Unable to remove user from org."});
     }
 })
 
@@ -107,7 +107,7 @@ router.get('/manageRoster', authenticateAdmin, async (req, res) => {
         }
         res.json( {admins: org.admins, employees: org.employees} );
     } catch(err) {
-        res.status(400).json({error: "Couldn't return roster."})
+        res.status(400).json({error: "Unable to retrieve roster"})
     }
 });
 
@@ -123,10 +123,10 @@ router.get('/manageRoster/:email', authenticateAdmin, async (req, res) => {
         } else if (anEmployee != undefined) {
             res.send({email: anEmployee, admin: false});
         } else {
-            res.status(400).json({error: 'User is not part of roster.'});
+            res.status(400).json({error: 'User is not part of roster'});
         }
     } catch(err) {
-        res.status(500).json({error: "Could not retrieve user."})
+        res.status(500).json({error: "Unable to retrieve user"})
     }
 });
 
@@ -135,7 +135,7 @@ router.patch('/manageRoster', authenticateAdmin, async (req, res) => {
     try {
         const { error } = await userValidation.validateAsync(req.body);
     } catch (error){ 
-        return res.status(400).send(error.details[0].message);
+        return res.status(400).json({error: error.details[0].message});
     }
     try {
         const org = await Org.findOne( {"name": req.user.org} );
@@ -143,7 +143,7 @@ router.patch('/manageRoster', authenticateAdmin, async (req, res) => {
         const anEmployee = await org.employees.find(e => e === req.body.email);
 
         if(await anAdmin === undefined && anEmployee === undefined) {
-            res.status(403).json({error: 'User does not exist.'});
+            res.status(403).json({error: 'User does not exist'});
             return;
         }
         await Org.updateOne({name: req.user.org}, {$pull: {employees: req.body.email}});
@@ -159,7 +159,7 @@ router.patch('/manageRoster', authenticateAdmin, async (req, res) => {
         }
         res.json(req.body);
     } catch (err) {
-        res.status(400).json({error: "Couldn't update user."});
+        res.status(400).json({error: "Unable to update user"});
     }
 });
 

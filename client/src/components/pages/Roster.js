@@ -21,7 +21,7 @@ class Roster extends React.Component {
             isAdmin: false,  //bool--only used when adding a user or changing account types
             submitClicked: false,
             permissions: "employee",
-            status: 400
+            status: 400,
         }
         this.initialState = this.state
         this.handleChange = this.handleChange.bind(this)
@@ -51,6 +51,7 @@ class Roster extends React.Component {
                 })
                 .catch(error => {
                     console.log(error)
+        
                 })
         }
         else if (this.state.method === "Remove") {
@@ -61,6 +62,7 @@ class Roster extends React.Component {
                 })
                 .catch(error => {
                     console.log(error)
+    
                 })
         }
         else if (this.state.method === "Lookup") {
@@ -77,7 +79,7 @@ class Roster extends React.Component {
              .catch(error => {
                 console.log(error)
                 this.setState({
-                    status: error.status,
+                    status: error.response.status
                 })
              })
         }
