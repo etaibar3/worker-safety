@@ -10,6 +10,7 @@
 import React from 'react'
 import axios from 'axios'
 import ViewRosterTable from './ViewRosterTable';
+import { withAlert } from 'react-alert';
 
 
 class Roster extends React.Component {
@@ -51,7 +52,7 @@ class Roster extends React.Component {
                 })
                 .catch(error => {
                     console.log(error)
-        
+                    this.props.alert.error(error.response.data.error)
                 })
         }
         else if (this.state.method === "Remove") {
@@ -62,7 +63,7 @@ class Roster extends React.Component {
                 })
                 .catch(error => {
                     console.log(error)
-    
+                    this.props.alert.error(error.response.data.error)
                 })
         }
         else if (this.state.method === "Lookup") {
@@ -93,6 +94,7 @@ class Roster extends React.Component {
              })
              .catch(error => {
                  console.log(error)
+                 this.props.alert.error(error.response.data.error)
              })
         }
         else {
@@ -246,4 +248,4 @@ class Roster extends React.Component {
     }
 }
 
-export default Roster
+export default withAlert()(Roster)

@@ -7,8 +7,7 @@ const { authenticateAdmin } = require('../middleware/auth.js');
 
 const sgMail = require('@sendgrid/mail');
 
-var SENDGRID_API_KEY= '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'
-sgMail.setApiKey(SENDGRID_API_KEY);
+sgMail.setApiKey(process.env.SENDGRID_API_KEY);
 
 function generateEmail(email, isAdmin, org) {
     let msg = {
@@ -87,7 +86,7 @@ router.delete('/manageRoster', authenticateAdmin, async (req, res) => {
             await Org.updateOne({name: req.user.org}, {$pull: {employees: req.body.email}});
             res.send(anEmployee);
         } else {
-            res.status(400).json({error: 'User not found: could not delete'});
+            res.status(400).json({error: 'User is not part of roster: unable to delete'});
             return
         }
         await User.deleteOne( {email: req.body.email } );
@@ -143,7 +142,7 @@ router.patch('/manageRoster', authenticateAdmin, async (req, res) => {
         const anEmployee = await org.employees.find(e => e === req.body.email);
 
         if(await anAdmin === undefined && anEmployee === undefined) {
-            res.status(403).json({error: 'User does not exist'});
+            res.status(403).json({error: 'User is not part of roster: unable to update status'});
             return;
         }
         await Org.updateOne({name: req.user.org}, {$pull: {employees: req.body.email}});
