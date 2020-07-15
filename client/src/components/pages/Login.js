@@ -4,7 +4,8 @@
 import React from 'react';
 import axios from 'axios';
 import { Redirect } from 'react-router';
-import { Link } from "react-router-dom"
+import { Link } from "react-router-dom";
+import { withAlert } from 'react-alert';
 
 class Login extends React.Component {
     constructor() {
@@ -15,7 +16,6 @@ class Login extends React.Component {
             status: 400,
             forgotPass: false,
             isAdmin: false,
-            errorMessage: "",
         }
         this.handleChange=this.handleChange.bind(this)
         this.handleSubmit=this.handleSubmit.bind(this)
@@ -44,10 +44,7 @@ class Login extends React.Component {
             })
             .catch(error  => {
                 console.log(error)
-                this.setState({
-                    status: error.response.status,
-                    errorMessage: error.response.data.error
-                })
+                this.props.alert.error(error.response.data.error)
             })          
     }
 
@@ -95,4 +92,4 @@ class Login extends React.Component {
     }
 }
 
-export default Login;
+export default withAlert()(Login);

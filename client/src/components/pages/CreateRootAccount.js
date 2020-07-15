@@ -9,6 +9,7 @@
 //  --form validation (only allow form submission if adminChecked, min password length)
 import React from 'react';
 import axios from 'axios';
+import { withAlert } from 'react-alert';
 
 class CreateRootAccount extends React.Component {
 	constructor() {
@@ -18,7 +19,6 @@ class CreateRootAccount extends React.Component {
 			email: "",
 			password: "",
 			adminChecked: false /* must be true to submit form */,
-			errorMessage: "",
 		}
 		this.handleChange=this.handleChange.bind(this)
 		this.handleSubmit=this.handleSubmit.bind(this)
@@ -38,10 +38,7 @@ class CreateRootAccount extends React.Component {
 			})
 			.catch(error => {
 				console.log(error)
-				this.setState({
-                    status: error.response.status,
-                    errorMessage: error.response.data.error
-                })
+				this.props.alert.error(error.response.data.error)
 			})			
 	}
 
@@ -49,8 +46,6 @@ class CreateRootAccount extends React.Component {
 		const { company, email, password, adminChecked } = this.state
 		return (
 		<div>
-			{this.state.errorMessage &&
-                <h3 className="error"> { this.state.errorMessage } </h3> }
 			<h1> Create Root Account </h1>
 			<p align="left"> By filling out this form, you are creating an administrative account within your organization.
 			All other accounts for your organization should be created through this account or other administrative
@@ -112,4 +107,4 @@ class CreateRootAccount extends React.Component {
 	}
 }
 
-export default CreateRootAccount;
+export default withAlert()(CreateRootAccount);

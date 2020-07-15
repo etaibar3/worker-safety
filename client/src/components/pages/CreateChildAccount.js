@@ -6,6 +6,7 @@
 //  --fill in all caps fields with appropriate info 
 import React from 'react';
 import axios from 'axios'
+import { withAlert } from 'react-alert';
 
 class CreateChildAccount extends React.Component {
     constructor() {
@@ -14,11 +15,11 @@ class CreateChildAccount extends React.Component {
             company: "",
             email: "",
             password: "",
-            errorMessage: "",
         }
         this.handleChange=this.handleChange.bind(this)
         this.handleSubmit=this.handleSubmit.bind(this)
     }
+
 
     handleChange(event) {
         const {name, value, type, checked} = event.target
@@ -27,6 +28,7 @@ class CreateChildAccount extends React.Component {
 
     handleSubmit(event) {
         event.preventDefault()
+        const alert = this.props.alert;
         axios
          .post(`http://localhost:5000/employee/create-account`, { 'email': this.state.email, 'password': this.state.password, 'org': this.state.company })
          .then(response => {
@@ -35,18 +37,14 @@ class CreateChildAccount extends React.Component {
          })
          .catch(error => {
              console.log(error)
-             this.setState({
-                status: error.response.status,
-                errorMessage: error.response.data.error
-            })
+             this.props.alert.error(error.response.data.error)
          })          
     }
 
+   
     render() {
         return (
             <div>
-                {this.state.errorMessage &&
-                    <h3 className="error"> { this.state.errorMessage } </h3> }
                 <h1> Create Child Account </h1>
                 <p align="left"> Your company representative, COMPANYREP@COMPANY.COM,
                  has added you as an EMPLOYEE/ADMIN at COMPANYNAME. Please create a password
@@ -95,4 +93,4 @@ class CreateChildAccount extends React.Component {
     }
 }
 
-export default CreateChildAccount;
+export default withAlert()(CreateChildAccount);
