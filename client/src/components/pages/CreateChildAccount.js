@@ -6,6 +6,7 @@
 //  --fill in all caps fields with appropriate info 
 import React from 'react';
 import axios from 'axios'
+import { withAlert } from 'react-alert';
 
 class CreateChildAccount extends React.Component {
     constructor() {
@@ -19,6 +20,7 @@ class CreateChildAccount extends React.Component {
         this.handleSubmit=this.handleSubmit.bind(this)
     }
 
+
     handleChange(event) {
         const {name, value, type, checked} = event.target
         type === "checkbox" ? this.setState ({ [name]: checked }) : this.setState({ [name] : value })
@@ -26,17 +28,21 @@ class CreateChildAccount extends React.Component {
 
     handleSubmit(event) {
         event.preventDefault()
+        const alert = this.props.alert;
         axios
          .post(`http://localhost:5000/employee/create-account`, { 'email': this.state.email, 'password': this.state.password, 'org': this.state.company })
          .then(response => {
              console.log(response)
+             this.props.alert.success('Success')
              {/*401 means theyre not invited by an admin OR they are an admin so must create THROUGH CREATE ROOT ACCT*/}
          })
          .catch(error => {
              console.log(error)
+             this.props.alert.error(error.response.data.error)
          })          
     }
 
+   
     render() {
         return (
             <div>
@@ -88,4 +94,4 @@ class CreateChildAccount extends React.Component {
     }
 }
 
-export default CreateChildAccount;
+export default withAlert()(CreateChildAccount);

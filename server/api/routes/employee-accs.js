@@ -25,17 +25,18 @@ router.post('/create-account', async (req, res) => {
     try { //Create account 
         const emailExists = await User.findOne( {"email": req.body.email }, {"email": 1}); 
         if(emailExists) { 
-            res.status(400).send({error: 'A user with this email already exists.'});
+            res.status(400).send({error: 'A user with the email ' + req.body.email + ' already exists'});
             return;
         }
         const org = await Org.findOne( {"name": req.body.org });
         if(await org === null) {
-            res.status(400).json({error: 'There is no organization with that name.'});
+            res.status(400).json({error: 'There is no organization by the name ' + req.body.org});
             return;
         }
         const employee = await org.employees.find(e =>  e  === req.body.email );
         if(await employee === undefined) {
-            res.status(401).json({error: 'You are not authorized to create an employee account with this organization'});
+            res.status(401).json({error: 'You are not authorized to create an employee account with the organization ' + 
+                    req.body.org});
             return;
         }
         const hashedPassword = await bcrypt.hash(req.body.password, 10);

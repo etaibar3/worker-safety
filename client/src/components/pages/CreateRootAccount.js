@@ -9,6 +9,7 @@
 //  --form validation (only allow form submission if adminChecked, min password length)
 import React from 'react';
 import axios from 'axios';
+import { withAlert } from 'react-alert';
 
 class CreateRootAccount extends React.Component {
 	constructor() {
@@ -17,7 +18,7 @@ class CreateRootAccount extends React.Component {
 			company: "",
 			email: "",
 			password: "",
-			adminChecked: false /* must be true to submit form */
+			adminChecked: false /* must be true to submit form */,
 		}
 		this.handleChange=this.handleChange.bind(this)
 		this.handleSubmit=this.handleSubmit.bind(this)
@@ -34,9 +35,11 @@ class CreateRootAccount extends React.Component {
 			.post(`http://localhost:5000/admin/create-account`, { 'email': this.state.email, 'password': this.state.password, 'org': this.state.company })
 			.then(response => {
 				console.log(response)
+				this.props.alert.success('Success')
 			})
 			.catch(error => {
 				console.log(error)
+				this.props.alert.error(error.response.data.error)
 			})			
 	}
 
@@ -105,4 +108,4 @@ class CreateRootAccount extends React.Component {
 	}
 }
 
-export default CreateRootAccount;
+export default withAlert()(CreateRootAccount);
