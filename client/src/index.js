@@ -10,7 +10,7 @@ import AlertTemplate from 'react-alert-template-basic'
 /* Settings for error alerts*/
 const options = {
   position: positions.TOP_CENTER,
-  timeout: 10000,
+  timeout: 7000,
   offset: '30px',
   transition: transitions.SCALE
 }

@@ -33,6 +33,7 @@ class CreateChildAccount extends React.Component {
          .post(`http://localhost:5000/employee/create-account`, { 'email': this.state.email, 'password': this.state.password, 'org': this.state.company })
          .then(response => {
              console.log(response)
+             this.props.alert.success('Success')
              {/*401 means theyre not invited by an admin OR they are an admin so must create THROUGH CREATE ROOT ACCT*/}
          })
          .catch(error => {

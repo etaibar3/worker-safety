@@ -35,6 +35,7 @@ class CreateRootAccount extends React.Component {
 			.post(`http://localhost:5000/admin/create-account`, { 'email': this.state.email, 'password': this.state.password, 'org': this.state.company })
 			.then(response => {
 				console.log(response)
+				this.props.alert.success('Success')
 			})
 			.catch(error => {
 				console.log(error)

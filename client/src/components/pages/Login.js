@@ -40,7 +40,7 @@ class Login extends React.Component {
                     status: response.status,
                     isAdmin: response.data.isAdmin
                 })
-                
+                this.props.alert.success('Logged in')
             })
             .catch(error  => {
                 console.log(error)

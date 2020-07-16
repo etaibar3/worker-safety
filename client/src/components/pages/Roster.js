@@ -49,6 +49,7 @@ class Roster extends React.Component {
                 .post(`http://localhost:5000/org/manageRoster`, { 'email': this.state.email, 'admin': this.state.isAdmin})
                 .then(response => {
                     console.log(response)
+                    this.props.alert.success('Success')
                 })
                 .catch(error => {
                     console.log(error)
@@ -60,6 +61,7 @@ class Roster extends React.Component {
                 .delete(`http://localhost:5000/org/manageRoster`, {data: {email: this.state.email } })
                 .then(response => {
                     console.log(response)
+                    this.props.alert.success('Success')
                 })
                 .catch(error => {
                     console.log(error)
@@ -91,6 +93,7 @@ class Roster extends React.Component {
              .patch(`http://localhost:5000/org/manageRoster`, { 'email': this.state.email, 'admin': admin })
              .then(response => {
                  console.log(response)
+                 this.props.alert.success('Success')
              })
              .catch(error => {
                  console.log(error)
