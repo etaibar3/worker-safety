@@ -14,7 +14,12 @@ const OrgSchema = mongoose.Schema({
     admins: {
         type: Array,
         default: []
-    }
+    },
+
+    parentAccounts: {
+        type: Array,
+        default: []
+    },
 });
 
 module.exports = mongoose.model('Orgs', OrgSchema);

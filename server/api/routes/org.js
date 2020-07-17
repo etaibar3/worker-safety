@@ -55,6 +55,7 @@ router.post('/manageRoster', authenticateAdmin, async (req, res) => {
             res.status(400).json({error: 'This email has already been added to the organization'});
             return;
         }
+
         if(await req.body.admin === true || req.body.admin === "true")  {
             await Org.updateOne({_id: org._id}, {$push: {admins: req.body.email}});
             //const msg = generateEmail(req.body.email, true, req.user.org);
@@ -63,6 +64,8 @@ router.post('/manageRoster', authenticateAdmin, async (req, res) => {
         }
         else {
            await Org.updateOne({_id: org._id}, {$push: {employees: req.body.email}});
+           await Org.updateOne({_id: org._id}, 
+            {$push: {parentAccounts: {user: req.body.email, rep: req.user.email}}});
            //const msg = generateEmail(req.body.email, false, req.user.org);
            //sgMail.send(msg);
            res.json(org.employees);
@@ -84,6 +87,7 @@ router.delete('/manageRoster', authenticateAdmin, async (req, res) => {
             res.send(anAdmin);
         } else if (anEmployee != undefined) {
             await Org.updateOne({name: req.user.org}, {$pull: {employees: req.body.email}});
+            await Org.updateOne({name: req.user.org}, {$pull: {parentAccounts: {user: req.body.email}}})
             res.send(anEmployee);
         } else {
             res.status(400).json({error: 'User is not part of roster: unable to delete'});
@@ -101,7 +105,7 @@ router.get('/manageRoster', authenticateAdmin, async (req, res) => {
     try {
         const org = await Org.findOne( {"name": req.user.org} );
         if(await org === null) {
-            res.sendStatus(400);
+            res.status(400).json({error: 'Org not found'});
             return;
         }
         res.json( {admins: org.admins, employees: org.employees} );
@@ -147,7 +151,8 @@ router.patch('/manageRoster', authenticateAdmin, async (req, res) => {
         }
         await Org.updateOne({name: req.user.org}, {$pull: {employees: req.body.email}});
         await Org.updateOne({name: req.user.org}, {$pull: {admins: req.body.email}});
-        
+        await Org.updateOne({name: req.user.org}, {$pull: {parentAccounts: {user: req.body.email}}})
+
         if(req.body.admin === true || req.body.admin === "true")  {
             await Org.updateOne({name: req.user.org}, {$push: {admins: req.body.email}});
             await User.updateOne({email: req.body.email}, {$set: {admin: true}});
@@ -155,6 +160,8 @@ router.patch('/manageRoster', authenticateAdmin, async (req, res) => {
         else {
             await Org.updateOne({name: req.user.org}, {$push: {employees: req.body.email}});
             await User.updateOne({email: req.body.email}, {$set: {admin: false}});
+            await Org.updateOne({_id: org._id}, 
+                {$push: {parentAccounts: {user: req.body.email, rep: req.user.email}}});
         }
         res.json(req.body);
     } catch (err) {

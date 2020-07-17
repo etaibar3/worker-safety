@@ -8,7 +8,7 @@ const mongoose = require("mongoose");
 
 mongoose.connect(
   "mongodb://localhost:27017/worker-saftey",
-  { useNewUrlParser: true, useUnifiedTopology: true },
+  { useNewUrlParser: true, useUnifiedTopology: true, useCreateIndex: true},
   (err, db) => {
     if(err) { return console.dir(err); }
     console.log("successfully connected to databasae");
