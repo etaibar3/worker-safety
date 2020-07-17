@@ -45,7 +45,7 @@ function App () {
           <Route exact path="/reservations" component={Reservations}/>
           <Route exact path="/report-a-case" component={ReportACase}/>
           <Route exact path="/company-rep" component={CompanyRep}/>
-          <Route exact path="/resetpassword" component={ResetPassword}/>
+          <Route exact path="/resetpassword/:token" component={ResetPassword}/>
           <Route exact path="/forgotyourpassword" component={ForgotYourPassword}/>
         </div>
       </div>

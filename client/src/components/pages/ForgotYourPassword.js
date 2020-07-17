@@ -26,8 +26,14 @@ class ForgotYourPassword extends React.Component {
 
     handleSubmit(event) {
         event.preventDefault()
-        //SET STATE
-        alert(`forgot your password email sent to ${this.state.email}`)        
+        axios
+            .patch(`http://localhost:5000/forgot-password`, { 'email': this.state.email })
+            .then(response => {
+                console.log(response)
+            })
+            .catch(error => {
+                console.log(error)
+            })
     }
 
     render() {

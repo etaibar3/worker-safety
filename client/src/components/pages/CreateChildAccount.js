@@ -40,10 +40,8 @@ class CreateChildAccount extends React.Component {
     render() {
         return (
             <div>
-                <h1> Create Child Account </h1>
-                <p align="left"> Your company representative, COMPANYREP@COMPANY.COM,
-                 has added you as an EMPLOYEE/ADMIN at COMPANYNAME. Please create a password
-                 to finish setting up your account. </p>
+                <h1> Create Employee Account </h1>
+                <p align="center"> Please fill out the form to finish setting up your account. </p>
             <form onSubmit={this.handleSubmit}>
                 <label> 
                     Company

@@ -9,9 +9,13 @@ function Home() {
                 <p>Worker safety is our top priority. Our service allows 
                     companies to track and manage desk reservations as 
                     employees return to the office after the COVID-19 
-                    pandemic. Create an account, add your company, 
-                    manage desk reservations, and more.
-                </p>
+                    pandemic. If you are an employee at a company that is already
+                    using Safe Return, please ask your company administrator to 
+                    add you to the company roster. If you are a company representative and
+                    would like to sign your company up for Safe Return, you can get started 
+                    {" "}
+                    <Link to='/create-root-account'><strong>here.</strong> </Link>
+                </p> 
             </Link>
             <div class="wrapper2" style={row2Style}>
                 <Link to="/learn-more" style={tileStyle}>

@@ -11,7 +11,6 @@ class ReportACase extends React.Component {
 		super()
 		this.state = {
 			email: "",
-			testDate: null,
 			illDate: null,
 			resultDate: null
 		}
@@ -49,26 +48,14 @@ class ReportACase extends React.Component {
 					<DatePicker
 						onSelect={this.handleSelect}
 					/>
-					<br /><br />
-					<p> When did you take your COVID-19 test? </p>
-					<DatePicker
-						selected={testDate}
-						onChange={this.handleChange}
-						onSelect={this.handleSelect}
-						closeOnScroll={true}
-						name="testDate"
-					/>
-					<br /><br />
+					<br />
 					<p> When did you receive your positive test result for COVID-19? </p>
 					<DatePicker
-						selected={resultDate}
-						onChange={this.handleChange}
 						onSelect={this.handleSelect}
-						closeOnScroll={true}
-						name="resultDate"
 					/>
 					<br /><br /><br />
 					<button type="submit">Submit</button>
+					<br /><br /><br /><br /><br /><br /><br /><br />
 				</form>
 			</div>
 		)

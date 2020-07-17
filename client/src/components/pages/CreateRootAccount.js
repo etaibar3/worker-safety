@@ -4,8 +4,6 @@
 
 // TODO: 
 //	--add functionality so that employees can lookup their company representative.
-//  --make formatting/styling compatible with rest of site
-//  --remove "Create Account" from Navbar and link to this page from "get started" page
 //  --form validation (only allow form submission if adminChecked, min password length)
 import React from 'react';
 import axios from 'axios';
@@ -44,11 +42,11 @@ class CreateRootAccount extends React.Component {
 		const { company, email, password, adminChecked } = this.state
 		return (
 		<div>
-			<h1> Create Root Account </h1>
-			<p align="left"> By filling out this form, you are creating an administrative account within your organization.
-			All other accounts for your organization should be created through this account or other administrative
-			accounts by adding employees to the company roster. If you would like to be added
-			to an organization's roster, please reach out to your company representative, and you will be emailed a 
+			<h1> Create Account </h1>
+			<p align="left"> By filling out this form, you are creating an administrative account for your organization.
+			Other administrators and employees can be added to your company roster through this account. If you are
+			not a company representative and you would like to be added to an organization's roster, please reach out 
+			to your company representative, and you will be emailed a 
 			link to create your account.</p><br/>
 			<form onSubmit={this.handleSubmit}>
 				<label> 
@@ -100,6 +98,8 @@ class CreateRootAccount extends React.Component {
 					<br/><br/>
 				<button type="submit">Create Account</button>
 			</form>
+			<br/><br/><br/><br/><br/><br/><br/><br/>
+
 		</div>
 		)
 	}

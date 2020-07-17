@@ -26,7 +26,18 @@ class ResetPassword extends React.Component {
     }
 
     handleSubmit(event) {
-        event.preventDefault()        
+        event.preventDefault()
+        axios
+            .patch(`http://localhost:5000/forgot-password/reset`, { 'resetToken': this.props.match.params.token, 'newPass': this.state.password })
+            .then(response => {
+                console.log(response)
+                this.setState({ 
+                    status: response.status,
+                })
+            })
+            .catch(error => {
+                console.log(error)
+            })     
     }
 
     render() {
