@@ -11,7 +11,8 @@ class ResetPassword extends React.Component {
         super()
         this.state = {
             email: "",
-            password: "",
+            password1: null,
+            password2: null,
             status: 400,
         }
         this.handleChange=this.handleChange.bind(this)
@@ -27,21 +28,29 @@ class ResetPassword extends React.Component {
 
     handleSubmit(event) {
         event.preventDefault()
-        axios
-            .patch(`http://localhost:5000/forgot-password/reset`, { 'resetToken': this.props.match.params.token, 'newPass': this.state.password })
-            .then(response => {
-                console.log(response)
-                this.setState({ 
-                    status: response.status,
+        const { email, password1, password2, status } = this.state
+        {(password1 === password2) ? 
+            axios
+                .patch(`http://localhost:5000/forgot-password/reset`, { 'resetToken': this.props.match.params.token, 'newPass': password1 })
+                .then(response => {
+                    console.log(response)
+                    this.setState({ 
+                        status: response.status,
+                    })
                 })
+                .catch(error => {
+                    console.log(error)
+                }) 
+            : alert(`Passwords do not match. Please try again.`)
+            this.setState({
+                password1: "",
+                password2: ""
             })
-            .catch(error => {
-                console.log(error)
-            })     
+        }
     }
 
     render() {
-        const { email, password, status } = this.state
+        const { email, password1, password2, status } = this.state
         return (
             <div>
             {( status === 200 ) ?
@@ -50,12 +59,24 @@ class ResetPassword extends React.Component {
                     <h1> Reset Password</h1>
                     <form onSubmit={this.handleSubmit}>
                         <label> 
-                            Password
+                            Password (min. 6 characters)
                             {" "} 
                             <input
                                 type="password"
-                                name="password"
-                                value={password}
+                                name="password1"
+                                value={password1}
+                                placeholder="Password"
+                                onChange={this.handleChange}
+                            />
+                        </label>
+                            <br/><br/>
+                        <label> 
+                            Confirm Password
+                            {" "} 
+                            <input
+                                type="password"
+                                name="password2"
+                                value={password2}
                                 placeholder="Password"
                                 onChange={this.handleChange}
                             />
