@@ -8,15 +8,15 @@ const Token = require('../models/Tokens');
  async function authenticateAdmin (req, res, next) {
     try {
         const token = await req.headers['auth'];
-        if(token === null) return res.status(401).send();
+        if(token === null) return res.status(401).json({error: 'No Token Provided'});
 
         const invalidToken = await Token.findOne( {"key": token} )
-        if(invalidToken != null) return res.status(401).send('Logged out token.');
+        if(invalidToken != null) return res.status(401).json({error: 'Invalid Token'});
 
         await jwt.verify(token, process.env.ACCESS_TOKEN_SECRET, (err, user) => {
-            if(err) return res.status(403).send('Invalid Token');
+            if(err) return res.status(403).json( {error: 'Invalid Token'} );
             req.user = user;
-            if(!req.user.admin) return res.status(401).send('No admin access.');
+            if(!req.user.admin) return res.status(401).json({error: 'No admin access'});
             next();
         });
     } catch(err) {
@@ -28,13 +28,13 @@ const Token = require('../models/Tokens');
 async function authenticateUser (req, res, next) {
     try {
         const token = await req.headers['auth'];
-        if(token === null) return res.status(401).send();
+        if(token === null) return res.status(401).json({error: 'No Token Provided'});
 
         const invalidToken = await Token.findOne( {"key": token} )
-        if(invalidToken != null) return res.status(401).send('Logged out token.');
+        if(invalidToken != null) return res.status(401).json({error: 'Logged out token'});
 
         await jwt.verify(token, process.env.ACCESS_TOKEN_SECRET, (err, user) => {
-            if(err) return res.status(403).send('Invalid Token');
+            if(err) return res.status(403).json({error: 'Invalid Token'});
             req.user = user;
             next();
         });

@@ -4,7 +4,8 @@
 import React from 'react';
 import axios from 'axios';
 import { Redirect } from 'react-router';
-import { Link } from "react-router-dom"
+import { Link } from "react-router-dom";
+import { withAlert } from 'react-alert';
 
 class Login extends React.Component {
     constructor() {
@@ -31,16 +32,19 @@ class Login extends React.Component {
         axios
             .post(`http://localhost:5000/login`, { 'email': this.state.email, 'password': this.state.password })
             .then(response => {
+                (response.status !== 200) ? console.log(response.data.error) : console.log(response.data.message)
                 axios.defaults.headers.common['auth'] = response.data.token
                 console.log(response)
                 this.setState({ 
                     status: response.status,
                     isAdmin: response.data.isAdmin
                 })
+                this.props.alert.success('Logged in')
             })
-            .catch(error => {
+            .catch(error  => {
                 console.log(error)
-            })          
+                this.props.alert.error(error.response.data.error)
+            })   
     }
 
     render() {
@@ -48,7 +52,7 @@ class Login extends React.Component {
         return (
             <div>
             {( status !== 200) ?
-                <div>
+                <div>                    
                     <h1> Login</h1>
                     <form onSubmit={this.handleSubmit}>
                         <label> 
@@ -89,4 +93,4 @@ class Login extends React.Component {
     }
 }
 
-export default Login;
+export default withAlert()(Login);

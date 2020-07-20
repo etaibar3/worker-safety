@@ -40,6 +40,12 @@ Install Docker Desktop on you computer.
 Keep Docker running.
 Run `docker-compose up -d`, this will start and run all services for mongodb and neo4j
 
+
 Update 7/14:
 Install react datepicker for report a case and reserve a desk functionality.
 run `npm install react-datepicker --save`
+
+Update 7/15:
+Install react-alert for client error notifications.
+npm install --save react-alert react-alert-template-basic
+

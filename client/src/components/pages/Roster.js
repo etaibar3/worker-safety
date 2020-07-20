@@ -10,6 +10,7 @@
 import React from 'react'
 import axios from 'axios'
 import ViewRosterTable from './ViewRosterTable';
+import { withAlert } from 'react-alert';
 
 
 class Roster extends React.Component {
@@ -21,7 +22,7 @@ class Roster extends React.Component {
             isAdmin: false,  //bool--only used when adding a user or changing account types
             submitClicked: false,
             permissions: "employee",
-            status: 400
+            status: 400,
         }
         this.initialState = this.state
         this.handleChange = this.handleChange.bind(this)
@@ -48,9 +49,11 @@ class Roster extends React.Component {
                 .post(`http://localhost:5000/org/manageRoster`, { 'email': this.state.email, 'admin': this.state.isAdmin})
                 .then(response => {
                     console.log(response)
+                    this.props.alert.success('Success')
                 })
                 .catch(error => {
                     console.log(error)
+                    this.props.alert.error(error.response.data.error)
                 })
         }
         else if (this.state.method === "Remove") {
@@ -58,9 +61,11 @@ class Roster extends React.Component {
                 .delete(`http://localhost:5000/org/manageRoster`, {data: {email: this.state.email } })
                 .then(response => {
                     console.log(response)
+                    this.props.alert.success('Success')
                 })
                 .catch(error => {
                     console.log(error)
+                    this.props.alert.error(error.response.data.error)
                 })
         }
         else if (this.state.method === "Lookup") {
@@ -77,7 +82,7 @@ class Roster extends React.Component {
              .catch(error => {
                 console.log(error)
                 this.setState({
-                    status: error.status,
+                    status: error.response.status
                 })
              })
         }
@@ -88,9 +93,11 @@ class Roster extends React.Component {
              .patch(`http://localhost:5000/org/manageRoster`, { 'email': this.state.email, 'admin': admin })
              .then(response => {
                  console.log(response)
+                 this.props.alert.success('Success')
              })
              .catch(error => {
                  console.log(error)
+                 this.props.alert.error(error.response.data.error)
              })
         }
         else {
@@ -244,4 +251,4 @@ class Roster extends React.Component {
     }
 }
 
-export default Roster
+export default withAlert()(Roster)

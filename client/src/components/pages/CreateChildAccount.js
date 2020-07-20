@@ -4,7 +4,7 @@
 import React from 'react';
 import axios from 'axios'
 import { Redirect } from 'react-router';
-
+import { withAlert } from 'react-alert';
 
 class CreateChildAccount extends React.Component {
     constructor() {
@@ -20,6 +20,7 @@ class CreateChildAccount extends React.Component {
         this.handleSubmit=this.handleSubmit.bind(this)
     }
 
+
     handleChange(event) {
         const {name, value, type, checked} = event.target
         type === "checkbox" ? this.setState ({ [name]: checked }) : this.setState({ [name] : value })
@@ -28,15 +29,18 @@ class CreateChildAccount extends React.Component {
     handleSubmit(event) {
         const { company, email, password1, password2, status } = this.state
         event.preventDefault()
+        const alert = this.props.alert;
         {(password1 === password2) ? 
             axios
                 .post(`http://localhost:5000/employee/create-account`, { 'email': email, 'password': password1, 'org': company })
                 .then(response => {
                     console.log(response)
+                    this.props.alert.success('Success')
                     this.setState({ status: response.status})
                 })
                 .catch(error => {
                     console.log(error)
+                    this.props.alert.error(error.response.data.error)
                 })
             : alert(`Passwords do not match. Please try again.`)
             this.setState({
@@ -46,6 +50,7 @@ class CreateChildAccount extends React.Component {
         }
     }
 
+   
     render() {
         const { company, email, password1, password2, status } = this.state
         return (
@@ -113,4 +118,4 @@ class CreateChildAccount extends React.Component {
     }
 }
 
-export default CreateChildAccount;
+export default withAlert()(CreateChildAccount);

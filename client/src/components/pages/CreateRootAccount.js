@@ -5,6 +5,7 @@
 import React from 'react';
 import axios from 'axios';
 import { Redirect } from 'react-router';
+import { withAlert } from 'react-alert';
 
 
 class CreateRootAccount extends React.Component {
@@ -30,17 +31,19 @@ class CreateRootAccount extends React.Component {
 	handleSubmit(event) {
 		const { company, email, password1, password2, adminChecked } = this.state
 		event.preventDefault()
-        {(password1 === password2 && adminChecked) ? 
+    {(password1 === password2 && adminChecked) ? 
 			axios
 				.post(`http://localhost:5000/admin/create-account`, { 'email': email, 'password': password1, 'org': company })
 				.then(response => {
 					console.log(response)
+          this.props.alert.success('Success')
 					this.setState({
 						status: response.status
 					})
 				})
 				.catch(error => {
 					console.log(error)
+     			this.props.alert.error(error.response.data.error)
 				})
 			: alert(`This form cannot be submitted. Please make sure your passwords match and that you have checked the acknowledgement box at the bottom of the form, and try again.`)
             this.setState({
@@ -48,6 +51,7 @@ class CreateRootAccount extends React.Component {
                 password2: ""
             })		
         }
+
 	}
 
 	render() {
@@ -134,4 +138,4 @@ class CreateRootAccount extends React.Component {
 	}
 }
 
-export default CreateRootAccount;
+export default withAlert()(CreateRootAccount);
