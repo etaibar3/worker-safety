@@ -3,13 +3,39 @@
 //		and make reservations
 
 import React from 'react'
-import { Link } from "react-router-dom"
+import axios from 'axios'
 
-function Reservations() {
-	return (
-		<h6> This is the reservations page where employees can view, cancel,
-		and make reservations </h6>
-	)
+
+class Reservations extends React.Component {
+    constructor() {
+        super()
+        this.state = {
+            email: "",
+            method: " ",
+            status: 400
+        }
+    }
+
+
+    render() {
+    	const { method } = this.state
+    	return (
+    		<div>
+	    		<h1> Manage My Reservations </h1>
+	                <p> What would you like to do? </p>
+	                <form onSubmit={this.handleSubmit} value={method}>
+	                    <select name="method">
+	                        <option value=" "> </option>
+	                        <option value="Reserve">Reserve a desk</option>
+	                        <option value="Cancel">Cancel a reservation</option>
+	                        <option value="View">View my reservations</option>
+	                        <option value="Change">Modify an existing reservation</option>
+	                    </select>
+	                 </form>
+	        </div>
+    	)
+    }
 }
 
 export default Reservations
+

@@ -1,11 +1,9 @@
 // Component: CreateChildAccount
 // Description: This component handles the front end account creation for the all secondary admin and employee accounts 
 
-// TODO: 
-//  --make formatting/styling compatible with rest of site 
-//  --fill in all caps fields with appropriate info 
 import React from 'react';
 import axios from 'axios'
+import { Redirect } from 'react-router';
 import { withAlert } from 'react-alert';
 
 class CreateChildAccount extends React.Component {
@@ -14,7 +12,9 @@ class CreateChildAccount extends React.Component {
         this.state = {
             company: "",
             email: "",
-            password: "",
+            password1: "",
+            password2: "",
+            status: 400
         }
         this.handleChange=this.handleChange.bind(this)
         this.handleSubmit=this.handleSubmit.bind(this)
@@ -27,68 +27,92 @@ class CreateChildAccount extends React.Component {
     }   
 
     handleSubmit(event) {
+        const { company, email, password1, password2, status } = this.state
         event.preventDefault()
         const alert = this.props.alert;
-        axios
-         .post(`http://localhost:5000/employee/create-account`, { 'email': this.state.email, 'password': this.state.password, 'org': this.state.company })
-         .then(response => {
-             console.log(response)
-             this.props.alert.success('Success')
-             {/*401 means theyre not invited by an admin OR they are an admin so must create THROUGH CREATE ROOT ACCT*/}
-         })
-         .catch(error => {
-             console.log(error)
-             this.props.alert.error(error.response.data.error)
-         })          
+        {(password1 === password2) ? 
+            axios
+                .post(`http://localhost:5000/employee/create-account`, { 'email': email, 'password': password1, 'org': company })
+                .then(response => {
+                    console.log(response)
+                    this.props.alert.success('Success')
+                    this.setState({ status: response.status})
+                })
+                .catch(error => {
+                    console.log(error)
+                    this.props.alert.error(error.response.data.error)
+                })
+            : alert(`Passwords do not match. Please try again.`)
+            this.setState({
+                password1: "",
+                password2: ""
+            })
+        }
     }
 
    
     render() {
+        const { company, email, password1, password2, status } = this.state
         return (
             <div>
-                <h1> Create Child Account </h1>
-                <p align="left"> Your company representative, COMPANYREP@COMPANY.COM,
-                 has added you as an EMPLOYEE/ADMIN at COMPANYNAME. Please create a password
-                 to finish setting up your account. </p>
-            <form onSubmit={this.handleSubmit}>
-                <label> 
-                    Company
-                    {" "}
-                    <input 
-                        type="text"
-                        value={this.state.company}
-                        name="company" 
-                        placeholder="Company" 
-                        onChange={this.handleChange}
-                    />   
-                </label>
-                    <br/><br/>
-                <label> 
-                    Work Email
-                    {" "} 
-                    <input 
-                        type="email" 
-                        name="email"
-                        value={this.state.email}
-                        placeholder="example@company.com"
-                        onChange={this.handleChange}
-                    />
-                </label>
-                    <br/><br/>
-                <label> 
-                    Password
-                    {" "} 
-                    <input 
-                        type="password" 
-                        name= "password"                        
-                        value={this.state.password}
-                        placeholder="Password"
-                        onChange={this.handleChange}
-                    />
-                </label>
-                    <br/><br/>
-                <button type="submit">Create Account</button>
-            </form>
+                {(status === 200) ?
+                    <Redirect to = {{ pathname: "/login" }} /> 
+                    : <div>
+                        <h1> Create Employee Account </h1>
+                        <p align="center"> Please fill out the form to finish setting up your account. </p>
+                        <form onSubmit={this.handleSubmit}>
+                            <label> 
+                                Company
+                                {" "}
+                                <input 
+                                    type="text"
+                                    value={company}
+                                    name="company" 
+                                    placeholder="Company" 
+                                    onChange={this.handleChange}
+                                />   
+                            </label>
+                                <br/><br/>
+                            <label> 
+                                Work Email
+                                {" "} 
+                                <input 
+                                    type="email" 
+                                    name="email"
+                                    value={email}
+                                    placeholder="example@company.com"
+                                    onChange={this.handleChange}
+                                />
+                            </label>
+                                <br/><br/>
+                            <label> 
+                                Password (min. 6 characters)
+                                {" "} 
+                                <input
+                                    type="password"
+                                    name="password1"
+                                    value={password1}
+                                    placeholder="Password"
+                                    onChange={this.handleChange}
+                                />
+                            </label>
+                                <br/><br/>
+                            <label> 
+                                Confirm Password
+                                {" "} 
+                                <input
+                                    type="password"
+                                    name="password2"
+                                    value={password2}
+                                    placeholder="Password"
+                                    onChange={this.handleChange}
+                                />
+                            </label>
+                                <br/><br/>
+                            <button type="submit">Create Account</button>
+                        </form>
+                    </div>
+                    }
             </div>
         )
     }

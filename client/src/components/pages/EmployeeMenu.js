@@ -11,7 +11,7 @@ function EmployeeMenu() {
 			<h2> Employee Menu </h2>
 			<Link to='/reservations'> Manage my Reservations </Link>
 			<br/><br/>
-			<Link to='/company-rep'> Lookup my Company Representative </Link>
+			<Link to='/company-rep'> Contact my Company Representative </Link>
 			<br/><br/>
 			<Link to='/report-a-case'> Report a Case </Link>
 		</div>

@@ -27,13 +27,19 @@ class Logout extends React.Component {
             })          
     }
 
+
     render() {
         const { status } = this.state
         return (
             <div>
-                <form onSubmit={this.handleSubmit}>
-                    <button type="submit">Logout </button>
-                </form>
+            {( status === 200 ) ?
+                    <Redirect to = {{ pathname: "/login" }} />
+                : 
+                <div>
+                    <form onSubmit={this.handleSubmit}>
+                        <button type="submit">Logout </button>
+                    </form>
+                </div> }
             </div>
         )
     }
