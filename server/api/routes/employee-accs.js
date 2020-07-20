@@ -60,13 +60,13 @@ router.get('/companyrep', authenticateUser, async (req, res) => {
             res.status(400).json({error: 'Org not found'});
             return;
         }
+        /* parentAccounts stores an array of pairs of a user and their rep*/
         const pair = org.parentAccounts.find(p => p.user === req.user.email);
         if(pair === undefined) {
             res.status(400).json({error: 'Unable to find ' + req.user.email + '`s company rep'});
             return;
         }
         res.json({rep: pair.rep});
-
     } catch(err) {
         res.status(500).json({error: err})
     }
