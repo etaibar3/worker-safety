@@ -4,7 +4,7 @@ const bcrypt = require('bcrypt');
 const Joi = require('@hapi/joi');
 const User = require('../models/Users.js');
 const Org = require('../models/Orgs.js');
-
+const { authenticateUser } = require('../middleware/auth.js');
 
 //Validate new employee acount data 
 const employeeValidation = Joi.object ({
@@ -53,5 +53,23 @@ router.post('/create-account', async (req, res) => {
     }
 });
 
+router.get('/companyrep', authenticateUser, async (req, res) => {
+    try {
+        const org = await Org.findOne({name: req.user.org})
+        if(await org === null) {
+            res.status(400).json({error: 'Org not found'});
+            return;
+        }
+        /* parentAccounts stores an array of pairs of a user and their rep*/
+        const pair = org.parentAccounts.find(p => p.user === req.user.email);
+        if(pair === undefined) {
+            res.status(400).json({error: 'Unable to find ' + req.user.email + '`s company rep'});
+            return;
+        }
+        res.json({rep: pair.rep});
+    } catch(err) {
+        res.status(500).json({error: err})
+    }
+});
 
 module.exports = router; 
