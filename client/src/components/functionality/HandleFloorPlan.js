@@ -1,11 +1,6 @@
 // HandleFloorPlan.js
 // Displays the image and implements functionality of marking desk
 
-// Todo:
-// Make dots not stretch out
-// Number overlay
-// Delete a desk
-
 import React, { useState, useEffect, useRef } from 'react';
 // import ReactDOM from 'react-dom';
 import PropTypes from 'prop-types';
@@ -41,34 +36,7 @@ export const HandleFloorPlan = (props) => {
 
     const onSubmit = async (e) => {
         e.preventDefault();
-
-        // Post file stuff
-        // const fileObj = {
-        //     name: filename,
-        //     floorplanImage: file
-        // }
-
-        // console.log(fileObj);
-
-        // axios.post('http://localhost:5000/floorplan/', { fileObj })
-        //     .then(res => {
-        //         console.log(res);
-        //     })
-        //     .catch(err => {
-        //         console.log(err);
-        //     })
-
-        // Posting desk stuff
-        // allDesks.map((singleDesk) => 
-        //     axios.post(`http://localhost:5000/seats`, { 'seat_number': singleDesk.seat_number, 'available': true, 'geometry': {'type': 'point', 'coordinates': [singleDesk.coordinates[0], singleDesk.coordinates[1]]}})
-        //         .then(response => {
-        //             console.log(response)
-        //         })
-        //         .catch(error => {
-        //             // console.log(error.response.data.error)
-        //             console.log(error)
-        //         })
-        // )
+        // This will be used later to make database requests
     }
 
     const canvasRef = useRef(null);
