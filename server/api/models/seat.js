@@ -24,7 +24,7 @@ const SeatSchema = new Schema({
     type: Boolean,
     default: true,
   },
-  $geometry: GeoSchema,
+  geometry: GeoSchema,
 });
 
 module.exports = mongoose.model("Seat", SeatSchema);
