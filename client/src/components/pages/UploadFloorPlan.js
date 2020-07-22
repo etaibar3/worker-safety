@@ -27,36 +27,13 @@ export const UploadFloorPlan = () => {
         e.preventDefault();
         const formData = new FormData();
         formData.append('file', file);
-        // formData.set('name', 'test123');
-        // console.log(file);
         
         const fileObj = {
             name: filename,
             floorplanImage: file
         }
 
-        // console.log(fileObj);
-
-        // try {
-        //     axios.post('http://localhost:5000/floorplan/', { fileObj })
-        //         .then(res => {
-        //             console.log(res);
-        //         });
-
-            // const res = await axios.post('http://localhost:5000/floorplan/', formData, {
-            //     headers: {
-            //         'Content-Type': 'multipart/form-data'
-            //     }
-            // });
-            // const { fileName, filePath } = res.data;
-            // setUploadedFile({ fileName, filePath });
-        // } catch(err) {
-        //     if(err.response.status === 500) {
-        //         console.log('There was a problem with the server');
-        //     } else {
-        //         console.log(err.response.data.msg);
-        //     }
-        // }
+        // This will be for making requests to the DB
 
     };
 
