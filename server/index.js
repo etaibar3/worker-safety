@@ -14,8 +14,6 @@ mongoose.connect(
     console.log("successfully connected to databasae");
     const tokenCollection = db.collection('tokens');
     tokenCollection.createIndex({'expiresAt': 1}, {expireAfterSeconds: 0});
-    // const seats = db.collection('seats');
-    // db.seats.createIndex({"geometry":"2dsphere"});
   }
 );
 
