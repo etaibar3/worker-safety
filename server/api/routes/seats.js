@@ -3,6 +3,60 @@ const router = express.Router();
 const Seat = require("../models/seat");
 const { Mongoose } = require("mongoose");
 
+
+// router.post('/seat/add', async function(req, res){
+//   const session = driver.session();
+//   const txc = session.beginTransaction()
+//   var name = req.body.name;
+//   var  xvalue = req.body.Xvalue;
+//   var Xvalue = parseFloat(xvalue);
+//   var yvalue = req.body.Yvalue;
+//   var Yvalue = parseFloat(yvalue);
+  
+//       try{
+//           const result1 = await txc.run(
+//               'Create (n:Seat {name: $firstParam,' +
+//               'location: point({ x: $Xcoord, y: $Ycoord, crs: "cartesian"})}) RETURN n.name', {firstParam: name, Xcoord: Xvalue, Ycoord: Yvalue })
+            
+//           var result2 = await txc.run('Match (n:Seat) return n')
+//           const records = result2.records
+//           // console.log(result2);
+//           for(let i = 0; i< records.length; i++){
+//               var location_value  = records[i].get(0).properties.location;
+//               console.log(location_value);
+//               const result3 =   txc.run('MATCH (n:Seat {name: $firstParam}), (b:Seat {location: $point }) return distance(n.location, b.location ) AS Distance', {firstParam: name, point: location_value })
+//               // const result3 = Seat.cypherQuery('MATCH (n:Seat {name: $firstParam}), (b:Seat {location: $point }) return distance(n.location, b.location) AS Distance', {firstParam: name, point: location })
+//               const records2 = (await result3).records;
+//               var distance = records2[0]._fields[0]; 
+//               console.log(distance);
+//               
+
+//               if(distance > 0 && distance < 6){
+
+//                   
+
+//                   const result4 =  txc.run('MATCH (n:Seat {name: $firstParam}), (b:Seat {location: $point }) Create (n)-[r:Within_dist]->(b) Return b', {firstParam: name, point: location_value })
+//               }
+//           }
+
+//       await txc.commit()
+//       console.log('committed')
+//     } catch (error) {
+//       console.log(error)
+//       await txc.rollback()
+//       console.log('rolled back')
+//   }
+      
+
+//       finally {
+//           await session.close()
+//         }
+//       res.redirect('/'); 
+
+//   })
+//
+
+
 router.post("/", async (req, res, next) => {
   try {
     const seat = new Seat(req.body);
