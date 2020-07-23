@@ -4,8 +4,8 @@ const Seat = require("../models/seat");
 const { Mongoose } = require("mongoose");
 
 router.post("/", async (req, res, next) => {
-  const seat = new Seat(req.body);
   try {
+    const seat = new Seat(req.body);
     const result = await seat.save();
     res.status(201).json({
       message: "Added a new seat successfully",

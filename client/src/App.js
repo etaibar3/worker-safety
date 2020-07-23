@@ -22,6 +22,7 @@ import Reservations from './components/pages/Reservations';
 import CompanyRep from './components/pages/CompanyRep';
 import ResetPassword from './components/pages/ResetPassword';
 import ForgotYourPassword from './components/pages/ForgotYourPassword';
+import UploadFloorPlan from './components/pages/UploadFloorPlan';
 
 
 function App () {
@@ -47,6 +48,7 @@ function App () {
           <Route exact path="/company-rep" component={CompanyRep}/>
           <Route exact path="/resetpassword/:token" component={ResetPassword}/>
           <Route exact path="/forgotyourpassword" component={ForgotYourPassword}/>
+          <Route exact path="/upload-floor-plan" component={UploadFloorPlan}/>
         </div>
       </div>
     </Router>
