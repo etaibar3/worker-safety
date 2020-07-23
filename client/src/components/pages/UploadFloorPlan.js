@@ -25,16 +25,22 @@ export const UploadFloorPlan = () => {
 
     const onSubmit = /*async*/ e => {
         e.preventDefault();
-        const formData = new FormData();
-        formData.append('file', file);
+        // const formData = new FormData();
+        // formData.append('file', file);
+        // formData.set('name', 'test123');
+        // console.log(file);
         
-        const fileObj = {
-            name: filename,
-            floorplanImage: file
-        }
+        // const fileObj = {
+        //     'name': filename,
+        //     'floorplanImage': file
+        // }
 
-        // This will be for making requests to the DB
+        // console.log(file);
 
+        // axios.post(`http://localhost:5000/floorplan/`, { 'name': filename, 'file': file })
+        //     .then(res => {
+        //         console.log(res);
+        //     });
     };
 
     return (
