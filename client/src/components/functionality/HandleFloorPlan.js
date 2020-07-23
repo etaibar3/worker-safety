@@ -63,7 +63,12 @@ export const HandleFloorPlan = (props) => {
         } else {
             console.log("Post things")
         }
-
+        const ppf = scaleValue / feetValue;
+        allDesks.map(desk => {
+            desk.coordinates[0] = desk.coordinates[0] / ppf;
+            desk.coordinates[1] = desk.coordinates[1] / ppf;
+            console.log('(' + desk.coordinates[0] + ', '+  desk.coordinates[1] + ')');
+        });
         
         // Posting desk stuff
         // allDesks.map((singleDesk) => 
