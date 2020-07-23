@@ -1,6 +1,7 @@
 import React from 'react';
 import axios from 'axios';
 import { Redirect } from 'react-router';
+import { withAlert } from 'react-alert';
 
 class Logout extends React.Component {
     constructor() {
@@ -21,9 +22,11 @@ class Logout extends React.Component {
                 this.setState({ 
                     status: response.status 
                 })
+                this.props.alert.success('Logged out')
             })
             .catch(error => {
                 console.log(error)
+                this.props.alert.error(error.response.data.error)
             })          
     }
 
@@ -45,4 +48,4 @@ class Logout extends React.Component {
     }
 }
 
-export default Logout;
+export default withAlert()(Logout);
