@@ -12,10 +12,15 @@ export const HandleFloorPlan = (props) => {
     const [buttonText, setText] = useState('Upload');
     const [scaleValue, setScaleValue] = useState(1);
     const [feetValue, setFeetValue] = useState(1);
+    const [usingFeet, setUsingFeet] = useState(false);
+    const [meterValue, setMeterValue] = useState(1);
+    const [usingMeters, setUsingMeters] = useState(false);
     const [scaleOriginX, setOriginX] = useState(0);
     const [scaleOriginY, setOriginY] = useState(0);
 
     const canvasRef = useRef(null);
+    var setScale = false;
+
     useEffect(() => {
         const canvas = canvasRef.current;
         const ctx = canvas.getContext("2d");
@@ -56,20 +61,33 @@ export const HandleFloorPlan = (props) => {
 
     const onSubmit = async (e) => {
         e.preventDefault();
+        var ppf;
         if (buttonText === "Done") {
             const element = <h2>Step 2: Set the scale of the image</h2>
             ReactDOM.render(element, document.getElementById('header2'));
             setText('Upload');
         } else {
             console.log("Post things")
+            if(usingFeet === true) {
+                ppf = scaleValue / feetValue;
+                console.log('feet are scale')
+            } 
+            else if (usingMeters === true){
+                ppf = scaleValue / meterValue;
+                console.log('meters are scale')
+            } 
+
+            allDesks.map(desk => {
+                if(ppf != undefined && setScale === false) {
+                    desk.coordinates[0] = desk.coordinates[0] / ppf;
+                    desk.coordinates[1] = desk.coordinates[1] / ppf;
+                    setScale = true;
+                }
+                console.log('(' + desk.coordinates[0] + ', '+  desk.coordinates[1] + ')');
+            });
+            
         }
-        const ppf = scaleValue / feetValue;
-        allDesks.map(desk => {
-            desk.coordinates[0] = desk.coordinates[0] / ppf;
-            desk.coordinates[1] = desk.coordinates[1] / ppf;
-            console.log('(' + desk.coordinates[0] + ', '+  desk.coordinates[1] + ')');
-        });
-        
+    
         // Posting desk stuff
         // allDesks.map((singleDesk) => 
         //     axios.post(`http://localhost:5000/seats`, { 'seat_number': singleDesk.seat_number, 'available': true, 'geometry': {'type': 'point', 'coordinates': [singleDesk.coordinates[0], singleDesk.coordinates[1]]}})
@@ -121,6 +139,8 @@ export const HandleFloorPlan = (props) => {
         input.style = {display: 'block'}
         var input2 = document.getElementById("wrap-inputFt");
         input2.style = {display: 'block'}
+        var input3 = document.getElementById("wrap-inputM");
+        input3.style = {display: 'block'}
 
         const xPos = e.nativeEvent.offsetX;
         const yPos = e.nativeEvent.offsetY;
@@ -132,17 +152,26 @@ export const HandleFloorPlan = (props) => {
     const auxScale = (e) => {
         var input = document.getElementById("inputPx");
         setScaleValue(input.value);
+        
     }
 
     const auxFeet = (e) => {
         var input = document.getElementById("inputFt");
         setFeetValue(input.value);
+        setUsingFeet(true);
     }
 
+    const auxMeters = (e) => {
+        var input = document.getElementById("inputM");
+        setMeterValue(input.value);
+        setUsingMeters(true);
+    }
+   
     return (
         <div id="wrapper" style={wrapperStyle} >
             <div id="header1"></div>
             <div id="header2"></div>
+            <div id="header3"></div>
             
             <canvas id="canvas" ref={canvasRef} width={500} height={500} style={canvasStyle} onClick={markDesk} onMouseMove={deleteDesk}></canvas>
             <div id="wrap-inputPx" style={{display: 'none'}}>
@@ -152,6 +181,10 @@ export const HandleFloorPlan = (props) => {
             <div id="wrap-inputFt" style={{display: 'none'}}>
                 <label htmlFor="inputFt">How many feet does this correspond to? </label>
                 <input id="inputFt" onChange={auxFeet} type="number" min="1" placeholder="1" ></input>
+            </div>
+            <div id="wrap-inputM" style={{display: 'none'}}>
+                <label htmlFor="inputM"> Or how many meters does this correspond to? </label>
+                <input id="inputM" onChange={auxMeters} type="number" min="1" placeholder="1" ></input>
             </div>
             <input onMouseUp={onSubmit} type="submit" value={buttonText} style={uploadStyle}/>
         </div>
