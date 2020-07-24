@@ -238,14 +238,6 @@ const canvasStyle = {
     display: 'block'
 }
 
-const canvasStyle2 = {
-    paddingLeft: '0',
-    paddingRight: '0',
-    marginLeft: 'auto',
-    marginRight: 'auto',
-    display: 'none'
-}
-
 const uploadStyle = {
     position: 'relative',
     margin: '20px',
