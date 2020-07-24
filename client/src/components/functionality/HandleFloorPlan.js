@@ -43,7 +43,9 @@ export const HandleFloorPlan = (props) => {
             allDesks.map((singleDesk) => {
                 ctx.fillStyle = "#2b60a6"
                 const sX = singleDesk.coordinates[0];
-                const sY = singleDesk.coordinates[1] ;
+                const sY = singleDesk.coordinates[1];
+                console.log(`Desk Xcoord: ${sX}`);
+                console.log(`Desk Ycoord: ${sY}`);
                 ctx.fillRect(sX - 15, sY - 15, 30, 30);
                 ctx.fillStyle = "white";
                 ctx.font = "20px Arial";
@@ -85,20 +87,22 @@ export const HandleFloorPlan = (props) => {
                 }
                 console.log('(' + desk.coordinates[0] + ', '+  desk.coordinates[1] + ')');
             });
+           
+            // Posting desk stuff
+            allDesks.map((singleDesk) => 
+                axios.post(`http://localhost:5000/seats/add`, {"id": singleDesk.seat_number, "Xcoord": singleDesk.coordinates[0], "Ycoord": singleDesk.coordinates[1]})
+                    .then(response => {
+                        console.log(response)
+                    })
+                    .catch(error => {
+                        // console.log(error.response.data.error)
+                        console.log(error)
+                    })
+            )
             
         }
     
-        // Posting desk stuff
-        // allDesks.map((singleDesk) => 
-        //     axios.post(`http://localhost:5000/seats`, { 'seat_number': singleDesk.seat_number, 'available': true, 'geometry': {'type': 'point', 'coordinates': [singleDesk.coordinates[0], singleDesk.coordinates[1]]}})
-        //         .then(response => {
-        //             console.log(response)
-        //         })
-        //         .catch(error => {
-        //             // console.log(error.response.data.error)
-        //             console.log(error)
-        //         })
-        // )
+
 
         // Also need to post scale stuff
     }
