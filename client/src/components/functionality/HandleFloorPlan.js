@@ -110,7 +110,6 @@ export const HandleFloorPlan = (props) => {
                     createDesk(xPos, yPos);
                 }
             
-                // its not going into the if for every single desk, but it is checking it for every single desk (because the for loop goes through every desk)
                 allDesks.forEach((singleDesk) => {
                     var differenceX = e.nativeEvent.offsetX - singleDesk.coordinates[0];
                     var differenceY = e.nativeEvent.offsetY - singleDesk.coordinates[1];
