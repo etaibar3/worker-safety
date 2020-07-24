@@ -13,13 +13,13 @@ export const HandleFloorPlan = (props) => {
     const [scaleValue, setScaleValue] = useState(1);
     const [feetValue, setFeetValue] = useState(1);
     const [usingFeet, setUsingFeet] = useState(false);
+    const [scaleIsSet, setScale] = useState(false);
     const [meterValue, setMeterValue] = useState(1);
     const [usingMeters, setUsingMeters] = useState(false);
     const [scaleOriginX, setOriginX] = useState(0);
     const [scaleOriginY, setOriginY] = useState(0);
 
     const canvasRef = useRef(null);
-    var setScale = false;
 
     useEffect(() => {
         const canvas = canvasRef.current;
@@ -42,53 +42,52 @@ export const HandleFloorPlan = (props) => {
             // Creating all the desks
             allDesks.map((singleDesk) => {
                 ctx.fillStyle = "#2b60a6"
-                const sX = singleDesk.coordinates[0];
-                const sY = singleDesk.coordinates[1];
-                console.log(`Desk Xcoord: ${sX}`);
-                console.log(`Desk Ycoord: ${sY}`);
+                const sX = singleDesk.pix_coordinates[0];
+                const sY = singleDesk.pix_coordinates[1];
                 ctx.fillRect(sX - 15, sY - 15, 30, 30);
                 ctx.fillStyle = "white";
                 ctx.font = "20px Arial";
                 ctx.fillText(singleDesk.seat_number, sX - 5, sY + 7);
+        
             })
 
             // Creating the scale rectangle
             ctx.fillStyle = "black"
             var value = parseFloat(10) + parseFloat(scaleValue);
-            console.log(`Start point: ${scaleOriginX}`);
-            console.log(`End point: ${scaleOriginX + value}`);
             ctx.fillRect(scaleOriginX, scaleOriginY, value, 10);
         }
     });
 
     const onSubmit = async (e) => {
         e.preventDefault();
-        var ppf;
+        var pixels_per_feet;
+        const meters_per_foot = 0.3048;
+
         if (buttonText === "Done") {
             const element = <h2>Step 2: Set the scale of the image</h2>
             ReactDOM.render(element, document.getElementById('header2'));
             setText('Upload');
         } else {
-            console.log("Post things")
             if(usingFeet === true) {
-                ppf = scaleValue / feetValue;
-                console.log('feet are scale')
+                pixels_per_feet = scaleValue / feetValue;
             } 
             else if (usingMeters === true){
-                ppf = scaleValue / meterValue;
-                console.log('meters are scale')
-            } 
-
+                var ppm = scaleValue / meterValue;
+                var pixels_per_feet = ppm * meters_per_foot;
+            }
             allDesks.map(desk => {
-                if(ppf != undefined && setScale === false) {
-                    desk.coordinates[0] = desk.coordinates[0] / ppf;
-                    desk.coordinates[1] = desk.coordinates[1] / ppf;
-                    setScale = true;
+                if(pixels_per_feet != undefined && scaleIsSet === false) {
+                    desk.coordinates[0] = desk.coordinates[0] / pixels_per_feet;
+                    desk.coordinates[1] = desk.coordinates[1] / pixels_per_feet;
                 }
                 console.log('(' + desk.coordinates[0] + ', '+  desk.coordinates[1] + ')');
             });
+
+            if (pixels_per_feet != undefined) {
+                setScale(true);
+            }
            
-            // Posting desk stuff
+            //Posting desk stuff
             allDesks.map((singleDesk) => 
                 axios.post(`http://localhost:5000/seats/add`, {"id": singleDesk.seat_number, "Xcoord": singleDesk.coordinates[0], "Ycoord": singleDesk.coordinates[1]})
                     .then(response => {
@@ -102,8 +101,6 @@ export const HandleFloorPlan = (props) => {
             
         }
     
-
-
         // Also need to post scale stuff
     }
 
@@ -120,7 +117,11 @@ export const HandleFloorPlan = (props) => {
                     coordinates: [
                         xPos,
                         yPos
-                    ]
+                    ],
+                    pix_coordinates: [
+                        xPos,
+                        yPos
+                    ],
                 }
     
                 addDesk(allDesks.concat(desk)); // adds the desk to the allDesks array in the state
