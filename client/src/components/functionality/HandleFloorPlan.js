@@ -1,15 +1,18 @@
 // HandleFloorPlan.js
 // Displays the image and implements functionality of marking desk
 
+// Why is desk count being incremented???
+
 import React, { useState, useEffect, useRef } from 'react';
 import ReactDOM from 'react-dom';
 import PropTypes from 'prop-types';
 import axios from 'axios';
+// import { connect } from '../../../../server/app';
+// import { all } from '../../../../server/app';
 
 export const HandleFloorPlan = (props) => {
     const [allDesks, addDesk] = useState([]);
-    const [deskCount, setDeskCount] = useState(1);
-    const [buttonText, setText] = useState('Upload');
+    const [buttonText, setText] = useState('Done');
     const [scaleValue, setScaleValue] = useState(1);
     const [feetValue, setFeetValue] = useState(1);
     const [usingFeet, setUsingFeet] = useState(false);
@@ -17,6 +20,8 @@ export const HandleFloorPlan = (props) => {
     const [usingMeters, setUsingMeters] = useState(false);
     const [scaleOriginX, setOriginX] = useState(0);
     const [scaleOriginY, setOriginY] = useState(0);
+    const [forceUpdate, causeForceUpdate] = useState("");
+    const [randomNum, setRandomNum] = useState(1);
 
     const canvasRef = useRef(null);
     var setScale = false;
@@ -32,20 +37,11 @@ export const HandleFloorPlan = (props) => {
             const element = <h2>Step 1: Mark desk locations by clicking on the floor plan</h2>
             ReactDOM.render(element, document.getElementById('header1'));
 
-            // Set the button text
-            if(document.getElementById('header2').childElementCount > 0) {
-                setText('Upload');
-            } else {
-                setText('Done');
-            }
-
             // Creating all the desks
             allDesks.map((singleDesk) => {
                 ctx.fillStyle = "#2b60a6"
                 const sX = singleDesk.coordinates[0];
                 const sY = singleDesk.coordinates[1];
-                console.log(`Desk Xcoord: ${sX}`);
-                console.log(`Desk Ycoord: ${sY}`);
                 ctx.fillRect(sX - 15, sY - 15, 30, 30);
                 ctx.fillStyle = "white";
                 ctx.font = "20px Arial";
@@ -55,8 +51,8 @@ export const HandleFloorPlan = (props) => {
             // Creating the scale rectangle
             ctx.fillStyle = "black"
             var value = parseFloat(10) + parseFloat(scaleValue);
-            console.log(`Start point: ${scaleOriginX}`);
-            console.log(`End point: ${scaleOriginX + value}`);
+            // console.log(`Start point: ${scaleOriginX}`);
+            // console.log(`End point: ${scaleOriginX + value}`);
             ctx.fillRect(scaleOriginX, scaleOriginY, value, 10);
         }
     });
@@ -101,10 +97,6 @@ export const HandleFloorPlan = (props) => {
             )
             
         }
-    
-
-
-        // Also need to post scale stuff
     }
 
     const markDesk = (e) => {
@@ -112,30 +104,68 @@ export const HandleFloorPlan = (props) => {
             if (buttonText === "Done") {
                 const xPos = e.nativeEvent.offsetX;
                 const yPos = e.nativeEvent.offsetY;
-            
-                const desk = {
-                    seat_number: deskCount,
-                    available: true,
-                    type: 'point',
-                    coordinates: [
-                        xPos,
-                        yPos
-                    ]
+                var deletion = false;
+
+                if (allDesks.length === 0) {
+                    createDesk(xPos, yPos);
                 }
-    
-                addDesk(allDesks.concat(desk)); // adds the desk to the allDesks array in the state
-    
-                // for tracking the ID of the desk
-                let tempDeskCount = deskCount + 1;
-                setDeskCount(tempDeskCount);
+            
+                // its not going into the if for every single desk, but it is checking it for every single desk (because the for loop goes through every desk)
+                allDesks.forEach((singleDesk) => {
+                    var differenceX = e.nativeEvent.offsetX - singleDesk.coordinates[0];
+                    var differenceY = e.nativeEvent.offsetY - singleDesk.coordinates[1];
+                    if (differenceX < 15 && differenceX > -15 && differenceY < 15 && differenceY > -15) {
+                        deletion = true;
+                        deleteDesk(singleDesk, xPos, yPos);
+                    } 
+                })
+                if (!deletion) {
+                    createDesk(xPos, yPos);
+                }
+                
+
+               
             } else {
                 findScale(e);
             }
         }
     }
 
-    const deleteDesk = (e) => {
-        // console.log("Todo")
+    const createDesk = (xPos, yPos) => {
+        const desk = {
+            seat_number: allDesks.length +  1,
+            available: true,
+            type: 'point',
+            coordinates: [
+                xPos,
+                yPos
+            ]
+        }
+
+        addDesk(allDesks.concat(desk)); // adds the desk to the allDesks array in the state
+    }
+
+    const deleteDesk = (desk, xPos, yPos) => {
+        for (var i = 0; i < allDesks.length;i++) {
+            if (desk === allDesks[i]) {
+                allDesks.splice(i, 1);
+                break;
+            }
+        }
+
+        for (var i = 0; i < allDesks.length; i++) {
+            allDesks[i].seat_number = i + 1;
+        }
+
+        var input = document.getElementById("confirm-deletion");
+        input.style = {display: 'block'}
+    }
+
+    const auxDelete = () => {
+        causeForceUpdate(randomNum);
+        setRandomNum(randomNum + 1);
+        var input = document.getElementById("confirm-deletion");
+        input.style.visibility = "hidden";
     }
 
     const findScale = (e) => {
@@ -155,8 +185,7 @@ export const HandleFloorPlan = (props) => {
 
     const auxScale = (e) => {
         var input = document.getElementById("inputPx");
-        setScaleValue(input.value);
-        
+        setScaleValue(input.value);  
     }
 
     const auxFeet = (e) => {
@@ -177,7 +206,7 @@ export const HandleFloorPlan = (props) => {
             <div id="header2"></div>
             <div id="header3"></div>
             
-            <canvas id="canvas" ref={canvasRef} width={500} height={500} style={canvasStyle} onClick={markDesk} onMouseMove={deleteDesk}></canvas>
+            <canvas id="canvas" ref={canvasRef} width={500} height={500} style={canvasStyle} onClick={markDesk}></canvas>
             <div id="wrap-inputPx" style={{display: 'none'}}>
                 <label htmlFor="inputPx">Adjust size of the scale line: </label>
                 <input id="inputPx" onChange={auxScale} type="number" min="1" placeholder="1" ></input>
@@ -189,6 +218,9 @@ export const HandleFloorPlan = (props) => {
             <div id="wrap-inputM" style={{display: 'none'}}>
                 <label htmlFor="inputM"> Or how many meters does this correspond to? </label>
                 <input id="inputM" onChange={auxMeters} type="number" min="1" placeholder="1" ></input>
+            </div>
+            <div id="confirm-deletion" style={{display: 'none'}}>
+                <input id="delete-btn" type="submit" value="Confirm Deletion" style={uploadStyle} onMouseUp={auxDelete}></input>
             </div>
             <input onMouseUp={onSubmit} type="submit" value={buttonText} style={uploadStyle}/>
         </div>
@@ -205,6 +237,14 @@ const canvasStyle = {
     marginLeft: 'auto',
     marginRight: 'auto',
     display: 'block'
+}
+
+const canvasStyle2 = {
+    paddingLeft: '0',
+    paddingRight: '0',
+    marginLeft: 'auto',
+    marginRight: 'auto',
+    display: 'none'
 }
 
 const uploadStyle = {
