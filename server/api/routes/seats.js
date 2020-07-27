@@ -18,7 +18,7 @@ router.post('/add', async function(req, res){
           console.log(`Yval: ${Yvalue}`)
           const result1 = await txc.run(
               'Create (n:Seat {name: $id,' +
-              'location: point({ x: $Xcoord, y: $Ycoord, crs: "cartesian"})}) RETURN n.name', {id: name, Xcoord: Xvalue, Ycoord: Yvalue })
+              'location: point({ x: $Xcoord, y: $Ycoord, crs: "cartesian"}), reserved:false}) RETURN n.name', {id: name, Xcoord: Xvalue, Ycoord: Yvalue })
             
           var result2 = await txc.run('Match (n:Seat) return n')
           const records = result2.records
