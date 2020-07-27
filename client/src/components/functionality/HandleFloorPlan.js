@@ -1,14 +1,10 @@
 // HandleFloorPlan.js
 // Displays the image and implements functionality of marking desk
 
-// Why is desk count being incremented???
-
 import React, { useState, useEffect, useRef } from 'react';
 import ReactDOM from 'react-dom';
 import PropTypes from 'prop-types';
 import axios from 'axios';
-// import { connect } from '../../../../server/app';
-// import { all } from '../../../../server/app';
 
 export const HandleFloorPlan = (props) => {
     const [allDesks, addDesk] = useState([]);
@@ -21,15 +17,14 @@ export const HandleFloorPlan = (props) => {
     const [usingMeters, setUsingMeters] = useState(false);
     const [scaleOriginX, setOriginX] = useState(0);
     const [scaleOriginY, setOriginY] = useState(0);
-    const [forceUpdate, causeForceUpdate] = useState("");
-    const [randomNum, setRandomNum] = useState(1);
+    const [forceUpdate, causeForceUpdate] = useState(1);
 
     const canvasRef = useRef(null);
 
     useEffect(() => {
         const canvas = canvasRef.current;
         const ctx = canvas.getContext("2d");
-        const img = new Image;
+        const img = new Image();
         img.src = props.imageSrc;
         img.onload = () => {
             ctx.drawImage(img, 0, 0, 500, 500);
@@ -38,7 +33,7 @@ export const HandleFloorPlan = (props) => {
             ReactDOM.render(element, document.getElementById('header1'));
 
             // Creating all the desks
-            allDesks.map((singleDesk) => {
+            allDesks.forEach((singleDesk) => {
                 ctx.fillStyle = "#2b60a6"
                 const sX = singleDesk.pix_coordinates[0];
                 const sY = singleDesk.pix_coordinates[1];
@@ -71,17 +66,17 @@ export const HandleFloorPlan = (props) => {
             } 
             else if (usingMeters === true){
                 var ppm = scaleValue / meterValue;
-                var pixels_per_feet = ppm * meters_per_foot;
+                pixels_per_feet = ppm * meters_per_foot;
             }
-            allDesks.map(desk => {
-                if(pixels_per_feet != undefined && scaleIsSet === false) {
+            allDesks.forEach(desk => {
+                if(pixels_per_feet !== undefined && scaleIsSet === false) {
                     desk.coordinates[0] = desk.coordinates[0] / pixels_per_feet;
                     desk.coordinates[1] = desk.coordinates[1] / pixels_per_feet;
                 }
                 console.log('(' + desk.coordinates[0] + ', '+  desk.coordinates[1] + ')');
             });
 
-            if (pixels_per_feet != undefined) {
+            if (pixels_per_feet !== undefined) {
                 setScale(true);
             }
            
@@ -157,8 +152,8 @@ export const HandleFloorPlan = (props) => {
             }
         }
 
-        for (var i = 0; i < allDesks.length; i++) {
-            allDesks[i].seat_number = i + 1;
+        for (var j = 0; j < allDesks.length; j++) {
+            allDesks[j].seat_number = j + 1;
         }
 
         var input = document.getElementById("confirm-deletion");
@@ -166,8 +161,7 @@ export const HandleFloorPlan = (props) => {
     }
 
     const auxDelete = () => {
-        causeForceUpdate(randomNum);
-        setRandomNum(randomNum + 1);
+        causeForceUpdate(forceUpdate + 1);
         var input = document.getElementById("confirm-deletion");
         input.style.visibility = "hidden";
     }
@@ -260,6 +254,7 @@ const uploadStyle = {
 
 HandleFloorPlan.propTypes = {
     imageSrc: PropTypes.string,
+    imgFile: PropTypes.any
 }
 
 export default HandleFloorPlan;

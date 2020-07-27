@@ -50,7 +50,7 @@ export const UploadFloorPlan = () => {
                     <label style={fileStyle} htmlFor="file-upload"> {filename}
                     </label>
                     <input id="file-upload" type="file" style={hide} onChange={onChange}/>
-                    <HandleFloorPlan imageSrc={imgSrc} />  
+                    <HandleFloorPlan imageSrc={imgSrc} imgFile={file}/>  
                 </div>
             </form>       
         </div>
