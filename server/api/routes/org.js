@@ -4,6 +4,7 @@ const Joi = require('@hapi/joi');
 const Org = require('../models/Orgs.js');
 const User = require('../models/Users.js');
 const { authenticateAdmin } = require('../middleware/auth.js');
+require('dotenv').config()
 
 const sgMail = require('@sendgrid/mail');
 
@@ -55,7 +56,7 @@ router.post('/manageRoster', authenticateAdmin, async (req, res) => {
             res.status(400).json({error: 'This email has already been added to the organization'});
             return;
         }
-
+        console.log(process.env.SENDGRID_API_KEY)
         if(await req.body.admin === true || req.body.admin === "true")  {
             await Org.updateOne({_id: org._id}, {$push: {admins: req.body.email}});
             //const msg = generateEmail(req.body.email, true, req.user.org);
