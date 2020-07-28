@@ -13,7 +13,7 @@ const loginValidation = Joi.object({
 
 function generateToken(user) {
   /* TODO: 2nd argument of the follwing line should produce a token. Must be a hex value as a string */
-    return jwt.sign(user , process.env.ACCESS_TOKEN_SECRET, {expiresIn: '10m'});
+    return jwt.sign(user , process.env.ACCESS_TOKEN_SECRET, {expiresIn: '30m'});
 }
 
 /*Post request to authenticate user */
