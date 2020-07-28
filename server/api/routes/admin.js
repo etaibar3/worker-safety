@@ -11,6 +11,8 @@ const adminValidation = Joi.object({
   password: Joi.string().min(6).required(),
   admin: Joi.bool(),
   org: Joi.string().required(),
+  firstName: Joi.string().required(),
+  lastName: Joi.string().required(),
 });
 
 /* Returns admins organization - or creates a new one */
@@ -49,7 +51,7 @@ router.post('/create-account', async (req, res) => {
         const org = await getOrg(req, res);
         const admin = await org.admins.find(a =>  a === req.body.email );
         if(await admin === undefined) {
-            res.status(401).json({error: 'You are not authorized to create an employee account with the organization ' + 
+            res.status(401).json({error: 'You are not authorized to create an administrative account with the organization ' + 
                 req.body.org});            
             return;
         }
@@ -58,7 +60,9 @@ router.post('/create-account', async (req, res) => {
             email: req.body.email,
             password: hashedPassword,
             admin: true,
-            org: req.body.org
+            org: req.body.org,
+            firstName: req.body.firstName,
+            lastName: req.body.lastName,
         })
         const savedUser = await user.save();
         res.json(savedUser);

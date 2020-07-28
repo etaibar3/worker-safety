@@ -11,7 +11,9 @@ const employeeValidation = Joi.object ({
     email: Joi.string().email().required(),    
     password: Joi.string().min(6).required(),
     admin: Joi.bool(),
-    org: Joi.string().required()
+    org: Joi.string().required(),
+    firstName: Joi.string().required(),
+    lastName: Joi.string().required(),
 });
 
 
@@ -44,7 +46,9 @@ router.post('/create-account', async (req, res) => {
             email: req.body.email,
             password: hashedPassword,
             admin: false,
-            org: req.body.org
+            org: req.body.org,
+            firstName: req.body.firstName,
+            lastName: req.body.lastName,
         })
         const savedUser = await user.save();
         res.json(savedUser);
