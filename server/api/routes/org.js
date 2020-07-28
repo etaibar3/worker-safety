@@ -104,11 +104,30 @@ router.delete('/manageRoster', authenticateAdmin, async (req, res) => {
 router.get('/manageRoster', authenticateAdmin, async (req, res) => {
     try {
         const org = await Org.findOne( {"name": req.user.org} );
-        if(await org === null) {
+        if(org === null) {
             res.status(400).json({error: 'Org not found'});
             return;
         }
-        res.json( {admins: org.admins, employees: org.employees} );
+        const adminNames = await Promise.all(org.admins.map(async (a) => {
+           const user = await User.findOne({email: a});
+           if(user === null) {
+               return "";
+           }
+           else {
+               return user.firstName + " " + user.lastName;
+           }
+        }));
+        const employeeNames = await Promise.all(org.employees.map(async (e) => {
+            const user =  await User.findOne({email: e});
+            if(user === null) {
+                return "";
+            }
+            else {
+                return user.firstName + " " + user.lastName;
+            }
+         }));
+        res.json( {admins: org.admins, aNames: adminNames, 
+                    eNames: employeeNames, employees: org.employees} );
     } catch(err) {
         res.status(400).json({error: "Unable to retrieve roster"})
     }
@@ -117,14 +136,27 @@ router.get('/manageRoster', authenticateAdmin, async (req, res) => {
 /*For lookup of a single user */
 router.get('/manageRoster/:email', authenticateAdmin, async (req, res) => {
     try {
+        var fullName;
         const org = await Org.findOne( {"name": req.user.org} );
         const anAdmin = await org.admins.find(a => a === req.params.email);
         const anEmployee = await org.employees.find(e => e === req.params.email);
-
+        
         if(anAdmin != undefined) {
-            res.send({email: anAdmin, admin: true});
+            const user = await User.findOne( {email: anAdmin} )
+            if (user === null) {
+                fullName = ""
+            } else {
+                fullName = user.firstName + " " + user.lastName;
+            }
+            res.send( {email: anAdmin, admin: true, name: fullName} );
         } else if (anEmployee != undefined) {
-            res.send({email: anEmployee, admin: false});
+            const user = await User.findOne( {email: anEmployee} )
+            if (user === null) {
+                fullName = ""
+            } else {
+                fullName = user.firstName + " " + user.lastName;
+            }
+            res.send( {email: anEmployee, admin: false, name: fullName} );
         } else {
             res.status(400).json({error: 'User is not part of roster'});
         }

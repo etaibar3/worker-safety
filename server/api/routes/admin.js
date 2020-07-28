@@ -11,6 +11,8 @@ const adminValidation = Joi.object({
   password: Joi.string().min(6).required(),
   admin: Joi.bool(),
   org: Joi.string().required(),
+  firstName: Joi.string().required(),
+  lastName: Joi.string().required(),
 });
 
 /* Returns admins organization - or creates a new one */
@@ -58,7 +60,9 @@ router.post('/create-account', async (req, res) => {
             email: req.body.email,
             password: hashedPassword,
             admin: true,
-            org: req.body.org
+            org: req.body.org,
+            firstName: req.body.firstName,
+            lastName: req.body.lastName,
         })
         const savedUser = await user.save();
         res.json(savedUser);
