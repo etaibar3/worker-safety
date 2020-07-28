@@ -6,6 +6,7 @@ const bodyParser = require("body-parser");
 const mongoose = require("mongoose");
 const cors = require("cors");
 //var neo4j = require('neo4j-driver');
+require('dotenv').config()
 
 
 const employeeRoutes = require("./api/routes/employees");
@@ -81,5 +82,7 @@ app.get("/", (req, res) => {
 });
 
 app.use(cors());
+
+console.log(process.env.SENDGRID_API_KEY)
 
 module.exports = app;

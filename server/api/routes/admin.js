@@ -51,7 +51,7 @@ router.post('/create-account', async (req, res) => {
         const org = await getOrg(req, res);
         const admin = await org.admins.find(a =>  a === req.body.email );
         if(await admin === undefined) {
-            res.status(401).json({error: 'You are not authorized to create an employee account with the organization ' + 
+            res.status(401).json({error: 'You are not authorized to create an administrative account with the organization ' + 
                 req.body.org});            
             return;
         }

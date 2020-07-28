@@ -13,6 +13,8 @@ function RootMenu() {
 			<br/><br/>
 			<Link to='/floorplan'> View Floor Plan </Link>
 			<br/><br/>
+			<Link to='/reservations'> Manage my Reservations </Link>
+			<br/><br/>
 			<Link to='/report-a-case'> Report a Case </Link>
 		</div>
 	)

@@ -15,10 +15,10 @@ class CompanyRep extends React.Component {
 
     componentDidMount() {
         axios
-            .get(`<URL>`)
+            .get('http://localhost:5000/employee/companyrep')
             .then(response => {
-            	console.log(response)
-            	this.setState({ adminEmail: "FILL THIS IN" })
+                console.log(response)
+                this.setState({ adminEmail: response.data.rep })
             })
             .catch(error => {
                 console.log(error)
@@ -30,7 +30,7 @@ class CompanyRep extends React.Component {
         return (
             <div>
                 <h3> Please direct any questions or concerns towards your company
-                	 representative. You can email your company representative at <strong> {adminEmail} </strong>. </h3>
+                     representative. You can email your company representative at <strong> {adminEmail}</strong>. </h3>
                 {/*<a href="mailto:`${this.state.adminEmail}`"> Email yourself </a>*/} 
             </div>
         )
