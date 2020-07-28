@@ -23,6 +23,7 @@ class Roster extends React.Component {
             submitClicked: false,
             permissions: "employee",
             status: 400,
+            name: ""
         }
         this.initialState = this.state
         this.handleChange = this.handleChange.bind(this)
@@ -76,7 +77,8 @@ class Roster extends React.Component {
                 console.log(response)
                 this.setState({
                     status: response.status,
-                    isAdmin: response.data.admin
+                    isAdmin: response.data.admin,
+                    name: response.data.name
                 })
              })
              .catch(error => {

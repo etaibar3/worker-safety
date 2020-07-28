@@ -8,6 +8,8 @@ class ViewRoster extends React.Component {
         this.state = {
             admins: [],      //array of admin emails for view roster
             employees: [],
+            adminNames: [],   //array of admin names corresponds to indices for admins email array
+            employeeNames: []
         }
         this.initialState = this.state
     }
@@ -23,6 +25,8 @@ class ViewRoster extends React.Component {
                 		email: a_email
                 	};
 	                admins.push(newAdmin)
+                    adminNames.push(response.data.aNames[index])
+                    console.log(response.data.aNames[index])
                 })
                 this.setState({
                 	admins: this.state.admins
@@ -33,6 +37,8 @@ class ViewRoster extends React.Component {
                         email: e_email,
                     };
                 	employees.push(newEmployee)
+                    employeeNames.push(response.data.eNames[index])
+                    console.log(response.data.eNames[index])
                 })
                 this.setState({
                 	employees: this.state.employees
