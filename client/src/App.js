@@ -60,14 +60,14 @@ function App() {
             path="/forgotyourpassword"
             component={ForgotYourPassword}
           />
-          <div className="container mt-4">
+          {/* <div className="container mt-4">
             <h4 className="display-4 text-center mb-4">
               <i className="fab fa-react" /> Upload your floor plan
             </h4>
 
             <FileUpload />
-          </div>
-          {/* <Route exact path="/upload-floor-plan" component={UploadFloorPlan} /> */}
+          </div> */}
+          <Route exact path="/upload-floor-plan" component={FileUpload} />
         </div>
       </div>
     </Router>
