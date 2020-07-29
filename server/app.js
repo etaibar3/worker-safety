@@ -144,5 +144,5 @@ app.post("/upload", (req, res) => {
 
 app.use(cors());
 app.listen(3000, () => console.log("Server Started..."));
-console.log(process.env.SENDGRID_API_KEY
+console.log(process.env.SENDGRID_API_KEY)
 module.exports = app;
