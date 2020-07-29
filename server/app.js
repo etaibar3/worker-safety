@@ -1,13 +1,14 @@
 const express = require("express");
 const path = require("path");
 const app = express();
+const multer = require("multer");
+const ejs = require("ejs");
 const morgan = require("morgan");
 const bodyParser = require("body-parser");
 const mongoose = require("mongoose");
 const cors = require("cors");
 //var neo4j = require('neo4j-driver');
 require('dotenv').config()
-
 
 const employeeRoutes = require("./api/routes/employees");
 const reservationRoutes = require("./api/routes/reservations");
@@ -19,9 +20,10 @@ const adminAccRotues = require("./api/routes/admin");
 const logoutRoutes = require("./api/routes/logout");
 const resetPassRoutes = require("./api/routes/resetpassword");
 const seatRoutes = require("./api/routes/seats");
-
-app.set("view", path.join(__dirname, "views"));
-app.set("view engin", "ejs");
+const fileUpload = require("express-fileupload");
+// app.set("view", path.join(__dirname, "views"));
+// app.set("view engine", "ejs");
+app.set("view engine", "ejs");
 const neo4j = require("neo4j-driver");
 const driver = neo4j.driver(
   "bolt://localhost",
@@ -35,7 +37,7 @@ mongo4j.init("neo4j://localhost", { user: "neo4j", pass: "123456" });
 mongoose.Promise = global.Promise;
 
 app.use(morgan("dev"));
-app.use("/uploads", express.static("uploads"));
+// app.use("/uploads", express.static("uploads"));
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: false }));
 app.use((req, res, next) => {
@@ -61,28 +63,90 @@ app.use("/admin", adminAccRotues);
 app.use("/logout", logoutRoutes);
 app.use("/forgot-password", resetPassRoutes);
 app.use("/seats", seatRoutes);
+app.use(fileUpload());
+// const storage = multer.diskStorage({
+//   destination: "./public/uploads/",
+//   filename: function (req, file, cb) {
+//     cb(
+//       null,
+//       file.fieldname + "-" + Date.now() + path.extname(file.originalname)
+//     );
+//   },
+// });
 
-app.use((req, res, next) => {
-  const error = new Error("Not found");
-  error.status = 404;
-  next(error);
-});
+// const upload = multer({
+//   storage: storage,
+//   limits: { fileSize: 1000000 },
+//   fileFilter: function (req, file, cb) {
+//     checkFileType(file, cb);
+//   },
+// }).single("myImage");
 
-app.use((error, req, res, next) => {
-  res.status(error.status || 500);
-  res.json({
-    error: {
-      message: error.message,
-    },
+// function checkFileType(file, cb) {
+//   // Allowed ext
+//   const filetypes = /jpeg|jpg|png|gif/;
+//   // Check ext
+//   const extname = filetypes.test(path.extname(file.originalname).toLowerCase());
+//   // Check mime
+//   const mimetype = filetypes.test(file.mimetype);
+
+//   if (mimetype && extname) {
+//     return cb(null, true);
+//   } else {
+//     cb("Error: Images Only!");
+//   }
+// }
+
+// app.get("/", (req, res) => res.render("index"));
+
+//upload
+// app.post("/upload", (req, res) => {
+//   console.log("is it working");
+//   upload(req, res, (err) => {
+//     if (err) {
+//       console.log("err");
+//       res.render("index", {
+//         msg: err,
+//       });
+//     } else {
+//       if (req.file == undefined) {
+//         console.log("undefined");
+//         res.render("index", {
+//           msg: "Error: No File Selected!",
+//         });
+//       } else {
+//         console.log("succ");
+//         res.render("index", {
+//           msg: "File Uploaded!",
+//           file: `uploads/${req.file.filename}`,
+//         });
+//       }
+//     }
+//   });
+// });
+
+app.post("/upload", (req, res) => {
+  console.log("working");
+  if (req.files === null) {
+    return res.status(400).json({ msg: "No file uploaded" });
+  }
+
+  const file = req.files.file;
+
+  file.mv(`${__dirname}/public/uploads/${file.name}`, (err) => {
+    if (err) {
+      console.error(err);
+      return res.status(500).send(err);
+    }
+    res.json({ fileName: file.name, filePath: `/uploads/${file.name}` });
   });
-});
-
-app.get("/", (req, res) => {
-  res.send("test");
 });
 
 app.use(cors());
 
-console.log(process.env.SENDGRID_API_KEY)
+//const port = 3000;
+//app.listen(port, () => console.log(`Server started on port ${port}`));
+// app.listen(5000, () => console.log("Server Started..."));
+//app.listen(3000, () => console.log("Server Started..."));
 
 module.exports = app;
