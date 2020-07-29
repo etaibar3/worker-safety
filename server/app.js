@@ -8,6 +8,7 @@ const bodyParser = require("body-parser");
 const mongoose = require("mongoose");
 const cors = require("cors");
 //var neo4j = require('neo4j-driver');
+require('dotenv').config()
 
 const employeeRoutes = require("./api/routes/employees");
 const reservationRoutes = require("./api/routes/reservations");
@@ -144,6 +145,6 @@ app.post("/upload", (req, res) => {
 app.use(cors());
 //const port = 3000;
 //app.listen(port, () => console.log(`Server started on port ${port}`));
-// app.listen(5000, () => console.log("Server Started..."));
-app.listen(3000, () => console.log("Server Started..."));
+app.listen(5000, () => console.log("Server Started..."));
+// app.listen(3000, () => console.log("Server Started..."));
 module.exports = app;

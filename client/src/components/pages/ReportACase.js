@@ -11,10 +11,11 @@ class ReportACase extends React.Component {
 		super()
 		this.state = {
 			email: "",
-			illDate: null,
-			resultDate: null
+			illDate: new Date(),
+			max: new Date()
 		}
 		this.handleChange = this.handleChange.bind(this)
+		this.handleSelect = this.handleSelect.bind(this)
 		this.handleSubmit = this.handleSubmit.bind(this)
 	}
 
@@ -23,18 +24,17 @@ class ReportACase extends React.Component {
 		this.setState({ [name]: value })
 	}
 
-	handleSelect(event) {
-        const {name, value} = event.target
-		this.setState({ [name]: value })
+	handleSelect(date) {
+		this.setState({ illDate: date})
 	}
 
 	handleSubmit(event) {
 		event.preventDefault()
-		alert(`reporting case`)
+		alert(`${this.state.illDate}`)
 	}
 
 	render() {
-		const { email, testDate, illDate, resultDate} = this.state
+		const { email, illDate, max } = this.state
 		return (
 			<div>
 				<h1> Report a Case </h1>
@@ -44,16 +44,30 @@ class ReportACase extends React.Component {
 				case will be reported.</strong></p> 
 				<br />
 				<form onSubmit={this.handleSubmit}>
-					<p> When did you first start feeling ill before you tested positive for COVID-19? </p>
+					<p> Whose case are you reporting? </p>
+					<p style={{ fontSize:"70%" }}> If you are reporting your own case, please enter your email associated
+						with your Safe Return account. If you are reporting a case for another
+						employee, please enter that employee's email address. 
+					</p>
+                    <label> 
+                        Work Email
+                        {" "} 
+                        <input
+                            type="email"
+                            name="email"
+                            value={email}
+                            placeholder="example@company.com"
+                            onChange={this.handleChange}
+                        />
+                    </label>
+                        <br/><br/>
+					<p> When did you (or the employee you are reporting for) first start feeling ill before testing positive for COVID-19? </p>
 					<DatePicker
-						onSelect={this.handleSelect}
+						selected={illDate}
+						onChange={this.handleSelect}
+						maxDate={max}
 					/>
-					<br />
-					<p> When did you receive your positive test result for COVID-19? </p>
-					<DatePicker
-						onSelect={this.handleSelect}
-					/>
-					<br /><br /><br />
+					<br /><br /><br /><br />
 					<button type="submit">Submit</button>
 					<br /><br /><br /><br /><br /><br /><br /><br />
 				</form>
