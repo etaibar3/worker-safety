@@ -126,11 +126,12 @@ router.post("/", async (req, res, next) => {
 
     var employee_id = employee.id;
     var seat_number = req.body.seat_number;
+    var reserv_date = req.body.date;
 
     const result1 = await txc.run(
-      "Match (n:Employee {employee_id: $Name})," +
-        " (a:Seat{name: $id}) Create (n)-[r: Reserved {time: datetime()}]->(a) ",
-      { Name: employee_id, id: seat_number }
+      "Match (n:Employee {m_id: $Name})," +
+        " (a:Seat{name: $id}) Create (n)-[r: Reserved {time: date($date)}]->(a) ",
+      { Name: employee_id, id: seat_number, date: reserv_date }
     );
     const result2 = await txc.run(
       "Match (a:Seat{name: $id}) SET a.reserved = true Return a",
