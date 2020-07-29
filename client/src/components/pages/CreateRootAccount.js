@@ -14,6 +14,8 @@ class CreateRootAccount extends React.Component {
 		this.state = {
 			company: "",
 			email: "",
+			first: "",
+			last: "",
 			password1: "",
 			password2: "",
 			adminChecked: false, /* must be true to submit form */
@@ -29,11 +31,11 @@ class CreateRootAccount extends React.Component {
 	}   
 
 	handleSubmit(event) {
-		const { company, email, password1, password2, adminChecked } = this.state
+		const { company, email, password1, password2, adminChecked, first, last } = this.state
 		event.preventDefault()
     {(password1 === password2 && adminChecked) ? 
 			axios
-				.post(`http://localhost:5000/admin/create-account`, { 'email': email, 'password': password1, 'org': company })
+				.post(`http://localhost:5000/admin/create-account`, { 'email': email, 'password': password1, 'org': company, 'firstName': first, 'lastName': last })
 				.then(response => {
 					console.log(response)
           this.props.alert.success('Success')
@@ -55,7 +57,7 @@ class CreateRootAccount extends React.Component {
 	}
 
 	render() {
-		const { company, email, password1, password2, adminChecked, status } = this.state
+		const { company, email, password1, password2, adminChecked, status, first, last } = this.state
 		return (
 			<div>
 				{(status === 200) ?
@@ -77,6 +79,30 @@ class CreateRootAccount extends React.Component {
 								value={company}
 								name="company" 
 								placeholder="Company" 
+								onChange={this.handleChange}
+							/>   
+						</label>
+							<br/><br/>
+						<label> 
+							First name
+							{" "}
+							<input 
+								type="text"
+								value={first}
+								name="first" 
+								placeholder="First" 
+								onChange={this.handleChange}
+							/>   
+						</label>
+							<br/><br/>
+						<label> 
+							Last name
+							{" "}
+							<input 
+								type="text"
+								value={last}
+								name="last" 
+								placeholder="Last" 
 								onChange={this.handleChange}
 							/>   
 						</label>
