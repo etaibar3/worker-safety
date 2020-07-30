@@ -12,13 +12,18 @@ router.post('/add', async function(req, res){
   var name = req.body.id;
   var Xvalue = req.body.Xcoord;
   var Yvalue = req.body.Ycoord;
+  var PXvalue = req.body.pixXcoord;
+  var PYvalue = req.body.pixYcoord;
+
+  
   
       try{
           console.log(`Xval: ${Xvalue}`)
           console.log(`Yval: ${Yvalue}`)
           const result1 = await txc.run(
               'Create (n:Seat {name: $id,' +
-              'location: point({ x: $Xcoord, y: $Ycoord, crs: "cartesian"}), reserved:false}) RETURN n.name', {id: name, Xcoord: Xvalue, Ycoord: Yvalue })
+              'location: point({ x: $Xcoord, y: $Ycoord, crs: "cartesian"}),' +
+              'pixel_location: point({x: $pixXcoord, y: $pixYcoord})}) RETURN n.name', {id: name, Xcoord: Xvalue, Ycoord: Yvalue, pixXcoord: PXvalue, pixYcoord: PYvalue })
             
           var result2 = await txc.run('Match (n:Seat) return n')
           const records = result2.records
