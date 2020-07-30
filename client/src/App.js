@@ -15,6 +15,7 @@ import Logout from "./components/pages/Logout";
 import RootMenu from "./components/pages/RootMenu";
 import Home from "./components/layout/home";
 import Roster from "./components/pages/Roster";
+import ReserveDate from './components/pages/ReserveDate';
 import Floorplan from "./components/pages/Floorplan";
 import ReportACase from "./components/pages/ReportACase";
 import EmployeeMenu from "./components/pages/EmployeeMenu";
@@ -31,6 +32,7 @@ function App() {
         <div className="container">
           <Header />
           <NavBar />
+
           <Route exact path="/" component={Home} />
           <Route exact path="/learn-more" component={LearnMore} />
           <Route exact path="/know-your-rights" component={KnowYourRights} />
@@ -40,6 +42,7 @@ function App() {
           <Route exact path="/logout" component={Logout} />
           <Route exact path="/root-menu" component={RootMenu} />
           <Route exact path="/roster" component={Roster} />
+          <Route exact path="/reserve-date" component={ReserveDate}/>
           <Route exact path="/floorplan" component={Floorplan} />
           <Route exact path="/employee-menu" component={EmployeeMenu} />
           <Route exact path="/reservations" component={Reservations} />
