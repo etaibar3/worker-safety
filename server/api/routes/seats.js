@@ -24,6 +24,7 @@ router.post('/add', async function(req, res){
               'Create (n:Seat {name: $id,' +
               'location: point({ x: $Xcoord, y: $Ycoord, crs: "cartesian"}),' +
               'pixel_location: point({x: $pixXcoord, y: $pixYcoord})}) RETURN n.name', {id: name, Xcoord: Xvalue, Ycoord: Yvalue, pixXcoord: PXvalue, pixYcoord: PYvalue })
+
             
           var result2 = await txc.run('Match (n:Seat) return n')
           const records = result2.records
