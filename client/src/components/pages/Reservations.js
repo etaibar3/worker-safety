@@ -4,7 +4,7 @@
 
 import React from 'react'
 import axios from 'axios'
-import Reserve from './Reserve'
+import { Redirect } from 'react-router';
 
 
 class Reservations extends React.Component {
@@ -61,7 +61,7 @@ class Reservations extends React.Component {
                             <option value="Cancel">Cancel a reservation</option>
                             <option value="View">View my reservations</option>
                         </select>
-                        {(method === "Reserve") ? <Reserve /> : null}
+                        {(method === "Reserve") ? <Redirect to = {{ pathname: "/reserve-date" }} /> : null}
                      </form>
             </div>
         )

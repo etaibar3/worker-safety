@@ -15,6 +15,7 @@ import Logout from "./components/pages/Logout";
 import RootMenu from "./components/pages/RootMenu";
 import Home from "./components/layout/home";
 import Roster from "./components/pages/Roster";
+import ReserveDate from './components/pages/ReserveDate';
 import Floorplan from "./components/pages/Floorplan";
 import ReportACase from "./components/pages/ReportACase";
 import EmployeeMenu from "./components/pages/EmployeeMenu";
@@ -22,7 +23,6 @@ import Reservations from "./components/pages/Reservations";
 import CompanyRep from "./components/pages/CompanyRep";
 import ResetPassword from "./components/pages/ResetPassword";
 import ForgotYourPassword from "./components/pages/ForgotYourPassword";
-import UploadFloorPlan from "./components/FileUpload";
 import FileUpload from "./components/FileUpload";
 
 function App() {
@@ -32,41 +32,24 @@ function App() {
         <div className="container">
           <Header />
           <NavBar />
+
           <Route exact path="/" component={Home} />
           <Route exact path="/learn-more" component={LearnMore} />
           <Route exact path="/know-your-rights" component={KnowYourRights} />
-          <Route
-            exact
-            path="/create-root-account"
-            component={CreateRootAccount}
-          />
-          <Route
-            exact
-            path="/create-child-account"
-            component={CreateChildAccount}
-          />
+          <Route exact path="/create-root-account" component={CreateRootAccount} />
+          <Route exact path="/create-child-account" component={CreateChildAccount} />
           <Route exact path="/login" component={Login} />
           <Route exact path="/logout" component={Logout} />
           <Route exact path="/root-menu" component={RootMenu} />
           <Route exact path="/roster" component={Roster} />
+          <Route exact path="/reserve-date" component={ReserveDate}/>
           <Route exact path="/floorplan" component={Floorplan} />
           <Route exact path="/employee-menu" component={EmployeeMenu} />
           <Route exact path="/reservations" component={Reservations} />
           <Route exact path="/report-a-case" component={ReportACase} />
           <Route exact path="/company-rep" component={CompanyRep} />
           <Route exact path="/resetpassword/:token" component={ResetPassword} />
-          <Route
-            exact
-            path="/forgotyourpassword"
-            component={ForgotYourPassword}
-          />
-          {/* <div className="container mt-4">
-            <h4 className="display-4 text-center mb-4">
-              <i className="fab fa-react" /> Upload your floor plan
-            </h4>
-
-            <FileUpload />
-          </div> */}
+          <Route exact path="/forgotyourpassword" component={ForgotYourPassword} />
           <Route exact path="/upload-floor-plan" component={FileUpload} />
         </div>
       </div>
