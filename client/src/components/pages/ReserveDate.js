@@ -1,4 +1,4 @@
-// Component: Reserve
+// Component: ReserveDate
 // Description: Component for employees to reserve a desk
 
 //TODO: allow employees to make recurring reservations (select multiple dates at once)
@@ -74,8 +74,9 @@ class ReserveDate extends React.Component {
         const { email, desk, status, date, min, showDesks, maxDesk } = this.state
         return (
             <div>
+                <h2 style={reserveADesk}> Reserve a Desk </h2>
                 <form onSubmit={this.handleSubmit}>
-                    <p> Select a date for your desk reservation. </p>
+                    <p style={selectADateForYourDeskReservation}> Select a date for your desk reservation. </p>
                     <p> Reservation date </p>
                     <DatePicker
                         selected={date}
@@ -107,3 +108,27 @@ class ReserveDate extends React.Component {
 }
 
 export default ReserveDate
+
+
+const reserveADesk = {
+  width: 290,
+  height: 41,
+  fontFamily: "Rubik",
+  fontSize: 35,
+  fontWeight: "bold",
+  fontStyle: "normal",
+  letterSpacing: 0,
+  color: "#222831"
+};
+
+const selectADateForYourDeskReservation = {
+  width: 290,
+  height: 24,
+  fontFamily: "Rubik",
+  fontSize: 16,
+  fontWeight: "normal",
+  fontStyle: "normal",
+  lineHeight: 2,
+  letterSpacing: 0,
+  color: "#222831"
+};

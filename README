@@ -49,3 +49,6 @@ Update 7/15:
 Install react-alert for client error notifications.
 npm install --save react-alert react-alert-template-basic
 
+Update 7/29:
+run "npm install tailwindcss postcss-cli autoprefixer -D"
+//run "npm install tailwindcss --save-dev"

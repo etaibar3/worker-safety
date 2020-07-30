@@ -6,15 +6,14 @@ class ViewRoster extends React.Component {
     constructor() {
         super()
         this.state = {
-            admins: [],      //array of admin emails for view roster
-            employees: [],
-            adminNames: [],   //array of admin names corresponds to indices for admins email array
-            employeeNames: []
+            admins: [],      //array of admin user with email and name field for view roster
+            employees: []
         }
         this.initialState = this.state
     }
 
     componentDidMount() {
+        {/* user.name is empty string post invite and pre account creation */ }
         const { admins, employees } = this.state
         axios
             .get(`http://localhost:5000/org/manageRoster`)
@@ -22,11 +21,10 @@ class ViewRoster extends React.Component {
             	console.log(response)
                 response.data.admins.map((a_email, index) => {
                 	const newAdmin = {
-                		email: a_email
+                		email: a_email,
+                        name: response.data.aNames[index] 
                 	};
 	                admins.push(newAdmin)
-                    adminNames.push(response.data.aNames[index])
-                    console.log(response.data.aNames[index])
                 })
                 this.setState({
                 	admins: this.state.admins
@@ -35,10 +33,9 @@ class ViewRoster extends React.Component {
                 response.data.employees.map((e_email, index) => {
                     const newEmployee = {
                         email: e_email,
+                        name: response.data.eNames[index]
                     };
                 	employees.push(newEmployee)
-                    employeeNames.push(response.data.eNames[index])
-                    console.log(response.data.eNames[index])
                 })
                 this.setState({
                 	employees: this.state.employees
@@ -52,9 +49,10 @@ class ViewRoster extends React.Component {
             <div>
                 { (admins.length > 0 || employees.length > 0) ? 
                     <div>
-                        <table align="center">
+                        <table align="center" >
                         	<thead>
                                 <tr>
+                                    <th> Name </th>
                                     <th> Email </th>
                                     <th> Account Type </th>
                                 </tr>
@@ -62,6 +60,9 @@ class ViewRoster extends React.Component {
                         	<tbody>
                                 {admins.map(user => (
                                     <tr key={user.email} align="center">
+                                        <td key={user.name}> 
+                                            {(user.name === "" || user.name === " ") ? <p> User has not yet created their account. </p>: user.name}
+                                        </td>
                                         <td key={user.email}>
                                             {user.email}
                                         </td>
@@ -72,6 +73,9 @@ class ViewRoster extends React.Component {
                                 ))}
                                 {employees.map(user => (
                                     <tr key={user.email} align="center">
+                                        <td key={user.name}>
+                                            {(user.name === "" || user.name === " ") ? <p> User has not yet created their account. </p>: user.name}
+                                        </td>
                                         <td key={user.email}>
                                             {user.email}
                                         </td>

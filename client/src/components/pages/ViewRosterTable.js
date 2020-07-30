@@ -1,3 +1,5 @@
+/* Redundant file---use ViewRoster.js instead */
+
 import React from 'react'
 import axios from 'axios'
 import './RosterTable.css'

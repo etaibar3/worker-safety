@@ -15,12 +15,12 @@ import Logout from './components/pages/Logout';
 import RootMenu from './components/pages/RootMenu';
 import Home from './components/layout/home';
 import Roster from './components/pages/Roster';
-import Floorplan from './components/pages/Floorplan';
 import ReportACase from './components/pages/ReportACase';
 import EmployeeMenu from './components/pages/EmployeeMenu';
 import Reservations from './components/pages/Reservations';
 import CompanyRep from './components/pages/CompanyRep';
 import ResetPassword from './components/pages/ResetPassword';
+import ReserveDate from './components/pages/ReserveDate';
 import ForgotYourPassword from './components/pages/ForgotYourPassword';
 import UploadFloorPlan from './components/pages/UploadFloorPlan';
 
@@ -41,11 +41,11 @@ function App () {
           <Route exact path="/logout" component={Logout}/>
           <Route exact path="/root-menu" component={RootMenu}/>
           <Route exact path="/roster" component={Roster}/>
-          <Route exact path="/floorplan" component={Floorplan}/>
           <Route exact path="/employee-menu" component={EmployeeMenu}/>
           <Route exact path="/reservations" component={Reservations}/>
           <Route exact path="/report-a-case" component={ReportACase}/>
           <Route exact path="/company-rep" component={CompanyRep}/>
+          <Route exact path="/reserve-date" component={ReserveDate}/>
           <Route exact path="/resetpassword/:token" component={ResetPassword}/>
           <Route exact path="/forgotyourpassword" component={ForgotYourPassword}/>
           <Route exact path="/upload-floor-plan" component={UploadFloorPlan}/>

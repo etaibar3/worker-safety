@@ -11,7 +11,7 @@ function RootMenu() {
 			<h2> Administrative Menu </h2>
 			<Link to='/roster'> View Company Roster </Link>
 			<br/><br/>
-			<Link to='/floorplan'> View Floor Plan </Link>
+			<Link to='/upload-floor-plan'> View Floor Plan </Link>
 			<br/><br/>
 			<Link to='/reservations'> Manage my Reservations </Link>
 			<br/><br/>
