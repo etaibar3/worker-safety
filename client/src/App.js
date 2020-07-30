@@ -36,16 +36,8 @@ function App() {
           <Route exact path="/" component={Home} />
           <Route exact path="/learn-more" component={LearnMore} />
           <Route exact path="/know-your-rights" component={KnowYourRights} />
-          <Route
-            exact
-            path="/create-root-account"
-            component={CreateRootAccount}
-          />
-          <Route
-            exact
-            path="/create-child-account"
-            component={CreateChildAccount}
-          />
+          <Route exact path="/create-root-account" component={CreateRootAccount} />
+          <Route exact path="/create-child-account" component={CreateChildAccount} />
           <Route exact path="/login" component={Login} />
           <Route exact path="/logout" component={Logout} />
           <Route exact path="/root-menu" component={RootMenu} />
@@ -57,18 +49,7 @@ function App() {
           <Route exact path="/report-a-case" component={ReportACase} />
           <Route exact path="/company-rep" component={CompanyRep} />
           <Route exact path="/resetpassword/:token" component={ResetPassword} />
-          <Route
-            exact
-            path="/forgotyourpassword"
-            component={ForgotYourPassword}
-          />
-          {/* <div className="container mt-4">
-            <h4 className="display-4 text-center mb-4">
-              <i className="fab fa-react" /> Upload your floor plan
-            </h4>
-
-            <FileUpload />
-          </div> */}
+          <Route exact path="/forgotyourpassword" component={ForgotYourPassword} />
           <Route exact path="/upload-floor-plan" component={FileUpload} />
         </div>
       </div>
