@@ -3,11 +3,10 @@ const router = express.Router();
 const mongoose = require("mongoose");
 const Reservation = require("../models/reservation");
 const Employee = require("../models/employee");
-const User = require("../models/Users");
 const { restart } = require("nodemon");
 const reservation = require("../models/reservation");
 var neo4j = require("neo4j-driver");
-const { authenticateUser, authenticateAdmin } = require("../middleware/auth");
+const {authenticateUser } = require("../middleware/auth");
 
 //Use post to create a person in neo4j to post and form relationships with. Will be removed after integration with mongodb
 // app.post('/person', async function(req, res){
@@ -86,50 +85,19 @@ const driver = neo4j.driver(
 const session = driver.session();
 const txc = session.beginTransaction();
 
-/* Gets all reservations made from people in an organization */
-router.get("/", authenticateAdmin, async (req, res, next) => {
+router.get("/", authenticateUser, async (req, res, next) => {
   try {
-    const results = await Reservation.find({org: req.user.org});
-    const response = {
-      count: results.length,
-      reservations: results.map((result) => {
-        return {
-          _id: result._id,
-          employee: result.employee,
-          org: result.org,
-          request: {
-            type: "GET",
-            url: "http://localhost:5000/reservations/" + result._id,
-          },
-        };
-      }),
-    };
-    res.status(200).json(response);
-  } catch (err) {
-    res.status(500).json({
-      error: err,
-    });
-  }
-});
+    
+    const result = await txc.run( 'Match (a:Employee {m_id: $id}) - [r:Reserved] - (b: Seat) return b, r.time', 
+                                  {id: req.user._id});
+    const records = result.records;
+    const reservations = records.map(record => {
+        const reservation = {id: record._fields[0].properites.name,
+                              date: record._fields[1] }
+        return reservation;
+    })                           
 
-/* Returns all reservations made in past 18 days by user*/
-router.get("/my-reservations", authenticateUser, async (req, res, next) => {
-  try {
-    const results = await Reservation.find({employee: req.user._id});
-    const response = {
-      count: results.length,
-      reservations: results.map((result) => {
-        return {
-          _id: result._id,
-          employee: result.employee,
-          request: {
-            type: "GET",
-            url: "http://localhost:5000/reservations/my-reservations" 
-          },
-        };
-      }),
-    };
-    res.status(200).json(response);
+    res.status(200).json(reservations);
   } catch (err) {
     res.status(500).json({
       error: err,
@@ -138,25 +106,21 @@ router.get("/my-reservations", authenticateUser, async (req, res, next) => {
 });
 
 router.post("/", authenticateUser, async (req, res, next) => {
-
-  const reservation = new Reservation({
-    _id: new mongoose.Types.ObjectId(),
-    employee: req.user._id,
-    seat_number: req.body.seat_number,
-    date_created: Date.now(),
-    org: req.user.org,
-  });
+  // const employee = await Employee.findById(req.body.employee_id);
+  // if (!employee) {
+  //   return res.status(404).json({
+  //     message: "Employee not found",
+  //   });
+  // }
+  // const reservation = new Reservation({
+  //   _id: new mongoose.Types.ObjectId(),
+  //   employee: req.body.employee_id,
+  //   seat_number: req.body.seat_number,
+  // });
 
   try {
-    const employee = await Employee.findOne({employee_id: req.user._id})
-    if (!employee) {
-      return res.status(404).json({
-        message: "Employee not found",
-      });
-    }
-    const result = await reservation.save();
-
-    var employee_id = employee.id;
+   // const result = await reservation.save();
+    var employee_id = req.user._id;
     var seat_number = req.body.seat_number;
     var reserv_date = req.body.date;
 
@@ -192,14 +156,12 @@ router.post("/", authenticateUser, async (req, res, next) => {
     res.status(201).json({
       message: "Order stored",
       createdReservation: {
-        _id: result._id,
-        employee: result.employee,
-        seat_number: result.seat_number,
-        org: result.org
+        employee: employee_id,
+        seat_number: seat_number,
       },
       request: {
         type: "GET",
-        url: "http://localhost:5000/reservations/" + result._id,
+        url: "http://localhost:5000/reservations/",
       },
     });
   } catch (err) {
@@ -212,8 +174,9 @@ router.post("/", authenticateUser, async (req, res, next) => {
   }
 });
 
-// router.get("/:reservationId", authenticateUser, async (req, res, next) => {
+// router.get("/:reservationId", async (req, res, next) => {
 //   const id = req.params.reservationId;
+
 //   try {
 //     const result = await Reservation.findById(id);
 //     if (result) {
@@ -233,21 +196,21 @@ router.post("/", authenticateUser, async (req, res, next) => {
 //   }
 // });
 
-/* This should work user will have reservation_id after they get all their reservations*/
-router.delete("/:reservation_id", authenticateUser, async (req, res, next) => {
-  try {
-    const id = req.params.reservation_id;
-    const result = await Reservation.findById(id);
-    result.remove();
+// router.delete("/:reservation_id", async (req, res, next) => {
+//   try {
+//     const id = req.params.reservation_id;
+//     const result = await Reservation.findById(id);
+//     result.remove();
 
-    res.status(200).json({
-      message: "Reservation deleted",
-    });
-  } catch (err) {
-    res.status(500).json({
-      error: err,
-    });
-  }
-});
+//     res.status(200).json({
+//       message: "Reservation deleted",
+//     });
+//   } catch (err) {
+//     res.status(500).json({
+//       error: err,
+//     });
+//   }
+// });
 
 module.exports = router;
+
