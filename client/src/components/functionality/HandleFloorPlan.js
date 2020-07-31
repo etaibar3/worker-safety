@@ -29,7 +29,7 @@ export const HandleFloorPlan = (props) => {
         img.onload = () => {
             ctx.drawImage(img, 0, 0, 500, 500);
 
-            const element = <h2>Step 1: Mark desk locations by clicking on the floor plan</h2>
+            const element = <h3>Step 1: Mark desk locations by clicking on the floor plan</h3>
             ReactDOM.render(element, document.getElementById('header1'));
 
             // Creating all the desks
@@ -57,7 +57,7 @@ export const HandleFloorPlan = (props) => {
         const meters_per_foot = 0.3048;
 
         if (buttonText === "Done") {
-            const element = <h2>Step 2: Set the scale of the image</h2>
+            const element = <h3>Step 2: Set the scale of the image</h3>
             ReactDOM.render(element, document.getElementById('header2'));
             setText('Set Scale');
         } else {
@@ -209,15 +209,15 @@ export const HandleFloorPlan = (props) => {
             <canvas id="canvas" ref={canvasRef} width={500} height={500} style={canvasStyle} onClick={markDesk}></canvas>
             <div id="wrap-inputPx" style={{display: 'none'}}>
                 <label htmlFor="inputPx">Adjust size of the scale line: </label>
-                <input id="inputPx" onChange={auxScale} type="number" min="1" placeholder="1" ></input>
+                <input id="inputPx" onChange={auxScale} type="number" min="1" placeholder="1" style={inputStyle} ></input>
             </div>
             <div id="wrap-inputFt" style={{display: 'none'}}>
                 <label htmlFor="inputFt">How many feet does this correspond to? </label>
-                <input id="inputFt" onChange={auxFeet} type="number" min="1" placeholder="1" ></input>
+                <input id="inputFt" onChange={auxFeet} type="number" min="1" placeholder="1" style={inputStyle} ></input>
             </div>
             <div id="wrap-inputM" style={{display: 'none'}}>
                 <label htmlFor="inputM"> Or how many meters does this correspond to? </label>
-                <input id="inputM" onChange={auxMeters} type="number" min="1" placeholder="1" ></input>
+                <input id="inputM" onChange={auxMeters} type="number" min="1" placeholder="1" style={inputStyle} ></input>
             </div>
             <div id="confirm-deletion" style={{display: 'none'}}>
                 <input id="delete-btn" type="submit" value="Confirm Deletion" style={uploadStyle} onMouseUp={auxDelete}></input>
@@ -237,6 +237,7 @@ const canvasStyle = {
     paddingRight: '0',
     marginLeft: 'auto',
     marginRight: 'auto',
+    marginTop: '10px',
     display: 'block'
 }
 
@@ -253,6 +254,20 @@ const uploadStyle = {
     borderColor: 'black',
     borderWidth: '1px',
     borderRadius: '25px',
+}
+
+const inputStyle = {
+    width: '50px',
+    marginLeft: '10px',
+    paddingTop: '5px',
+    paddingBottom: '5px',
+    paddingRight: '-10px',
+    paddingLeft: '20px',
+    background: '#eee',
+    fontSize: '14px',
+    border: 'none',
+    borderColor: 'black',
+    borderWidth: '1px',
 }
 
 HandleFloorPlan.propTypes = {

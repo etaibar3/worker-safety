@@ -69,7 +69,8 @@ const FileUpload = () => {
       {message ? <Message msg={message} /> : null}
       <form onSubmit={onSubmit} style={formStyle} >
         <div className="custom-file mb-4">
-        <label htmlFor="customFile" style={fileStyle} htmlFor="customFile">
+          <h2>Create your floor plan</h2>
+          <label htmlFor="customFile" style={fileStyle} htmlFor="customFile">
             {filename}
           </label>
           <input
@@ -89,7 +90,7 @@ const FileUpload = () => {
           id="upload-btn"
           type="submit"
           value="Upload"
-          className="btn btn-primary btn-block mt-4"
+          // className="btn btn-primary btn-block mt-4"
           style={uploadStyle}
         />
       </form>
@@ -108,6 +109,7 @@ const formStyle ={
 }
 
 const fileStyle = {
+  marginTop: '20px',
   paddingTop: '10px',
   paddingBottom: '10px',
   paddingLeft: '75px',
@@ -122,17 +124,17 @@ const fileStyle = {
 
 const uploadStyle = {
   visibility: 'hidden',
-  margin: '10px',
-  paddingTop: '5px',
-  paddingBottom: '5px',
-  paddingRight: '20px',
-  paddingLeft: '20px',
+  marginTop: '20px',
+  paddingTop: '10px',
+  paddingBottom: '10px',
+  paddingLeft: '75px',
+  paddingRight: '75px',
   background: '#eee',
-  fontSize: '14px',
+  fontSize: '16px',
   border: 'solid',
   borderColor: 'black',
   borderWidth: '1px',
-  borderRadius: '25px',
+  borderRadius: '25px'
 }
 
 export default FileUpload;

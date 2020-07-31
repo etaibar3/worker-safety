@@ -4,9 +4,9 @@ import { Link } from 'react-router-dom';
 function NavBar() {
     return(
         <div style={navBarStyle}>
-                <div style={navItemStyle}> <Link style={linkStyle} to="/"> <p>Home</p> </Link> </div>
-                <div style={navItemStyle}> <Link style={linkStyle} to="/learn-more"> <p>Learn more</p> </Link> </div>
                 <div style={navItemStyle}> <Link style={linkStyle} to="/know-your-rights"> <p>Know Your Rights</p> </Link> </div>
+                <div style={navItemStyle}> <Link style={linkStyle} to="/learn-more"> <p>Learn more</p> </Link> </div>
+                <div style={navItemStyle}> <Link style={linkStyle} to="/"> <p>Home</p> </Link> </div>
                 <div style={navItemStyle}> <Link style={linkStyle} to="/login"> <p>Login</p> </Link> </div>
                 <div style={navItemStyle}> <Link style={linkStyle} to="/logout"> <p>Logout</p> </Link> </div>
         </div>
