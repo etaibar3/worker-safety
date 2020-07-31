@@ -13,7 +13,8 @@ class Reservations extends React.Component {
         this.state = {
             email: "",
             method: " ",
-            status: 400
+            status: 400,
+            reservations: []
         }
         this.initialState = this.state
         this.handleChange = this.handleChange.bind(this)
@@ -21,6 +22,29 @@ class Reservations extends React.Component {
         this.routeChange = this.routeChange.bind(this)
         this.handleSubmit = this.handleSubmit.bind(this)
     }
+
+    componentDidMount() {
+        {/* Get reservations here */}
+        const { desks, reservations } = this.state
+        axios
+            .get(`URL HERE`)
+            .then(response => {
+                console.log(response)
+                response.data.reservations.map((reservation, index) => {
+                    const newReservation = {
+                        deskNum: reservation.deskNum,
+                        date: reservation.date,
+                    };
+                    reservations.push(newReservation)
+                })
+                this.setState({
+                    maxDesk: desks.length
+                })
+            })
+            .catch(error => {
+                console.log(error)
+            })
+      }
 
     handleChange(event) {
         const {name, value } = event.target
@@ -55,7 +79,7 @@ class Reservations extends React.Component {
     }
 
     render() {
-        const { method } = this.state
+        const { method, reservations } = this.state
         return (
             <div>
                 <p style={reservations}> Reservations </p>
@@ -78,6 +102,8 @@ class Reservations extends React.Component {
                                 </tr>
                           </thead>
                     </table>
+                   {(reservations.length > 0) ?
+                    <h1> THERE ARE RESERVATIONS TO DISPLAY </h1> : null }
             </div>
         )
     }

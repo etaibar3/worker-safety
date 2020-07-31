@@ -15,17 +15,17 @@ class ReserveDate extends React.Component {
         this.state = {
             email: "",
             status: 400,
-            date: "",
+            date: new Date(),
             min: new Date(),
-            showDesks: false,
+            dateChosen: false,
             desk: null,
             image: new Image(),
+            continueClicked: false,
             maxDesk: 0
         }
         this.initialState = this.state
         this.handleChange = this.handleChange.bind(this)
         this.handleSubmit = this.handleSubmit.bind(this)
-        this.routeChangeCont = this.routeChangeCont.bind(this);
         this.routeChangeCancel = this.routeChangeCancel.bind(this);
     }
 
@@ -38,53 +38,24 @@ class ReserveDate extends React.Component {
         this.setState({
             min: today
         })
-        {/*axios
-         .get(`http://localhost:5000/upload/`)
-         .then(response => {
-            console.log(response)
-            alert(response)
-            this.setState({
-                image: response.image
-            })
-         })
-         .catch(error => {
-            console.log(error)
-            alert(error)
-            this.setState({
-                status: error.response.status
-            })
-         }) */}
     }
 
     handleChange(event) {
         const {name, value } = event.target
         this.setState({ 
             [name] : value,
-            showDesks: true
+            dateChosen: true
         })
     }
 
     handleSubmit(event) {
-        event.preventDefault()
-    {/* make sure desk num is valid integer 
-        alert(`reserving desk ${this.state.desk} on ${this.state.date} for EMAIL`)
-        axios
-                .post(`URL HERE`, { 'date': this.state.date, 'deskNum': this.state.desk }) 
-                .then(response => {
-                    console.log(response)
-                    this.props.alert.success('Success')
-                })
-                .catch(error => {
-                    console.log(error)
-                    this.props.alert.error(error.response.data.error)
-                })*/}
-    alert(`here`)
+      event.preventDefault()
+        this.setState({ 
+            continueClicked: true
+        })
     }
 
-    routeChangeCont() {
-        let path = `/reserve-select`;
-        this.props.history.push(path);
-    }
+
 
     routeChangeCancel() {
         let path = `/reservations`;
@@ -93,33 +64,38 @@ class ReserveDate extends React.Component {
 
 
     render() {
-        const { email, desk, status, date, min, showDesks, maxDesk } = this.state
+        const { email, continueClicked, desk, status, date, min, dateChosen, maxDesk } = this.state
         return (
             <div>
-                <p className="h1"><strong> Reserve a Desk </strong></p>
-                <form onSubmit={this.handleSubmit}>
-                    <p className="font-rubik leading-normal text-text"> Select a date for your desk reservation. </p>                    
-                    <br/>
-                    <label className="h6">
-                        <strong> Reservation Date </strong>
-                        <br />
-                        <input
-                            className="rounded bg-primary-light border border-border max-w-xs"
-                            type="date"
-                            name="date"
-                            value={date}
-                            min={min}
-                            onChange={this.handleChange}
-                        />
-                    </label>
-                    <br /><br />
-                    {(showDesks) ? 
-                    <div>
-                        <button style={cancel} onClick={this.routeChangeCancel}>Cancel</button>
-                        <button type="submit" style={continueButton} onClick={this.routeChangeCont}>Continue</button>
-                    </div> 
+              {(continueClicked === false) ?
+                <div>
+                  <p className="h1"><strong> Reserve a Desk </strong></p>
+                  <form onSubmit={this.handleSubmit}>
+                      <p className="font-rubik leading-normal text-text"> Select a date for your desk reservation. </p>                    
+                      <br/>
+                      <label className="h6">
+                          <strong> Reservation Date </strong>
+                          <br />
+                          <input
+                              className="rounded bg-primary-light border border-border max-w-xs"
+                              type="date"
+                              name="date"
+                              value={date}
+                              min={min}
+                              onChange={this.handleChange}
+                          />
+                      </label>
+                      <br /><br />
+                      {(dateChosen) ? 
+                        <div>
+                            <button style={cancel} onClick={this.routeChangeCancel}>Cancel</button>
+                            <button type="submit" style={continueButton}>Continue</button>
+                        </div> : null }
+                  </form>
+                </div> : null}
+                    {(dateChosen && continueClicked) ? 
+                      <ReserveSelect date={date}/>  
                     : null}
-                </form>
             </div>
         )
     }

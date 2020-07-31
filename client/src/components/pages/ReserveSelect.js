@@ -1,16 +1,18 @@
-import React from 'react'
+import  React, { useRef } from 'react'
 import axios from 'axios'
 import { Redirect } from 'react-router';
 
 /* implement max desk for form validation */
 
 class ReserveSelect extends React.Component {
-    constructor() {
-        super()
+    constructor(props) {
+        super(props)
+        this.canvasRef = React.createRef()
         this.state = {
             deskNum: 0,
             desks:[],
-            maxDesk: 0
+            maxDesk: 0,
+            date: props.date
         }
         this.routeChangeBack = this.routeChangeBack.bind(this);
         this.handleClick = this.handleClick.bind(this)
@@ -20,41 +22,44 @@ class ReserveSelect extends React.Component {
     componentDidMount() {
         const { desks } = this.state
         axios
-            .get(`URL HERE`)
+            .get(`http://localhost:5000/seats`)
             .then(response => {
                 console.log(response)
-                response.data.desks.map((id, Xcoord, Ycoord, pixXcoord, pixYcoord, index) => {
+                response.data.seats.map((seat, index) => {
                     const newDesk = {
-                        deskNum: id,
-                        Xcoord: Xcoord,
-                        Ycoord: Ycoord,
-                        pixXcoord: pixXcoord,
-                        pixYcoord: pixYcoord
+                        deskNum: seat.id,
+                        pixXcoord: seat.pix_x,
+                        pixYcoord: seat.pix_y
                     };
                     desks.push(newDesk)
                 })
                 this.setState({
-                    desks: this.state.desks,
-                    maxDesk: desks.length - 1
+                    maxDesk: desks.length
                 })
             })
             .catch(error => {
                 console.log(error)
-                //alert(error)
             })
-        {/*get desk coordinates
-        FROM HANDLEFLOORPLAN.JS
-            allDesks.map((singleDesk) => 
-                axios.post(`http://localhost:5000/seats/add`, {"id": singleDesk.seat_number, "Xcoord": singleDesk.coordinates[0], "Ycoord": singleDesk.coordinates[1], "pixXcoord": singleDesk.pix_coordinates[0], "pixYcoord": singleDesk.pix_coordinates[1]})
-                    .then(response => {
-                        console.log(response)
-                    })
-                    .catch(error => {
-                        // console.log(error.response.data.error)
-                        console.log(error)
-                    })
-            )*/}
+
+        {/* GET IMAGE FROM DB
+        axios
+         .get(`http://localhost:5000/upload/`)
+         .then(response => {
+            console.log(response)
+            alert(response)
+            this.setState({
+                image: response.image
+            })
+         })
+         .catch(error => {
+            console.log(error)
+            alert(error)
+            this.setState({
+                status: error.response.status
+            })
+         }) */}
     }
+
     handleClick(event) {
         const {name, value } = event.target
         this.setState({ 
@@ -64,26 +69,49 @@ class ReserveSelect extends React.Component {
     }
 
     handleSubmit(event) {
-        const { deskNum, maxDesk } = this.state
+        const { date, deskNum, maxDesk } = this.state
         event.preventDefault()
-        alert(`reserving desk ${deskNum} out of ${maxDesk} for EMAIL on DATE`)
-    {/* make sure desk num is valid integer 
-        axios
-                .post(`URL HERE`, { 'date': this.state.date, 'deskNum': this.state.desk }) 
-                .then(response => {
-                    console.log(response)
-                    this.props.alert.success('Success')
-                })
-                .catch(error => {
-                    console.log(error)
-                    this.props.alert.error(error.response.data.error)
-                })*/}
+        alert(`reserving desk ${deskNum} out of ${maxDesk} for EMAIL on ${date}`)
+      {/* make sure desk num is valid integer and POST RESERVATION HERE
+          axios
+                  .post(`URL HERE`, { 'date': this.state.date, 'deskNum': this.state.deskNum }) 
+                  .then(response => {
+                      console.log(response)
+                      this.props.alert.success('Success')
+                  })
+                  .catch(error => {
+                      console.log(error)
+                      this.props.alert.error(error.response.data.error)
+                  })*/}
     }
 
     routeChangeBack() {
         let path = `/reservations`;
         this.props.history.push(path);
     }
+    
+    componentDidUpdate() {
+        const { desks } = this.state
+        const canvas = this.canvasRef.current;
+        const ctx = canvas.getContext("2d");
+        const img = new Image();
+        img.src = "https://external-preview.redd.it/vQmMvI6xk-2MHbkPDOJDO_HDDM_l2qR61gwd0nAC2go.jpg?auto=webp&s=f9fa784d471d0ed203fbf63530cc8f4db6454063"
+        img.onload = () => {
+            ctx.drawImage(img, 0, 0, 500, 500);
+
+            // Creating all the desks
+            desks.forEach((singleDesk) => {
+                ctx.fillStyle = "#2b60a6"
+                const sX = singleDesk.pixXcoord;
+                const sY = singleDesk.pixYcoord;
+                ctx.fillRect(sX - 15, sY - 15, 30, 30);
+                ctx.fillStyle = "white";
+                ctx.font = "20px Arial";
+                ctx.fillText(singleDesk.deskNum, sX - 5, sY + 7);
+            })
+        }
+    }
+
 
     render() {
         const { deskNum, desks } = this.state
@@ -92,13 +120,11 @@ class ReserveSelect extends React.Component {
                 <p className="h1"><strong> Reserve a Desk </strong></p>
                 <form onSubmit={this.handleSubmit}>
                     <p className="font-rubik leading-normal text-text"> Select a desk from the floorplan below. </p>                    
-                    <br/>
-                    <img style={floorplan} src="https://i.pinimg.com/originals/ee/50/25/ee5025099140b6697668a340c930c879.jpg" onClick={this.handleClick} />
                     <br/><br/>
 
                     {( desks.length > 0 ) ?
-                        <div> <h1> there are desks to display </h1> </div>
-                    :   null}
+                        <canvas ref={this.canvasRef} style={canvasStyle} onClick={this.handleClick} width={500} height={500}/>
+                    : null}
 
                     {(deskNum <= 0) ?
                         <div>
@@ -157,9 +183,13 @@ const reserveButtonInactive = {
   color:"#ffffff"
 };
 
-const floorplan = {
-  display: "flex",
-  align: 'center'
-};
+const canvasStyle = {
+    paddingLeft: '0',
+    paddingRight: '0',
+    marginLeft: 'auto',
+    marginRight: 'auto',
+    marginTop: '10px',
+    display: 'block'
+}
 
 export default ReserveSelect
