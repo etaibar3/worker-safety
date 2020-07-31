@@ -156,13 +156,12 @@ router.post("/", authenticateUser, async (req, res, next) => {
     res.status(201).json({
       message: "Order stored",
       createdReservation: {
-        _id: result._id,
-        employee: result.employee_id,
-        seat_number: result.seat_number,
+        employee: employee_id,
+        seat_number: seat_number,
       },
       request: {
         type: "GET",
-        url: "http://localhost:5000/reservations/" + result._id,
+        url: "http://localhost:5000/reservations/",
       },
     });
   } catch (err) {
