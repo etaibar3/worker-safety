@@ -21,6 +21,7 @@ class ReserveSelect extends React.Component {
 
     componentDidMount() {
         const { desks } = this.state
+      {/* Getting desk coordinates and numbers*/}
         axios
             .get(`http://localhost:5000/seats`)
             .then(response => {
@@ -64,7 +65,7 @@ class ReserveSelect extends React.Component {
         const {name, value } = event.target
         this.setState({ 
             [name] : value,
-            deskNum: 1
+            deskNum: 5
         })
     }
 
@@ -72,17 +73,18 @@ class ReserveSelect extends React.Component {
         const { date, deskNum, maxDesk } = this.state
         event.preventDefault()
         alert(`reserving desk ${deskNum} out of ${maxDesk} for EMAIL on ${date}`)
-      {/* make sure desk num is valid integer and POST RESERVATION HERE
+      {/* Posting desk reservation */}
           axios
-                  .post(`URL HERE`, { 'date': this.state.date, 'deskNum': this.state.deskNum }) 
-                  .then(response => {
-                      console.log(response)
-                      this.props.alert.success('Success')
-                  })
-                  .catch(error => {
-                      console.log(error)
-                      this.props.alert.error(error.response.data.error)
-                  })*/}
+            .post(`http://localhost:5000/reservations`, { 'date': date, 'seat_number': deskNum }) 
+            .then(response => {
+                console.log(response)
+                this.props.alert.success('Success')
+            })
+            .catch(error => {
+                console.log(error)
+                //console.log(error.response.data.error)
+                //this.props.alert.error(error.response.data.error)
+            })
     }
 
     routeChangeBack() {
@@ -91,6 +93,7 @@ class ReserveSelect extends React.Component {
     }
     
     componentDidUpdate() {
+    {/* Displays all the desks */}
         const { desks } = this.state
         const canvas = this.canvasRef.current;
         const ctx = canvas.getContext("2d");

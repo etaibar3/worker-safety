@@ -53,13 +53,13 @@ router.post('/create-account', async (req, res) => {
             lastName: req.body.lastName,
         })
         const savedUser = await user.save();
-        const graph_employee = new Employee({
-            _id: new mongoose.Types.ObjectId(),
-            name: req.body.firstName + ' ' + req.body.lastName,
-            employee_id: savedUser._id
-        })
-        const savedEmployee = await graph_employee.save();
-        res.json({user: savedUser, graph_user: savedEmployee});
+        // const graph_employee = new Employee({
+        //     _id: new mongoose.Types.ObjectId(),
+        //     name: req.body.firstName + ' ' + req.body.lastName,
+        //     employee_id: savedUser._id
+        // })
+        // const savedEmployee = await graph_employee.save();
+        res.json({user: savedUser});
 
     } catch(err){
         res.status(500).json({error: err});
