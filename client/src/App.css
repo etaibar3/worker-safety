@@ -2,7 +2,13 @@
   text-align: center;
 }
 
-.App-logo {
+.container {
+  margin: 0px;
+  padding: 0px;
+  max-width: 100%;
+}
+
+/* .App-logo {
   height: 40vmin;
   pointer-events: none;
 }
@@ -35,4 +41,79 @@
   to {
     transform: rotate(360deg);
   }
+} */
+
+@font-face {
+  font-family: Rubik;
+  src: local(Rubik-Regular),
+    url(./assets/fonts/Rubik/Rubik-Regular.ttf) format("truetype");
+  font-weight: normal;
+  font-style: normal;
+  font-stretch: normal;
+}
+@font-face {
+  font-family: Rubik;
+  src: local(Rubik-Medium),
+    url(./assets/fonts/Rubik/Rubik-Medium.ttf) format("truetype");
+  font-weight: 500;
+  font-style: normal;
+  font-stretch: normal;
+}
+@font-face {
+  font-family: Rubik;
+  src: local(Rubik-Bold),
+    url(./assets/fonts/Rubik/Rubik-Bold.ttf) format("truetype");
+  font-weight: bold;
+  font-style: normal;
+  font-stretch: normal;
+}
+
+h1 {
+  font-family: Rubik;
+  font-size: 56px;
+  font-weight: bold;
+  font-stretch: normal;
+  font-style: normal;
+  line-height: normal;
+  letter-spacing: normal;
+}
+
+h2 {
+  font-family: Rubik;
+  font-size: 35px;
+  font-weight: bold;
+  font-stretch: normal;
+  font-style: normal;
+  line-height: normal;
+  letter-spacing: normal;
+}
+
+h3 {
+  font-family: Rubik;
+  font-size: 24px;
+  font-weight: normal;
+  font-stretch: normal;
+  font-style: normal;
+  line-height: 1.5;
+  letter-spacing: normal;
+}
+
+h4 {
+  font-family: Rubik;
+  font-size: 16px;
+  font-weight: 500;
+  font-stretch: normal;
+  font-style: normal;
+  line-height: normal;
+  letter-spacing: normal;
+}
+
+body {
+  font-family: Rubik;
+  font-size: 16px;
+  font-weight: normal;
+  font-stretch: normal;
+  font-style: normal;
+  line-height: normal;
+  letter-spacing: normal;
 }

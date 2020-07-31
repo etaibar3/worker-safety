@@ -1,15 +1,16 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { Link } from 'react-router-dom';
 
 function NavBar() {
     return(
-        <ul style={navBarStyle}>
-            <Link style={linkStyle} to="/"> <li style={navItemStyle}>Home</li> </Link> | 
-            <Link style={linkStyle} to="/learn-more"> <li style={navItemStyle}>Learn more</li> </Link> | 
-            <Link style={linkStyle} to="/know-your-rights"> <li style={navItemStyle}>Know Your Rights</li> </Link> | 
-            <Link style={linkStyle} to="/login"> <li style={navItemStyle}>Login</li> </Link> | 
-            <Link style={linkStyle} to="/logout"> <li style={navItemStyle}>Logout</li> </Link> | 
-        </ul>
+        <div style={navBarStyle}>
+                <div style={navItemStyle}> <Link style={linkStyle} to="/"> <p>Home</p> </Link> </div>
+                <div style={navItemStyle}> <Link style={linkStyle} to="/learn-more"> <p>Learn more</p> </Link> </div>
+                <div style={navItemStyle}> <Link style={linkStyle} to="/know-your-rights"> <p>Know Your Rights</p> </Link> </div>
+                <div style={navItemStyle}> <Link style={linkStyle} to="/login"> <p>Login</p> </Link> </div>
+                <div style={navItemStyle}> <Link style={linkStyle} to="/logout"> <p>Logout</p> </Link> </div>
+        </div>
+
     )
 }
 
@@ -18,19 +19,25 @@ const linkStyle = {
 }
 
 const navBarStyle = {
+    display: 'flex',
+    justifyContent: 'space-between',
     margin: '0px',
-    padding: '10px',
+    padding: '20px',
     background: '#333',
     listStyle: 'none',
     textAlign: 'left',
-    fontSize: '18px',
-    color: 'white'
-    
+    width: '100%',
 }
 
 const navItemStyle = {
-    display: 'inline',
-    color: 'white'
+    margin: 'auto',
+    textAlign: 'center',
+    flexBasis: '15%',
+    fontSize: 16,
+    fontWeight: "500",
+    fontStyle: "normal",
+    letterSpacing: 0,
+    color: "white"
 }
 
 export default NavBar;
