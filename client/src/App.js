@@ -1,7 +1,4 @@
-// Must npm i react-router-dom
-
 import React from "react";
-
 import { BrowserRouter as Router, Route } from "react-router-dom";
 import "./App.css";
 import Header from "./components/layout/header";
@@ -16,7 +13,7 @@ import RootMenu from "./components/pages/RootMenu";
 import Home from "./components/layout/home";
 import Roster from "./components/pages/Roster";
 import ReserveDate from './components/pages/ReserveDate';
-import Floorplan from "./components/pages/Floorplan";
+import ReserveSelect from './components/pages/ReserveSelect';
 import ReportACase from "./components/pages/ReportACase";
 import EmployeeMenu from "./components/pages/EmployeeMenu";
 import Reservations from "./components/pages/Reservations";
@@ -32,7 +29,6 @@ function App() {
         <div className="container">
           <Header />
           <NavBar />
-
           <Route exact path="/" component={Home} />
           <Route exact path="/learn-more" component={LearnMore} />
           <Route exact path="/know-your-rights" component={KnowYourRights} />
@@ -43,7 +39,7 @@ function App() {
           <Route exact path="/root-menu" component={RootMenu} />
           <Route exact path="/roster" component={Roster} />
           <Route exact path="/reserve-date" component={ReserveDate}/>
-          <Route exact path="/floorplan" component={Floorplan} />
+          <Route exact path="/reserve-select" component={ReserveSelect}/>
           <Route exact path="/employee-menu" component={EmployeeMenu} />
           <Route exact path="/reservations" component={Reservations} />
           <Route exact path="/report-a-case" component={ReportACase} />

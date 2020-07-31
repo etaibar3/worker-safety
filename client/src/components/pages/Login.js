@@ -52,68 +52,6 @@ class Login extends React.Component {
 
     render() {
         const { email, password, status, isAdmin } = this.state
-        const safeReturn = {
-          width: 210,
-          height: 34.2,
-          fontFamily: "Rubik",
-          fontSize: 35,
-          fontWeight: "bold",
-          fontStyle: "normal",
-          letterSpacing: 0,
-          color: "#222831"
-        };
-        const logo = {
-          width: 54,
-          height: 45,
-          backgroundColor: "#c4c4c4"
-        };
-        const inputLabel = {
-          width: 109,
-          height: 19,
-          fontFamily: "Rubik",
-          fontSize: 20,
-          fontWeight: "900",
-          fontStyle: "normal",
-          letterSpacing: 0,
-          color: "#222831"
-        };
-        const submit = {
-          width: 280,
-          height: 59,
-          borderRadius: 5,
-          backgroundColor: "#2121ca",
-          color: "#ffffff"
-        };
-        const inputBox = {
-          width: 280,
-          height: 59,
-          borderRadius: 5,
-          backgroundColor: "#ffffff",
-          borderStyle: "solid",
-          borderWidth: 1,
-          borderColor: "#c4c4c4"
-        };
-        const SignUpForgotPass = {
-          width: 177,
-          height: 19,
-          fontFamily: "Rubik",
-          fontSize: 16,
-          fontWeight: "1000",
-          fontStyle: "normal",
-          letterSpacing: 0,
-          color: "#2121ca"
-        };
-        const dontHaveAnAccount = {
-          width: 176,
-          height: 24,
-          fontFamily: "Rubik",
-          fontSize: 16,
-          fontWeight: "normal",
-          fontStyle: "normal",
-          lineHeight: 5,
-          letterSpacing: 0,
-          color: "#6c6c6c"
-        };
         return (
             <div>
             {( status !== 200) ?
@@ -163,5 +101,68 @@ class Login extends React.Component {
         )
     }
 }
+
+const safeReturn = {
+  width: 210,
+  height: 34.2,
+  fontFamily: "Rubik",
+  fontSize: 35,
+  fontWeight: "bold",
+  fontStyle: "normal",
+  letterSpacing: 0,
+  color: "#222831"
+};
+const logo = {
+  width: 54,
+  height: 45,
+  backgroundColor: "#c4c4c4"
+};
+const inputLabel = {
+  width: 109,
+  height: 19,
+  fontFamily: "Rubik",
+  fontSize: 20,
+  fontWeight: "900",
+  fontStyle: "normal",
+  letterSpacing: 0,
+  color: "#222831"
+};
+const submit = {
+  width: 280,
+  height: 59,
+  borderRadius: 5,
+  backgroundColor: "#2121ca",
+  color: "#ffffff"
+};
+const inputBox = {
+  width: 280,
+  height: 59,
+  borderRadius: 5,
+  backgroundColor: "#ffffff",
+  borderStyle: "solid",
+  borderWidth: 1,
+  borderColor: "#c4c4c4"
+};
+const SignUpForgotPass = {
+  width: 177,
+  height: 19,
+  fontFamily: "Rubik",
+  fontSize: 16,
+  fontWeight: "1000",
+  fontStyle: "normal",
+  letterSpacing: 0,
+  color: "#2121ca"
+};
+const dontHaveAnAccount = {
+  width: 176,
+  height: 24,
+  fontFamily: "Rubik",
+  fontSize: 16,
+  fontWeight: "normal",
+  fontStyle: "normal",
+  lineHeight: 5,
+  letterSpacing: 0,
+  color: "#6c6c6c"
+};
 
 export default withAlert()(Login);
