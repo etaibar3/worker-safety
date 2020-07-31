@@ -2,7 +2,9 @@ const express = require('express');
 const router = express.Router();
 const bcrypt = require('bcrypt');
 const Joi = require('@hapi/joi');
+const mongoose = require("mongoose");
 const User = require('../models/Users.js');
+const Employee = require('../models/employee');
 const Org = require('../models/Orgs.js');
 const { authenticateUser } = require('../middleware/auth.js');
 
@@ -51,7 +53,14 @@ router.post('/create-account', async (req, res) => {
             lastName: req.body.lastName,
         })
         const savedUser = await user.save();
-        res.json(savedUser);
+        const graph_employee = new Employee({
+            _id: new mongoose.Types.ObjectId(),
+            name: req.body.firstName + ' ' + req.body.lastName,
+            employee_id: savedUser._id
+        })
+        const savedEmployee = await graph_employee.save();
+        res.json({user: savedUser, graph_user: savedEmployee});
+
     } catch(err){
         res.status(500).json({error: err});
     }

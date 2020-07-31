@@ -1,7 +1,4 @@
-// Must npm i react-router-dom
-
 import React from "react";
-
 import { BrowserRouter as Router, Route } from "react-router-dom";
 import "./App.css";
 import Header from "./components/layout/header";
@@ -32,7 +29,6 @@ function App() {
         <div className="container">
           <Header />
           <NavBar />
-
           <Route exact path="/" component={Home} />
           <Route exact path="/learn-more" component={LearnMore} />
           <Route exact path="/know-your-rights" component={KnowYourRights} />

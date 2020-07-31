@@ -3,10 +3,34 @@ const router = express.Router();
 const Seat = require("../models/seat");
 const { Mongoose } = require("mongoose");
 var neo4j = require("neo4j-driver");
+const { authenticateAdmin, authenticateUser } = require("../middleware/auth");
 
 const driver = neo4j.driver(  "bolt://localhost", neo4j.auth.basic("neo4j", "123456"));
 
-router.post('/add', async function(req, res){
+router.get('/', authenticateUser, async (req, res) => {
+    const session = driver.session();
+    const txc = session.beginTransaction();
+    const org = req.user.org
+    try {
+        const result_pix = await txc.run('Match (a:Seat {org: $org}) RETURN a.pixel_location', {org: org})
+        const result_id = await txc.run('Match (a:Seat {org: $org}) RETURN a.name', {org: org})
+        const pix_records = result_pix.records;
+        const id_records = result_id.records;
+        console.log(id_records);
+        const seats = pix_records.map((record, index) => {
+            const seat = {pix_x: record._fields[0].x,
+                          pix_y: record._fields[0].y,
+                          id: id_records[index]._fields[0],
+            }
+            return seat;
+        });
+        res.json({seats: seats})
+    } catch (err) {
+        res.status(500).json({error: err});
+    }
+})
+
+router.post('/add', authenticateAdmin, async function(req, res){
   const session = driver.session();
   const txc = session.beginTransaction()
   var name = req.body.id;
@@ -15,16 +39,14 @@ router.post('/add', async function(req, res){
   var PXvalue = req.body.pixXcoord;
   var PYvalue = req.body.pixYcoord;
 
-  
-  
       try{
           console.log(`Xval: ${Xvalue}`)
           console.log(`Yval: ${Yvalue}`)
           const result1 = await txc.run(
               'Create (n:Seat {name: $id,' +
               'location: point({ x: $Xcoord, y: $Ycoord, crs: "cartesian"}),' +
-              'pixel_location: point({x: $pixXcoord, y: $pixYcoord})}) RETURN n.name', {id: name, Xcoord: Xvalue, Ycoord: Yvalue, pixXcoord: PXvalue, pixYcoord: PYvalue })
-
+              'pixel_location: point({x: $pixXcoord, y: $pixYcoord}), org: $org}) RETURN n.name', 
+              {id: name, Xcoord: Xvalue, Ycoord: Yvalue, pixXcoord: PXvalue, pixYcoord: PYvalue, org: req.user.org })
             
           var result2 = await txc.run('Match (n:Seat) return n')
           const records = result2.records
@@ -40,9 +62,6 @@ router.post('/add', async function(req, res){
               
 
               if(distance > 0 && distance < 6){
-
-                  
-
                   const result4 =  txc.run('MATCH (n:Seat {name: $id}), (b:Seat {location: $point }) Create (n)-[r:Within_dist]->(b) Return b', {id: name, point: location_value })
               }
           }

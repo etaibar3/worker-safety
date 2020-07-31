@@ -2,8 +2,11 @@ const express = require("express");
 const router = express.Router();
 const bcrypt = require("bcrypt");
 const Joi = require("@hapi/joi");
+const mongoose = require("mongoose");
 const User = require("../models/Users.js");
 const Org = require("../models/Orgs.js");
+const Employee = require('../models/employee');
+
 
 //Validate new admin acount data
 const adminValidation = Joi.object({
@@ -65,7 +68,13 @@ router.post('/create-account', async (req, res) => {
             lastName: req.body.lastName,
         })
         const savedUser = await user.save();
-        res.json(savedUser);
+        const graph_admin = new Employee({
+            _id: new mongoose.Types.ObjectId(),
+            name: req.body.firstName + ' ' + req.body.lastName,
+            employee_id: savedUser._id
+        })
+        const savedAdmin = await graph_admin.save();
+        res.json({user: savedUser, graph_user: savedAdmin});
     } catch(err){ 
         res.status(500).json({error: "Failed to create account."});
 
