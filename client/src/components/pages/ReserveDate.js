@@ -5,9 +5,8 @@
 
 import React from 'react'
 import axios from 'axios'
-import DatePicker from 'react-datepicker'
-
-import 'react-datepicker/dist/react-datepicker.css'
+import { Redirect } from 'react-router';
+import ReserveSelect from './ReserveSelect'
 
 
 class ReserveDate extends React.Component {
@@ -20,43 +19,54 @@ class ReserveDate extends React.Component {
             min: new Date(),
             showDesks: false,
             desk: null,
+            image: new Image(),
             maxDesk: 0
         }
         this.initialState = this.state
-        this.handleSelect = this.handleSelect.bind(this)
         this.handleChange = this.handleChange.bind(this)
         this.handleSubmit = this.handleSubmit.bind(this)
+        this.routeChangeCont = this.routeChangeCont.bind(this);
+        this.routeChangeCancel = this.routeChangeCancel.bind(this);
     }
 
     componentDidMount() {
-        {/*axios call for floorplan image from database with desk numbers and max desk num*/}
-    
-        { /*GET MAX DESKS 
-            axios
-             .get('http://localhost:5000/org/manageRoster/' + this.state.email)
-             .then(response => {
-                console.log(response)
-                this.setState({
-                    maxDesk: response.maxDesk,
-                })
-             })      */}
-    }
-
-    handleSelect(date) {
-        this.setState({ 
-            date: date,
-            showDesks: true
+        var today = new Date();
+        var dd = String(today.getDate()).padStart(2, '0');
+        var mm = String(today.getMonth() + 1).padStart(2, '0');
+        var yyyy = today.getFullYear();
+        today = mm + '/' + dd + '/' + yyyy;
+        this.setState({
+            min: today
         })
+        {/*axios
+         .get(`http://localhost:5000/upload/`)
+         .then(response => {
+            console.log(response)
+            alert(response)
+            this.setState({
+                image: response.image
+            })
+         })
+         .catch(error => {
+            console.log(error)
+            alert(error)
+            this.setState({
+                status: error.response.status
+            })
+         }) */}
     }
 
     handleChange(event) {
         const {name, value } = event.target
-        this.setState({ [name] : value })
+        this.setState({ 
+            [name] : value,
+            showDesks: true
+        })
     }
 
     handleSubmit(event) {
         event.preventDefault()
-    {/* make sure desk num is valid integer */}
+    {/* make sure desk num is valid integer 
         alert(`reserving desk ${this.state.desk} on ${this.state.date} for EMAIL`)
         axios
                 .post(`URL HERE`, { 'date': this.state.date, 'deskNum': this.state.desk }) 
@@ -67,47 +77,53 @@ class ReserveDate extends React.Component {
                 .catch(error => {
                     console.log(error)
                     this.props.alert.error(error.response.data.error)
-                })
+                })*/}
+    alert(`here`)
     }
+
+    routeChangeCont() {
+        let path = `/reserve-select`;
+        this.props.history.push(path);
+    }
+
+    routeChangeCancel() {
+        let path = `/reservations`;
+        this.props.history.push(path);
+    }
+
 
     render() {
         const { email, desk, status, date, min, showDesks, maxDesk } = this.state
         return (
             <div>
-                <h2 style={reserveADesk}> Reserve a Desk </h2>
+                <p className="h1"><strong> Reserve a Desk </strong></p>
                 <form onSubmit={this.handleSubmit}>
-                    <p style={selectADateForYourDeskReservation}> Select a date for your desk reservation. </p>
-                    <p> Reservation date </p>
-                    <DatePicker
-                        selected={date}
-                        onChange={this.handleSelect}
-                        minDate={min}
-                    />
+                    <p className="font-rubik leading-normal text-text"> Select a date for your desk reservation. </p>                    
+                    <br/>
+                    <label className="h6">
+                        <strong> Reservation Date </strong>
+                        <br />
+                        <input
+                            className="rounded bg-primary-light border border-border max-w-xs"
+                            type="date"
+                            name="date"
+                            value={date}
+                            min={min}
+                            onChange={this.handleChange}
+                        />
+                    </label>
                     <br /><br />
-                    {(showDesks) ?
-                        <div>
-                        <h1> display floorplan with desk numbers here</h1> 
-                        <h1> display available desks here</h1> 
-                        <label>
-                            Please enter the number of the desk you would like to reserve:
-                            {" "}
-                            <input 
-                                type="text"
-                                name="desk"
-                                value={desk}
-                                onChange={this.handleChange}
-                            />
-                        </label> </div>
-                        : null}
-                    <br/><br/>
-                    <button type="submit">Submit</button>
+                    {(showDesks) ? 
+                    <div>
+                        <button style={cancel} onClick={this.routeChangeCancel}>Cancel</button>
+                        <button type="submit" style={continueButton} onClick={this.routeChangeCont}>Continue</button>
+                    </div> 
+                    : null}
                 </form>
             </div>
         )
     }
 }
-
-export default ReserveDate
 
 
 const reserveADesk = {
@@ -132,3 +148,44 @@ const selectADateForYourDeskReservation = {
   letterSpacing: 0,
   color: "#222831"
 };
+
+const reservationDate = {
+  width: 133,
+  height: 19,
+  fontFamily: "Rubik",
+  fontSize: 16,
+  fontWeight: "1000",
+  fontStyle: "normal",
+  letterSpacing: 0,
+  color: "#222831"
+};
+
+const rectangle4 = {
+  width: 280,
+  height: 49,
+  borderRadius: 5,
+  backgroundColor: "#000000",
+  borderStyle: "solid",
+  borderWidth: 1,
+  borderColor: "#c4c4c4"
+};
+
+const cancel = {
+  width: 113,
+  height: 59,
+  borderRadius: 5,
+  fontWeight: "500",
+  backgroundColor: "#ffffff",
+  color: "#2121ca"
+};
+
+const continueButton = {
+  width: 131,
+  height: 59,
+  borderRadius: 5,
+  fontWeight: "500",
+  backgroundColor: "#2121ca",
+  color:"#ffffff"
+};
+
+export default ReserveDate

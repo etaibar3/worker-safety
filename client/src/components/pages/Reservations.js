@@ -52,7 +52,8 @@ class Reservations extends React.Component {
         const { method } = this.state
         return (
             <div>
-                <h1> Manage My Reservations </h1>
+                <p style={reservations}> Reservations </p>
+                <button type="submit" style={reserveBlue} onClick={this.routeChange}>Reserve</button> 
                     <p> What would you like to do? </p>
                     <form onSubmit={this.handleSubmit} value={method}>
                         <select name="method" onChange={this.handleMethodChange}>
@@ -67,5 +68,24 @@ class Reservations extends React.Component {
         )
     }
 }
+
+const reservations = {
+  width: 231,
+  height: 41,
+  fontFamily: "Rubik",
+  fontSize: 35,
+  fontWeight: "bold",
+  fontStyle: "normal",
+  letterSpacing: 0,
+  color: "#222831"
+};
+
+const reserveBlue = {
+  width: 123,
+  height: 49,
+  borderRadius: 5,
+  backgroundColor: "#2121ca",
+  color:"#ffffff"
+};
 
 export default Reservations
