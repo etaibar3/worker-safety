@@ -18,12 +18,17 @@ class Reservations extends React.Component {
         this.initialState = this.state
         this.handleChange = this.handleChange.bind(this)
         this.handleMethodChange = this.handleMethodChange.bind(this)
+        this.routeChange = this.routeChange.bind(this)
         this.handleSubmit = this.handleSubmit.bind(this)
     }
 
     handleChange(event) {
         const {name, value } = event.target
         this.setState({ [name] : value })
+    }
+
+    routeChange() {
+      this.setState({ method: "Reserve"})
     }
 
     handleMethodChange(event) {
@@ -34,7 +39,7 @@ class Reservations extends React.Component {
 
     handleSubmit(event) {
         event.preventDefault()
-        if (this.state.method === "Add") {
+        {/*if (this.state.method === "CHANGE THIS") {
             axios
                 .post(`http://localhost:5000/org/manageRoster`, { 'email': this.state.email, 'admin': this.state.isAdmin})
                 .then(response => {
@@ -46,6 +51,7 @@ class Reservations extends React.Component {
                     this.props.alert.error(error.response.data.error)
                 })
         }
+      */}
     }
 
     render() {
@@ -53,7 +59,7 @@ class Reservations extends React.Component {
         return (
             <div>
                 <p style={reservations}> Reservations </p>
-                <button type="submit" style={reserveBlue} onClick={this.routeChange}>Reserve</button> 
+                <button style={reserveBlue} onClick={this.routeChange}>Reserve</button> 
                     <p> What would you like to do? </p>
                     <form onSubmit={this.handleSubmit} value={method}>
                         <select name="method" onChange={this.handleMethodChange}>
@@ -64,6 +70,14 @@ class Reservations extends React.Component {
                         </select>
                         {(method === "Reserve") ? <Redirect to = {{ pathname: "/reserve-date" }} /> : null}
                      </form>
+                     <table align="center" style={rectangle3}>
+                          <thead>
+                                <tr>
+                                    <th> Date </th>
+                                    <th> Desk Number </th>
+                                </tr>
+                          </thead>
+                    </table>
             </div>
         )
     }
@@ -86,6 +100,15 @@ const reserveBlue = {
   borderRadius: 5,
   backgroundColor: "#2121ca",
   color:"#ffffff"
+};
+
+const rectangle3 = {
+  width: 1080,
+  height: 600,
+  borderRadius: 5,
+  borderStyle: "solid",
+  borderWidth: 1,
+  borderColor: "#c4c4c4"
 };
 
 export default Reservations

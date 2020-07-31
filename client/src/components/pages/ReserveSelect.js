@@ -2,12 +2,15 @@ import React from 'react'
 import axios from 'axios'
 import { Redirect } from 'react-router';
 
+/* implement max desk for form validation */
 
 class ReserveSelect extends React.Component {
     constructor() {
         super()
         this.state = {
-            desk: 0
+            deskNum: 0,
+            desks:[],
+            maxDesk: 0
         }
         this.routeChangeBack = this.routeChangeBack.bind(this);
         this.handleClick = this.handleClick.bind(this)
@@ -15,21 +18,55 @@ class ReserveSelect extends React.Component {
     }
 
     componentDidMount() {
-        {/* Get request for coordinates of desks */}
+        const { desks } = this.state
+        axios
+            .get(`URL HERE`)
+            .then(response => {
+                console.log(response)
+                response.data.desks.map((id, Xcoord, Ycoord, pixXcoord, pixYcoord, index) => {
+                    const newDesk = {
+                        deskNum: id,
+                        Xcoord: Xcoord,
+                        Ycoord: Ycoord,
+                        pixXcoord: pixXcoord,
+                        pixYcoord: pixYcoord
+                    };
+                    desks.push(newDesk)
+                })
+                this.setState({
+                    desks: this.state.desks,
+                    maxDesk: desks.length - 1
+                })
+            })
+            .catch(error => {
+                console.log(error)
+                //alert(error)
+            })
+        {/*get desk coordinates
+        FROM HANDLEFLOORPLAN.JS
+            allDesks.map((singleDesk) => 
+                axios.post(`http://localhost:5000/seats/add`, {"id": singleDesk.seat_number, "Xcoord": singleDesk.coordinates[0], "Ycoord": singleDesk.coordinates[1], "pixXcoord": singleDesk.pix_coordinates[0], "pixYcoord": singleDesk.pix_coordinates[1]})
+                    .then(response => {
+                        console.log(response)
+                    })
+                    .catch(error => {
+                        // console.log(error.response.data.error)
+                        console.log(error)
+                    })
+            )*/}
     }
-
     handleClick(event) {
         const {name, value } = event.target
         this.setState({ 
             [name] : value,
-            desk: 1
+            deskNum: 1
         })
     }
 
     handleSubmit(event) {
-        const { desk } = this.state
+        const { deskNum, maxDesk } = this.state
         event.preventDefault()
-        alert(`reserving desk ${desk} for EMAIL on DATE`)
+        alert(`reserving desk ${deskNum} out of ${maxDesk} for EMAIL on DATE`)
     {/* make sure desk num is valid integer 
         axios
                 .post(`URL HERE`, { 'date': this.state.date, 'deskNum': this.state.desk }) 
@@ -49,7 +86,7 @@ class ReserveSelect extends React.Component {
     }
 
     render() {
-        const { desk } = this.state
+        const { deskNum, desks } = this.state
         return (
             <div>
                 <p className="h1"><strong> Reserve a Desk </strong></p>
@@ -58,14 +95,19 @@ class ReserveSelect extends React.Component {
                     <br/>
                     <img style={floorplan} src="https://i.pinimg.com/originals/ee/50/25/ee5025099140b6697668a340c930c879.jpg" onClick={this.handleClick} />
                     <br/><br/>
-                    {(desk === 0) ?
+
+                    {( desks.length > 0 ) ?
+                        <div> <h1> there are desks to display </h1> </div>
+                    :   null}
+
+                    {(deskNum <= 0) ?
                         <div>
                             <button style={back} onClick={this.state.routeChangeBack}>Back</button>
                             <button style={reserveButtonInactive}>Reserve</button>
                         </div>
                         :
                         <div>
-                            <p className="h6"><strong> You have selected Desk {desk} </strong></p>
+                            <p className="h6"><strong> You have selected Desk {deskNum} </strong></p>
                             <button style={back} onClick={this.state.routeChangeBack}>Back</button>
                             <button type="submit" style={reserveButtonActive} onSubmit={this.handleSubmit}>Reserve</button> 
                         </div>
