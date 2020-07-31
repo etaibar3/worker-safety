@@ -55,8 +55,6 @@ class ReserveDate extends React.Component {
         })
     }
 
-
-
     routeChangeCancel() {
         let path = `/reservations`;
         this.props.history.push(path);

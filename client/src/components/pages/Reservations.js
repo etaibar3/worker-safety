@@ -27,22 +27,20 @@ class Reservations extends React.Component {
         {/* Get reservations here */}
         const { desks, reservations } = this.state
         axios
-            .get(`URL HERE`)
+            .get(`http://localhost:5000/reservations`)
             .then(response => {
                 console.log(response)
                 response.data.reservations.map((reservation, index) => {
                     const newReservation = {
-                        deskNum: reservation.deskNum,
+                        deskNum: reservation.id,
                         date: reservation.date,
                     };
                     reservations.push(newReservation)
                 })
-                this.setState({
-                    maxDesk: desks.length
-                })
             })
             .catch(error => {
                 console.log(error)
+                //console.log(error.response.data.error)
             })
       }
 

@@ -88,16 +88,18 @@ const txc = session.beginTransaction();
 router.get("/", authenticateUser, async (req, res, next) => {
   try {
     
-    const result = await txc.run( 'Match (a:Employee {m_id: $id}) - [r:Reserved] - (b: Seat) return b, r.time', 
+    const result = await txc.run( 'Match (a:Users {m_id: $id}) - [r:Reserved] - (b: Seat) return b, r.time', 
                                   {id: req.user._id});
     const records = result.records;
-    const reservations = records.map(record => {
-        const reservation = {id: record._fields[0].properites.name,
+    const reservations = await Promise.all(records.map(async (record) => {
+        const reservation = {id: record._fields[0].properties.name,
                               date: record._fields[1] }
         return reservation;
-    })                           
+    }))               
 
-    res.status(200).json(reservations);
+    console.log(result)
+    
+    res.status(200).json({reservations: reservations});
   } catch (err) {
     res.status(500).json({
       error: err,
@@ -125,16 +127,28 @@ router.post("/", authenticateUser, async (req, res, next) => {
     var reserv_date = req.body.date;
 
     const result1 = await txc.run(
-      "Match (n:Employee {m_id: $Name})," +
-        " (a:Seat{name: $id}) Create (n)-[r: Reserved {time: date($date)}]->(a) ",
+      "Match (n:Users {m_id: $Name})," +
+        " (a:Seat{name: $id}) Create (n)-[r: Reserved {time: date($date)}]->(a) return n",
       { Name: employee_id, id: seat_number, date: reserv_date }
     );
+
+    console.log(employee_id)
+    console.log(result1.records)
+    console.log(reserv_date)
+
+    const result8 = await txc.run(
+      'Match (n: Seat {name : $id}) return n', 
+      {id: seat_number}
+    );
+
+    console.log(result8)
+
     const result2 = await txc.run(
       "Match (a:Seat{name: $id}) SET a.reserved = true Return a",
       { id: seat_number }
     );
     const result3 = await txc.run(
-      "MATCH (a:Employee)-[r:Reserved]->(b:Seat) RETURN r.time"
+      "MATCH (a:Users)-[r:Reserved]->(b:Seat) RETURN r.time"
     );
 
     const records = result3.records;
@@ -144,7 +158,7 @@ router.post("/", authenticateUser, async (req, res, next) => {
       var b = Date.parse(date);
       if ((Date.now() - b > 1, 555, 200, 000)) {
         const result4 = await txc.run(
-          "MATCH (a:Person)-[r:Reserved {time: $timestamp}]->(b:Seat) Delete r",
+          "MATCH (a:Users)-[r:Reserved {time: $timestamp}]->(b:Seat) Delete r",
           { timestamp: date }
         );
       }
