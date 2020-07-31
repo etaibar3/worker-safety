@@ -38,7 +38,7 @@ router.post('/', async (req, res) => {
         //     maxAge: 60 * 60 * 1000,
         //     httpOnly: true
         // });
-        console.log(token)
+        //console.log(token)
         res.header('auth-token',token).send({ token: token, isAdmin: user.admin });
         
     } catch(err) {
