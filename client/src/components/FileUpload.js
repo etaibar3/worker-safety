@@ -18,12 +18,13 @@ const FileUpload = () => {
   const onSubmit = async (e) => {
     e.preventDefault();
     const formData = new FormData();
-    formData.append("file", file);
+    formData.append("floorplanImage", file);
 
     try {
       const res = await axios.post("/upload", formData, {
         headers: {
           "Content-Type": "multipart/form-data",
+          //"Content-Type": "false",
         },
         onUploadProgress: (progressEvent) => {
           setUploadPercentage(
@@ -54,11 +55,17 @@ const FileUpload = () => {
   return (
     <Fragment>
       {message ? <Message msg={message} /> : null}
-      <form onSubmit={onSubmit}>
+      <form
+        action="fileupload"
+        method="POST"
+        onSubmit={onSubmit}
+        enctype="multipart/form-data"
+      >
         <div className="custom-file mb-4">
           <input
             type="file"
-            className="custom-file-input"
+            name="floorplanImage"
+            class="form-control"
             id="customFile"
             onChange={onChange}
           />
