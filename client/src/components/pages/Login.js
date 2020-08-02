@@ -56,13 +56,13 @@ class Login extends React.Component {
             <div>
             {( status !== 200) ?
                 <div>
-                    <p style={safeReturn}> Safe Return </p>
-                    <p style={dontHaveAnAccount}> Don't have an account? </p>
-                    <Link to='/create-child-account' style={SignUpForgotPass}> Sign up here </Link>
+                    <p className="h2"> Safe Return </p>
+                    <p className="font-rubik leading-normal text-text-light"> Don't have an account? </p>
+                    <Link to='/create-child-account' className="font-rubik font-medium text-blue-blue"> Sign up here </Link>
                     <br/><br/>
                     <form onSubmit={this.handleSubmit}>
-                        <label style={inputLabel}> 
-                            Email Address
+                        <label class="text-style"> 
+                            <strong> Email Address </strong>
                             <br/>
                             <input
                                 style={inputBox}
@@ -74,8 +74,8 @@ class Login extends React.Component {
                             />
                         </label>
                             <br/><br/>
-                        <label style={inputLabel}> 
-                            Password
+                        <label class="text-style"> 
+                            <strong> Password </strong>
                             <br/>
                             <input
                                 style={inputBox}
@@ -87,7 +87,7 @@ class Login extends React.Component {
                             />
                         </label>
                         <br/>
-                        <Link to='/forgotyourpassword' style={SignUpForgotPass}> Forgot your password? </Link>
+                        <Link to='/forgotyourpassword' className="font-rubik font-medium text-#2121ca"> Forgot your password? </Link>
                         <br/><br/>
                         <button style={submit} type="submit">Login </button>
                     </form>
