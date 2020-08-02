@@ -132,10 +132,6 @@ router.post("/", authenticateUser, async (req, res, next) => {
       { Name: employee_id, id: seat_number, date: reserv_date }
     );
 
-    console.log(employee_id)
-    console.log(result1.records)
-    console.log(reserv_date)
-
     const result8 = await txc.run(
       'Match (n: Seat {name : $id}) return n', 
       {id: seat_number}
