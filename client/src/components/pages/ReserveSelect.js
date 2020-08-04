@@ -69,12 +69,12 @@ class ReserveSelect extends React.Component {
         })
     }
 
-    handleSubmit(event) {
+    handleSubmit = async event => {
         const { date, deskNum, maxDesk } = this.state
         event.preventDefault()
-        alert(`reserving desk ${deskNum} out of ${maxDesk} for EMAIL on ${date}`)
+        alert(`reserving desk ${deskNum} out of ${maxDesk} for on ${date}`)
       {/* Posting desk reservation */}
-          axios
+          await axios
             .post(`http://localhost:5000/reservations`, { 'date': date, 'seat_number': deskNum }) 
             .then(response => {
                 console.log(response)
@@ -82,6 +82,7 @@ class ReserveSelect extends React.Component {
             })
             .catch(error => {
                 console.log(error)
+                alert('error posting reservation')
                 //console.log(error.response.data.error)
                 //this.props.alert.error(error.response.data.error)
             })
