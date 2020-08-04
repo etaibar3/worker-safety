@@ -16,7 +16,6 @@ router.get('/', authenticateUser, async (req, res) => {
         const result_id = await txc.run('Match (a:Seat {org: $org}) RETURN a.name', {org: org})
         const pix_records = result_pix.records;
         const id_records = result_id.records;
-        console.log(id_records);
         const seats = pix_records.map((record, index) => {
             const seat = {pix_x: record._fields[0].x,
                           pix_y: record._fields[0].y,
@@ -58,9 +57,8 @@ router.post('/add', authenticateAdmin, async function(req, res){
               // const result3 = Seat.cypherQuery('MATCH (n:Seat {name: $firstParam}), (b:Seat {location: $point }) return distance(n.location, b.location) AS Distance', {firstParam: name, point: location })
               const records2 = (await result3).records;
               var distance = records2[0]._fields[0]; 
-              console.log(distance);
+             // console.log(distance);
               
-
               if(distance > 0 && distance < 6){
                   const result4 =  txc.run('MATCH (n:Seat {name: $id}), (b:Seat {location: $point }) Create (n)-[r:Within_dist]->(b) Return b', {id: name, point: location_value })
               }

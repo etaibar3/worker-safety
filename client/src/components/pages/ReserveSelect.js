@@ -12,7 +12,9 @@ class ReserveSelect extends React.Component {
             deskNum: 0,
             desks:[],
             maxDesk: 0,
-            date: props.date
+            date: props.date,
+            status: 400,
+            numUpdates: 0
         }
         this.routeChangeBack = this.routeChangeBack.bind(this);
         this.handleClick = this.handleClick.bind(this)
@@ -65,7 +67,7 @@ class ReserveSelect extends React.Component {
         const {name, value } = event.target
         this.setState({ 
             [name] : value,
-            deskNum: 5
+            deskNum: 2
         })
     }
 
@@ -79,6 +81,9 @@ class ReserveSelect extends React.Component {
             .then(response => {
                 console.log(response)
                 this.props.alert.success('Success')
+                this.setState({
+                  status: response.status
+                })
             })
             .catch(error => {
                 console.log(error)
@@ -95,11 +100,13 @@ class ReserveSelect extends React.Component {
     
     componentDidUpdate() {
     {/* Displays all the desks */}
+      if (this.state.numUpdates < 1) {
         const { desks } = this.state
         const canvas = this.canvasRef.current;
         const ctx = canvas.getContext("2d");
         const img = new Image();
-        img.src = "https://external-preview.redd.it/vQmMvI6xk-2MHbkPDOJDO_HDDM_l2qR61gwd0nAC2go.jpg?auto=webp&s=f9fa784d471d0ed203fbf63530cc8f4db6454063"
+        img.src = "https://lh3.googleusercontent.com/Gjj4MhMrRWYHMMWunZZdskl8WWkvSApzx_Va3PzM1hxKWQz4rpxLtXvqYjkKCEBHM3HPVquWbWPYFmx_77z_KKoXNGTlocMAn4_pCDI85XsbCWwdWihW_OxcZx9VVIoTMqoOhhFT4w" 
+        //img.src = "https://external-preview.redd.it/vQmMvI6xk-2MHbkPDOJDO_HDDM_l2qR61gwd0nAC2go.jpg?auto=webp&s=f9fa784d471d0ed203fbf63530cc8f4db6454063"
         img.onload = () => {
             ctx.drawImage(img, 0, 0, 500, 500);
 
@@ -114,12 +121,22 @@ class ReserveSelect extends React.Component {
                 ctx.fillText(singleDesk.deskNum, sX - 5, sY + 7);
             })
         }
+        this.setState({
+          numUpdates: 1
+        })
+      }
     }
 
 
     render() {
-        const { deskNum, desks } = this.state
+        const { deskNum, desks, status, date } = this.state
         return (
+          <div>
+            {(status >= 200 && status < 300) ? 
+              <div>
+                <h1> Success! </h1>
+                <p className="font-rubik leading-normal text-text"> You have reserved desk {deskNum} on August 3, 2020. </p>                    
+              </div> :
             <div>
                 <p className="h1"><strong> Reserve a Desk </strong></p>
                 <form onSubmit={this.handleSubmit}>
@@ -144,7 +161,8 @@ class ReserveSelect extends React.Component {
                     }
                 </form>
             <br/><br/>
-            </div>
+            </div> }
+          </div>
         )
     }
 }
