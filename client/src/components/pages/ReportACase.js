@@ -36,7 +36,7 @@ class ReportACase extends React.Component {
         });
     }
     
-    handleSubmit = async event => {
+    handleSubmit(event){
 		const { illDate, testDate, validDates } = this.state
 		event.preventDefault()
 		if (illDate <= testDate) {
@@ -47,13 +47,13 @@ class ReportACase extends React.Component {
 		}
 
         {/* Post the case here and send email alerts */}
-        await axios
-            .post(`http://localhost:5000/URL HERE`, { 'date': this.state.earliest })
+        axios
+            .post(`http://localhost:5000/report`, { 'date': this.state.earliest })
             .then(response => {
                 console.log(response);
                 alert(`case successfully reported for ${this.state.earliest}`)
             })
-            .catch(error  => {
+            .catch(error => {
                 console.log(error)
                 console.log(error.response.data.error)
                 alert(`error posting case on ${this.state.earliest}`)
