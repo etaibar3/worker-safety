@@ -31,8 +31,7 @@ const UserSchema = mongoose.Schema({
     default: true,
     require: true
   },
-
-                                  
+                            
   org: {
     type: String,
     require: true
@@ -41,7 +40,18 @@ const UserSchema = mongoose.Schema({
   resetLink: {
         data: String,
         default: ''
-    }
+  },
+
+  COVID19: {
+    type: Boolean,
+    default: false
+  },
+
+  date: {
+    type: String,
+    default: ''
+  }
+
 });
 
 UserSchema.plugin(mongo4j.plugin());

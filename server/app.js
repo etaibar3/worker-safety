@@ -21,6 +21,8 @@ const logoutRoutes = require("./api/routes/logout");
 const resetPassRoutes = require("./api/routes/resetpassword");
 const seatRoutes = require("./api/routes/seats");
 const fileUpload = require("express-fileupload");
+const reportRoutes = require("./api/routes/report");
+
 // app.set("view", path.join(__dirname, "views"));
 // app.set("view engine", "ejs");
 app.set("view engine", "ejs");
@@ -63,6 +65,7 @@ app.use("/admin", adminAccRotues);
 app.use("/logout", logoutRoutes);
 app.use("/forgot-password", resetPassRoutes);
 app.use("/seats", seatRoutes);
+app.use("/report", reportRoutes);
 app.use(fileUpload());
 // const storage = multer.diskStorage({
 //   destination: "./public/uploads/",
