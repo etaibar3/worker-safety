@@ -7,13 +7,14 @@ import axios from 'axios';
 import { Redirect } from 'react-router';
 import { withAlert } from 'react-alert';
 
-
 class CreateRootAccount extends React.Component {
 	constructor() {
 		super()
 		this.state = {
 			company: "",
 			email: "",
+			first: "",
+			last: "",
 			password1: "",
 			password2: "",
 			adminChecked: false, /* must be true to submit form */
@@ -29,11 +30,11 @@ class CreateRootAccount extends React.Component {
 	}   
 
 	handleSubmit(event) {
-		const { company, email, password1, password2, adminChecked } = this.state
+		const { company, email, password1, password2, adminChecked, first, last } = this.state
 		event.preventDefault()
-    {(password1 === password2 && adminChecked) ? 
+    	{(password1 === password2 && adminChecked) ? 
 			axios
-				.post(`http://localhost:5000/admin/create-account`, { 'email': email, 'password': password1, 'org': company })
+				.post(`http://localhost:5000/admin/create-account`, { 'email': email, 'password': password1, 'org': company, 'firstName': first, 'lastName': last })
 				.then(response => {
 					console.log(response)
           this.props.alert.success('Success')
@@ -51,19 +52,43 @@ class CreateRootAccount extends React.Component {
                 password2: ""
             })		
         }
-
 	}
 
 	render() {
-		const { company, email, password1, password2, adminChecked, status } = this.state
+		const { company, email, password1, password2, adminChecked, status, first, last } = this.state
+		const pageTitle = {
+		  width: 167,
+		  height: 41,
+		  fontFamily: "Rubik",
+		  fontSize: 35,
+		  fontWeight: "bold",
+		  fontStyle: "normal",
+		  letterSpacing: 0,
+		};
+		const buttonprimarylarge = {
+		  width: 180,
+		  height: 59,
+		  borderRadius: 5,
+		  backgroundColor: "#2121ca",
+		  color: 'white'
+		};
+		const rectangle4 = {
+		  width: 280,
+		  height: 49,
+		  borderRadius: 5,
+		  backgroundColor: "#ffffff",
+		  borderStyle: "solid",
+		  borderWidth: 2,
+		};
 		return (
 			<div>
 				{(status === 200) ?
 				<Redirect to = {{ pathname: "/login" }} /> 
 				: 
 				<div>
-					<h1> Create Account </h1>
-					<p align="left"> By filling out this form, you are creating an administrative account for your organization.
+					<div style={pageTitle}> Create Account </div>
+					<br /><br />
+					<p> By filling out this form, you are creating an administrative account for your organization.
 					Other administrators and employees can be added to your company roster through this account. If you are
 					not a company representative and you would like to be added to an organization's roster, please reach out 
 					to your company representative, and you will be emailed a 
@@ -72,7 +97,8 @@ class CreateRootAccount extends React.Component {
 						<label> 
 							Company
 							{" "}
-							<input 
+							<input
+								style = {rectangle4}
 								type="text"
 								value={company}
 								name="company" 
@@ -82,9 +108,35 @@ class CreateRootAccount extends React.Component {
 						</label>
 							<br/><br/>
 						<label> 
+							First name
+							{" "}
+							<input 
+								style = {rectangle4}
+								type="text"
+								value={first}
+								name="first" 
+								placeholder="First" 
+								onChange={this.handleChange}
+							/>   
+						</label>
+							<br/><br/>
+						<label> 
+							Last name
+							{" "}
+							<input
+								style = {rectangle4}
+								value={last}
+								name="last" 
+								placeholder="Last" 
+								onChange={this.handleChange}
+							/>   
+						</label>
+							<br/><br/>
+						<label> 
 							Work Email
 							{" "} 
-							<input 
+							<input
+								style = {rectangle4}
 								type="email" 
 								name="email"
 								value={email}
@@ -97,6 +149,7 @@ class CreateRootAccount extends React.Component {
 		                    Password (min. 6 characters)
 		                    {" "} 
 		                    <input
+								style = {rectangle4}
 		                        type="password"
 		                        name="password1"
 		                        value={password1}
@@ -109,6 +162,7 @@ class CreateRootAccount extends React.Component {
 		                    Confirm Password
 		                    {" "} 
 		                    <input
+		                    	style = {rectangle4}
 		                        type="password"
 		                        name="password2"
 		                        value={password2}
@@ -124,15 +178,15 @@ class CreateRootAccount extends React.Component {
 								checked={adminChecked}
 								onChange={this.handleChange}
 							/>
-								I understand that I am creating the root account for my company
+								{" "}I understand that I am creating the root account for my company
 								and will be responsible for managing my company roster and floor plan. 
 						</label> 
 							<br/><br/>
-						<button type="submit">Create Account</button>
+						<button style={buttonprimarylarge} type="submit">Create Account</button>
 					</form>
 				<br/><br/><br/><br/><br/><br/><br/><br/> 
 				</div>
-			})
+			}
 			</div>
 		)
 	}

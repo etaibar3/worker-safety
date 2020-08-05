@@ -9,6 +9,7 @@ const mongoose = require("mongoose");
 const cors = require("cors");
 const fs = require("fs-extra");
 //var neo4j = require('neo4j-driver');
+require('dotenv').config()
 
 const employeeRoutes = require("./api/routes/employees");
 const reservationRoutes = require("./api/routes/reservations");
@@ -20,9 +21,15 @@ const adminAccRotues = require("./api/routes/admin");
 const logoutRoutes = require("./api/routes/logout");
 const resetPassRoutes = require("./api/routes/resetpassword");
 const seatRoutes = require("./api/routes/seats");
+
 // const fileUpload = require("express-fileupload");
 
 const Floorplan = require("./api/models/floorplan");
+
+const fileUpload = require("express-fileupload");
+const reportRoutes = require("./api/routes/report");
+
+
 // app.set("view", path.join(__dirname, "views"));
 // app.set("view engine", "ejs");
 app.set("view engine", "ejs");
@@ -67,7 +74,12 @@ app.use("/admin", adminAccRotues);
 app.use("/logout", logoutRoutes);
 app.use("/forgot-password", resetPassRoutes);
 app.use("/seats", seatRoutes);
+
 // app.use(fileUpload());
+
+
+app.use("/report", reportRoutes);
+app.use(fileUpload());
 
 // const storage = multer.diskStorage({
 //   destination: "./public/uploads/",
@@ -212,6 +224,13 @@ app.use("/seats", seatRoutes);
 //   }
 // });
 app.use(cors());
+
 app.listen(5000, () => console.log("Server Started..."));
 // admin_server.listen(5000, () => console.log("admin"));
+
+
+//const port = 3000;
+//app.listen(port, () => console.log(`Server started on port ${port}`));
+// app.listen(5000, () => console.log("Server Started..."));
+
 module.exports = app;

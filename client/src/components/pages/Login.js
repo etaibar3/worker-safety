@@ -1,6 +1,8 @@
 // Component: Login
 // Description: This component handles the front end login functionality. 
 
+//Where should sign up here link to-->root or child acct creation
+
 import React from 'react';
 import axios from 'axios';
 import { Redirect } from 'react-router';
@@ -43,7 +45,9 @@ class Login extends React.Component {
             })
             .catch(error  => {
                 console.log(error)
-                this.props.alert.error(error.response.data.error)
+                if(error.response.data)  {
+                    this.props.alert.error(error.response.data.error)
+                }
             })   
     }
 
@@ -52,36 +56,42 @@ class Login extends React.Component {
         return (
             <div>
             {( status !== 200) ?
-                <div>                    
-                    <h1> Login</h1>
+                <div>
+                    <p className="h2"> Safe Return </p>
+                    <p className="font-rubik leading-normal text-text-light"> Don't have an account? </p>
+                    <Link to='/create-child-account' className="font-rubik font-medium text-blue-blue"> Sign up here </Link>
+                    <br/><br/>
                     <form onSubmit={this.handleSubmit}>
-                        <label> 
-                            Work Email
-                            {" "} 
+                        <label class="text-style"> 
+                            <strong> Email Address </strong>
+                            <br/>
                             <input
+                                style={inputBox}
                                 type="email"
                                 name="email"
                                 value={email}
-                                placeholder="example@company.com"
+                                placeholder="Enter your email address"
                                 onChange={this.handleChange}
                             />
                         </label>
                             <br/><br/>
-                        <label> 
-                            Password
-                            {" "} 
+                        <label class="text-style"> 
+                            <strong> Password </strong>
+                            <br/>
                             <input
+                                style={inputBox}
                                 type="password"
                                 name="password"
                                 value={password}
-                                placeholder="Password"
+                                placeholder="Enter your password"
                                 onChange={this.handleChange}
                             />
                         </label>
-                            <br/><br/>
-                        <button type="submit">Login </button>
+                        <br/>
+                        <Link to='/forgotyourpassword' className="font-rubik font-medium text-#2121ca"> Forgot your password? </Link>
+                        <br/><br/>
+                        <button style={submit} type="submit">Login </button>
                     </form>
-            <Link to='/forgotyourpassword' style={{ fontSize:"65%" }}> Forgot your password? </Link>
             </div> : null}
 
             {( status === 200 && isAdmin) ?
@@ -92,5 +102,68 @@ class Login extends React.Component {
         )
     }
 }
+
+const safeReturn = {
+  width: 210,
+  height: 34.2,
+  fontFamily: "Rubik",
+  fontSize: 35,
+  fontWeight: "bold",
+  fontStyle: "normal",
+  letterSpacing: 0,
+  color: "#222831"
+};
+const logo = {
+  width: 54,
+  height: 45,
+  backgroundColor: "#c4c4c4"
+};
+const inputLabel = {
+  width: 109,
+  height: 19,
+  fontFamily: "Rubik",
+  fontSize: 20,
+  fontWeight: "900",
+  fontStyle: "normal",
+  letterSpacing: 0,
+  color: "#222831"
+};
+const submit = {
+  width: 280,
+  height: 59,
+  borderRadius: 5,
+  backgroundColor: "#2121ca",
+  color: "#ffffff"
+};
+const inputBox = {
+  width: 280,
+  height: 59,
+  borderRadius: 5,
+  backgroundColor: "#ffffff",
+  borderStyle: "solid",
+  borderWidth: 1,
+  borderColor: "#c4c4c4"
+};
+const SignUpForgotPass = {
+  width: 177,
+  height: 19,
+  fontFamily: "Rubik",
+  fontSize: 16,
+  fontWeight: "1000",
+  fontStyle: "normal",
+  letterSpacing: 0,
+  color: "#2121ca"
+};
+const dontHaveAnAccount = {
+  width: 176,
+  height: 24,
+  fontFamily: "Rubik",
+  fontSize: 16,
+  fontWeight: "normal",
+  fontStyle: "normal",
+  lineHeight: 5,
+  letterSpacing: 0,
+  color: "#6c6c6c"
+};
 
 export default withAlert()(Login);
