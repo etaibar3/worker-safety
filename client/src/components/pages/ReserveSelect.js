@@ -25,7 +25,7 @@ class ReserveSelect extends React.Component {
         const { desks } = this.state
       {/* Getting desk coordinates and numbers*/}
         axios
-            .get(`http://localhost:5000/seats`)
+            .get(`http://localhost:5000/seats/${this.state.date}`)
             .then(response => {
                 console.log(response)
                 response.data.seats.map((seat, index) => {
@@ -42,7 +42,7 @@ class ReserveSelect extends React.Component {
             })
             .catch(error => {
                 console.log(error)
-            })
+            }) 
 
         {/* GET IMAGE FROM DB
         axios
@@ -67,7 +67,7 @@ class ReserveSelect extends React.Component {
         const {name, value } = event.target
         this.setState({ 
             [name] : value,
-            deskNum: 2
+            deskNum: 3
         })
     }
 
