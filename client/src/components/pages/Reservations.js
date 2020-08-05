@@ -39,6 +39,7 @@ class Reservations extends React.Component {
                 })
             })
             .catch(error => {
+              alert('error getting reservations')
                 console.log(error)
                 //console.log(error.response.data.error)
             })

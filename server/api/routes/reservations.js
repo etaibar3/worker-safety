@@ -85,10 +85,9 @@ const driver = neo4j.driver(
 
 
 router.get("/", authenticateUser, async (req, res, next) => {
+  const session = driver.session();
+  const txc = session.beginTransaction();
   try {
-    const session = driver.session();
-    const txc = session.beginTransaction(); 
-    
     const result = await txc.run( 'Match (a:Users {m_id: $id}) - [r:Reserved] - (b: Seat) return b, r.time', 
                                   {id: req.user._id});
     const records = result.records;
@@ -97,11 +96,10 @@ router.get("/", authenticateUser, async (req, res, next) => {
                               date: record._fields[1] }
         return reservation;
     }))               
-
-    console.log(result)
     
     res.status(200).json({reservations: reservations});
   } catch (err) {
+    console.log(err)
     res.status(500).json({
       error: err,
     });
@@ -121,7 +119,7 @@ router.post("/", authenticateUser, async (req, res, next) => {
   //   seat_number: req.body.seat_number,
   // });
   const session = driver.session();
-  const txc = session.beginTransaction(); 
+  const txc = session.beginTransaction();
   try {
    // const result = await reservation.save();
     var employee_id = req.user._id;
@@ -138,8 +136,6 @@ router.post("/", authenticateUser, async (req, res, next) => {
       'Match (n: Seat {name : $id}) return n', 
       {id: seat_number}
     );
-
-    console.log(result8)
 
     const result2 = await txc.run(
       "Match (a:Seat{name: $id}) SET a.reserved = true Return a",

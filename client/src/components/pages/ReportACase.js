@@ -1,46 +1,43 @@
 import React, { useState }from 'react'
 import { Link } from "react-router-dom"
 import axios from 'axios'
-import DatePicker from 'react-datepicker'
-
-import 'react-datepicker/dist/react-datepicker.css'
+import { Redirect } from 'react-router';
 
 
 class ReportACase extends React.Component {
 	constructor() {
 		super()
 		this.state = {
-			email: "",
 			illDate: new Date(),
 			testDate: new Date(),
 			max: new Date(),
-			earliest: new Date()
+			earliest: new Date(),
+			cancel: false,
+			validDates: false,
 		}
 		this.handleChange = this.handleChange.bind(this)
-		this.handleSelectIll = this.handleSelectIll.bind(this)
-		this.handleSelectTest = this.handleSelectTest.bind(this)
 		this.handleSubmit = this.handleSubmit.bind(this)
+		this.cancelReport = this.cancelReport.bind(this)
 	}
 
-	handleChange(event) {
+    handleChange = async event => {
+		const { illDate, testDate } = this.state
         const {name, value} = event.target
 		this.setState({ [name]: value })
+		const today = new Date()
+		if (illDate <= today && testDate <= today) {
+			this.setState({validDates: true})
+		}
 	}
 
-	handleSelectIll(date) {
-		this.setState({ 
-			illDate: date,
-		})
-	}
-
-	handleSelectTest(date) {
-		this.setState({ 
-			testDate: date,
-		})
-	}
-
-	handleSubmit(event) {
-		const { email, illDate, testDate } = this.state
+	cancelReport() {
+        this.setState({
+        	cancel: true
+        });
+    }
+    
+    handleSubmit(event){
+		const { illDate, testDate, validDates } = this.state
 		event.preventDefault()
 		if (illDate <= testDate) {
 			this.setState({ earliest: illDate})
@@ -49,39 +46,104 @@ class ReportACase extends React.Component {
 			this.setState({ earliest: testDate})
 		}
 
-		alert(`The earlier of the two dates is: ${this.state.earliest}`)
+        {/* Post the case here and send email alerts */}
+        axios
+            .post(`http://localhost:5000/report`, { 'date': this.state.earliest })
+            .then(response => {
+                console.log(response);
+                alert(`case successfully reported for ${this.state.earliest}`)
+            })
+            .catch(error => {
+                console.log(error)
+                console.log(error.response.data.error)
+                alert(`error posting case on ${this.state.earliest}`)
+                //this.props.alert.error(error.response.data.error)
+            }) 
+
+
 	}
 
 	render() {
-		const { email, illDate, max, testDate } = this.state
+		const { email, illDate, max, testDate, cancel, validDates } = this.state
 		return (
 			<div>
-				<h1> Report a Case </h1>
-				<p> If you are feeling unwell or have recently tested positive for COVID-19, please follow proper
-				social distancing guidelines and avoid non-essential travel and social contact. {" "}  
-				<strong>Please fill out this form if you have recently tested positive for COVID-19, and your 
-				case will be reported.</strong></p> 
+				{(cancel === true) ? <Redirect to = {{ pathname: "/root-menu" }} /> : null}
+                <p className="h1"><strong> Report a Case </strong></p>
+				<p className="font-rubik leading-normal text-text">If you have recently tested positive for COVID-19, please report your case below.</p> 
 				<br />
 				<form onSubmit={this.handleSubmit}>
-					<p> When did you first start feeling ill with COVID-19 symptoms? </p>
-					<DatePicker
-						selected={illDate}
-						onChange={this.handleSelectIll}
-						maxDate={max}
-					/>
-					<p> When did you test positive for COVID-19? </p>
-					<DatePicker
-						selected={testDate}
-						onChange={this.handleSelectTest}
-						maxDate={max}
-					/>
-					<br /><br /><br /><br />
-					<button type="submit">Submit</button>
-					<br /><br /><br /><br /><br /><br /><br /><br />
+              		<label className="h6">
+	              		<strong> When did you first start feeling ill with COVID-19 symptoms? </strong>
+	              		<br />
+	              		<input
+		                  className="rounded bg-primary-light border border-border max-w-xs"
+		                  type="date"
+		                  name="illDate"
+		                  value={illDate}
+		                  max={max}
+		                  onChange={this.handleChange}
+	              		/>
+              		</label>
+              		<br /><br />
+              		<label className="h6">
+	              		<strong> When did you test positive for COVID-19? </strong>
+	              		<br />
+	              		<input
+		                  className="rounded bg-primary-light border border-border max-w-xs"
+		                  type="date"
+		                  name="testDate"
+		                  value={testDate}
+		                  max={max}
+		                  onChange={this.handleChange}
+	              		/>
+              		</label>
+              		<br /><br /><br /><br />
+                    {(validDates) ?
+                        <div>
+                            <button style={cancelStyle} onClick={this.cancelReport}>Cancel</button>
+                            {" "}
+                            <button type="submit" style={submitButtonActive} onSubmit={this.handleSubmit}>Submit</button> 
+                        </div>
+                        :
+                        <div>
+                            <button style={cancelStyle} onClick={this.cancelReport}>Cancel</button>
+                            {" "}
+                            <button style={submitButtonInactive}>Submit</button>
+                        </div>
+                    } 
 				</form>
 			</div>
 		)
 	}
-}
+	}
+
+
+const submitButtonActive = {
+  width: 131,
+  height: 59,
+  borderRadius: 5,
+  fontWeight: "500",
+  backgroundColor: "#2121ca",
+  color:"#ffffff"
+};
+
+
+const cancelStyle = {
+  width: 113,
+  height: 59,
+  borderRadius: 5,
+  fontWeight: "500",
+  backgroundColor: "#ffffff",
+  color: "#2121ca"
+};
+
+const submitButtonInactive = {
+  width: 131,
+  height: 59,
+  borderRadius: 5,
+  fontWeight: "500",
+  backgroundColor: "#c4c4c4",
+  color:"#ffffff"
+};
 
 export default ReportACase
