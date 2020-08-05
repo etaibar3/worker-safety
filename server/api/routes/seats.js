@@ -14,11 +14,9 @@ router.get('/:date', authenticateUser, async (req, res) => {
     const date = req.params.date;
     try {
         const result = await txc.run('Match (a:Seat {org: $org}) RETURN a', {org: org})
-        //const result_id = await txc.run('Match (a:Seat {org: $org}) RETURN a', {org: org})
         const reserved_result = await txc.run('Match (a:Users)-[r:Reserved {time: date($date)} ]- (b:Seat {org: $org}) return b',
                                     {date: date, org: org})
-        //console.log(reserved_seats.records);
-        //console.log(reserved_seats.records[0]._fields[0]);
+      
         const records = result.records;
         const reserved_records = reserved_result.records;
         const reserved_seats = reserved_records.map(record => {
@@ -67,7 +65,7 @@ router.post('/add', authenticateAdmin, async function(req, res){
               // const result3 = Seat.cypherQuery('MATCH (n:Seat {name: $firstParam}), (b:Seat {location: $point }) return distance(n.location, b.location) AS Distance', {firstParam: name, point: location })
               const records2 = (await result3).records;
               var distance = records2[0]._fields[0]; 
-              console.log(distance);
+              //console.log(distance);
               
 
               if(distance > 0 && distance < 6){
@@ -76,7 +74,7 @@ router.post('/add', authenticateAdmin, async function(req, res){
           }
 
       await txc.commit()
-      console.log('committed')
+      //console.log('committed')
       res.json({msg: "Okay"})
     } catch (error) {
       console.log(error)
