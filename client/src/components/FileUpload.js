@@ -18,8 +18,30 @@ const FileUpload = () => {
     setFile(e.target.files[0]);
     setFilename(e.target.files[0].name);
 
+  };
+
+  const onSubmit = async (e) => {
+    e.preventDefault();
+    const formData = new FormData();
+    formData.append("floorplanImage", file);
+
+    try {
+      const res = await axios.post("/upload", formData, {
+        headers: {
+          "Content-Type": "multipart/form-data",
+          //"Content-Type": "false",
+        },
+        onUploadProgress: (progressEvent) => {
+          setUploadPercentage(
+            parseInt(
+              Math.round((progressEvent.loaded * 100) / progressEvent.total)
+            )
+          );
+
+
     var reader = new FileReader();
       reader.readAsDataURL(e.target.files[0]);
+
 
       reader.onloadend = function (e) {
           setImg(reader.result); // imgSrc set here
@@ -67,7 +89,16 @@ const FileUpload = () => {
   return (
     <Fragment>
       {message ? <Message msg={message} /> : null}
+
+      <form
+        action="fileupload"
+        method="POST"
+        onSubmit={onSubmit}
+        enctype="multipart/form-data"
+      >
+
       <form onSubmit={onSubmit} style={formStyle} >
+
         <div className="custom-file mb-4">
           <h2>Create your floor plan</h2>
           <label htmlFor="customFile" style={fileStyle} htmlFor="customFile">
@@ -75,7 +106,8 @@ const FileUpload = () => {
           </label>
           <input
             type="file"
-            className="custom-file-input"
+            name="floorplanImage"
+            class="form-control"
             id="customFile"
             style={{display: 'none'}}
             onChange={onChange}
