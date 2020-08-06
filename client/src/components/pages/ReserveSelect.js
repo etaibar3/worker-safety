@@ -1,8 +1,8 @@
 import  React, { useRef } from 'react'
 import axios from 'axios'
 import { Redirect } from 'react-router';
+import { withAlert } from 'react-alert';
 
-/* implement max desk for form validation */
 
 class ReserveSelect extends React.Component {
     constructor(props) {
@@ -11,10 +11,11 @@ class ReserveSelect extends React.Component {
         this.state = {
             deskNum: 0,
             desks:[],
-            maxDesk: 0,
             date: props.date,
             status: 400,
-            numUpdates: 0
+            numUpdates: 0,
+            validRes: true,
+            imgURL: ""
         }
         this.routeChangeBack = this.routeChangeBack.bind(this);
         this.handleClick = this.handleClick.bind(this)
@@ -32,52 +33,61 @@ class ReserveSelect extends React.Component {
                     const newDesk = {
                         deskNum: seat.id,
                         pixXcoord: seat.pix_x,
-                        pixYcoord: seat.pix_y
+                        pixYcoord: seat.pix_y,
+                        isReserved: seat.isReserved
                     };
                     desks.push(newDesk)
-                })
-                this.setState({
-                    maxDesk: desks.length
                 })
             })
             .catch(error => {
                 console.log(error)
             }) 
 
-        {/* GET IMAGE FROM DB
+      {/* Getting floorplan image from DB*/}
         axios
-         .get(`http://localhost:5000/upload/`)
+         .get(`http://localhost:5000/FLOORPLANURLHERE/`)
          .then(response => {
             console.log(response)
-            alert(response)
+            alert('success requesting floorplan')
             this.setState({
-                image: response.image
+                imgURL: response.image
             })
          })
          .catch(error => {
             console.log(error)
-            alert(error)
+            alert('floorplan request failed')
             this.setState({
                 status: error.response.status
             })
-         }) */}
+         })
     }
 
     handleClick(event) {
-        const {name, value } = event.target
+        const {name, value} = event.target
         this.setState({ 
-            [name] : value,
-            deskNum: 3
+          [name] : value,
         })
     }
 
-    handleSubmit = async event => {
-        const { date, deskNum, maxDesk } = this.state
+
+    handleSubmit(event) {
+        const { date, deskNum, desks } = this.state
         event.preventDefault()
-        alert(`reserving desk ${deskNum} out of ${maxDesk} for on ${date}`)
-      {/* Posting desk reservation */}
-          await axios
-            .post(`http://localhost:5000/reservations`, { 'date': date, 'seat_number': deskNum }) 
+        let intDesk = parseInt(deskNum, 10)
+
+        let validDesk = true
+        desks.forEach((singleDesk) => {
+          if (singleDesk.deskNum === intDesk) {
+            if (singleDesk.isReserved === true) {
+              validDesk = false
+            }
+          }
+        })
+
+        if (validDesk) {
+          // Posting desk reservation
+          axios
+            .post(`http://localhost:5000/reservations`, { 'date': date, 'seat_number': intDesk }) 
             .then(response => {
                 console.log(response)
                 this.props.alert.success('Success')
@@ -91,6 +101,12 @@ class ReserveSelect extends React.Component {
                 //console.log(error.response.data.error)
                 //this.props.alert.error(error.response.data.error)
             })
+        }
+        else {
+          this.setState({
+            validRes: false
+          })
+        }
     }
 
     routeChangeBack() {
@@ -103,52 +119,69 @@ class ReserveSelect extends React.Component {
       if (this.state.numUpdates < 1) {
         const { desks } = this.state
         const canvas = this.canvasRef.current;
-        const ctx = canvas.getContext("2d");
-        const img = new Image();
-        img.src = "https://lh3.googleusercontent.com/Gjj4MhMrRWYHMMWunZZdskl8WWkvSApzx_Va3PzM1hxKWQz4rpxLtXvqYjkKCEBHM3HPVquWbWPYFmx_77z_KKoXNGTlocMAn4_pCDI85XsbCWwdWihW_OxcZx9VVIoTMqoOhhFT4w" 
-        //img.src = "https://external-preview.redd.it/vQmMvI6xk-2MHbkPDOJDO_HDDM_l2qR61gwd0nAC2go.jpg?auto=webp&s=f9fa784d471d0ed203fbf63530cc8f4db6454063"
-        img.onload = () => {
-            ctx.drawImage(img, 0, 0, 500, 500);
+        if (canvas !== null) {
+          const ctx = canvas.getContext("2d");
+          const img = new Image();
+          //img.src = "https://external-preview.redd.it/vQmMvI6xk-2MHbkPDOJDO_HDDM_l2qR61gwd0nAC2go.jpg?auto=webp&s=f9fa784d471d0ed203fbf63530cc8f4db6454063"
+          img.src = this.state.imgURL
+          img.onload = () => {
+              ctx.drawImage(img, 0, 0, 500, 500);
 
-            // Creating all the desks
-            desks.forEach((singleDesk) => {
-                ctx.fillStyle = "#2b60a6"
-                const sX = singleDesk.pixXcoord;
-                const sY = singleDesk.pixYcoord;
-                ctx.fillRect(sX - 15, sY - 15, 30, 30);
-                ctx.fillStyle = "white";
-                ctx.font = "20px Arial";
-                ctx.fillText(singleDesk.deskNum, sX - 5, sY + 7);
-            })
+              // Creating all the desks
+              desks.forEach((singleDesk) => {
+                  {(singleDesk.isReserved) ? ctx.fillStyle = "#a0a0a0" : ctx.fillStyle = "#2b60a6"}
+                  const sX = singleDesk.pixXcoord;
+                  const sY = singleDesk.pixYcoord;
+                  ctx.fillRect(sX - 15, sY - 15, 30, 30);
+                  ctx.fillStyle = "white";
+                  ctx.font = "20px Arial";
+                  ctx.fillText(singleDesk.deskNum, sX - 5, sY + 7);
+              })
+          }
+          this.setState({
+            numUpdates: 1
+          })
         }
-        this.setState({
-          numUpdates: 1
-        })
       }
     }
 
 
     render() {
-        const { deskNum, desks, status, date } = this.state
+        const { deskNum, desks, status, date, validRes } = this.state
         return (
           <div>
             {(status >= 200 && status < 300) ? 
               <div>
                 <h1> Success! </h1>
-                <p className="font-rubik leading-normal text-text"> You have reserved desk {deskNum} on August 3, 2020. </p>                    
+                <p className="font-rubik leading-normal text-text"> You have reserved desk {deskNum} on {date}. </p>                    
               </div> :
-            <div>
+              <div>
                 <p className="h1"><strong> Reserve a Desk </strong></p>
                 <form onSubmit={this.handleSubmit}>
                     <p className="font-rubik leading-normal text-text"> Select a desk from the floorplan below. </p>                    
-                    <br/><br/>
+                    <br/>
+                    <select name="deskNum" onChange={this.handleClick}>
+                                <option value=""></option>
+                                <option value="1">1</option>
+                                <option value="2">2</option>
+                                <option value="3">3</option>
+                                <option value="4">4</option>
+                                <option value="5">5</option> 
+                                <option value="6">6</option>
+                                <option value="7">7</option>
+                                <option value="8">8</option>
+                                <option value="9">9</option>
+                    </select>
+                    <br/>
 
                     {( desks.length > 0 ) ?
                         <canvas ref={this.canvasRef} style={canvasStyle} onClick={this.handleClick} width={500} height={500}/>
                     : null}
 
+                    <br /><br />
                     {(deskNum <= 0) ?
                         <div>
+                            {(validRes === false) ? <p className="h6"><strong> Desk {deskNum} is not available on the date you selected </strong> </p> : null}
                             <button style={back} onClick={this.state.routeChangeBack}>Back</button>
                             <button style={reserveButtonInactive}>Reserve</button>
                         </div>
@@ -214,4 +247,4 @@ const canvasStyle = {
     display: 'block'
 }
 
-export default ReserveSelect
+export default withAlert()(ReserveSelect);
