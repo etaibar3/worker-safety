@@ -183,6 +183,24 @@ router.post("/", authenticateUser, async (req, res, next) => {
   }
 });
 
+router.delete("/", authenticateUser, async (req, res, next) => {
+  const session = driver.session();
+  const txc = session.beginTransaction();
+  // var seat_number = req.body.seat_number;
+  var reserv_date = req.body.date;
+
+  try {
+    const result = await txc.run( 'Match (a:Users {m_id: $id}) - [r:Reserved {time: date($date)}] - (b: Seat) Delete r', 
+                                  {id: req.user._id, date: reserv_date });
+
+    res.json({msg: "Reservation Successfully Deleted"});
+  } catch (err) {
+    console.log(err)
+    res.status(500).json({
+      error: err,
+    });
+  }
+});
 // router.get("/:reservationId", async (req, res, next) => {
 //   const id = req.params.reservationId;
 
