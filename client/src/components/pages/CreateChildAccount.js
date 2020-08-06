@@ -42,7 +42,9 @@ class CreateChildAccount extends React.Component {
                 })
                 .catch(error => {
                     console.log(error)
-                    this.props.alert.error(error.response.data.error)
+                    if(error.response !== undefined)  {
+                        this.props.alert.error(error.response.data.error)
+                    }
                 })
             : alert(`Passwords do not match. Please try again.`)
             this.setState({
