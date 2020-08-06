@@ -7,6 +7,7 @@ const morgan = require("morgan");
 const bodyParser = require("body-parser");
 const mongoose = require("mongoose");
 const cors = require("cors");
+const fs = require("fs-extra");
 //var neo4j = require('neo4j-driver');
 require('dotenv').config()
 
@@ -20,8 +21,14 @@ const adminAccRotues = require("./api/routes/admin");
 const logoutRoutes = require("./api/routes/logout");
 const resetPassRoutes = require("./api/routes/resetpassword");
 const seatRoutes = require("./api/routes/seats");
+
+// const fileUpload = require("express-fileupload");
+
+const Floorplan = require("./api/models/floorplan");
+
 const fileUpload = require("express-fileupload");
 const reportRoutes = require("./api/routes/report");
+
 
 // app.set("view", path.join(__dirname, "views"));
 // app.set("view engine", "ejs");
@@ -39,7 +46,7 @@ mongo4j.init("neo4j://localhost", { user: "neo4j", pass: "123456" });
 mongoose.Promise = global.Promise;
 
 app.use(morgan("dev"));
-// app.use("/uploads", express.static("uploads"));
+app.use("/uploads", express.static("uploads"));
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: false }));
 app.use((req, res, next) => {
@@ -58,6 +65,8 @@ app.use((req, res, next) => {
 app.use("/employees", employeeRoutes);
 app.use("/reservations", reservationRoutes);
 app.use("/floorplan", floorplanRoutes);
+app.use("/upload", floorplanRoutes);
+
 app.use("/employee", employeeAccRoutes);
 app.use("/login", loginRoutes);
 app.use("/org", orgRoutes);
@@ -65,8 +74,13 @@ app.use("/admin", adminAccRotues);
 app.use("/logout", logoutRoutes);
 app.use("/forgot-password", resetPassRoutes);
 app.use("/seats", seatRoutes);
+
+// app.use(fileUpload());
+
+
 app.use("/report", reportRoutes);
 app.use(fileUpload());
+
 // const storage = multer.diskStorage({
 //   destination: "./public/uploads/",
 //   filename: function (req, file, cb) {
@@ -128,27 +142,95 @@ app.use(fileUpload());
 //   });
 // });
 
-app.post("/upload", (req, res) => {
-  console.log("working");
-  if (req.files === null) {
-    return res.status(400).json({ msg: "No file uploaded" });
-  }
+// const fileFilter = (req, file, cb) => {
+//   if (file.mimetype === "image/jpeg" || file.mimetype === "image/png") {
+//     cb(null, true);
+//   } else {
+//     cb(null, false);
+//   }
+// };
+// const upload = multer({
+//   storage: multer.diskStorage({
+//     destination: (req, file, callback) => {
+//       let path = "./public/uploads";
+//       fs.mkdirsSync(path);
+//       callback(null, path);
+//     },
+//     filename: (req, file, callback) => {
+//       callback(null, file.originalname);
+//     },
+//     limits: {
+//       fileSize: 1024 * 1024 * 5,
+//     },
+//     // fileFilter: fileFilter,
+//   }),
 
-  const file = req.files.file;
+//   limits: {
+//     fileSize: 1024 * 1024 * 5,
+//   },
+//   // fileFilter: fileFilter,
+// });
 
-  file.mv(`${__dirname}/public/uploads/${file.name}`, (err) => {
-    if (err) {
-      console.error(err);
-      return res.status(500).send(err);
-    }
-    res.json({ fileName: file.name, filePath: `/uploads/${file.name}` });
-  });
-});
+// app.post("/upload", upload.single("floorplanImage"), (req, res, next) => {
+//   console.log(req.file);
+//   const floorplan = new Floorplan({
+//     _id: new mongoose.Types.ObjectId(),
+//     name: req.body.name,
+//     floorplanImage: req.file.path,
+//   });
+//   floorplan
+//     .save()
+//     .then((result) => {
+//       console.log(result);
+//       res.status(201).json({
+//         message: "Image uploaded successfully",
+//         createdFloorplan: {
+//           name: result.name,
+//           floorplanImage: result.floorplanImage,
+//           _id: result._id,
+//           request: {
+//             type: "GET",
+//             url: "http//localhost:3000/floorplan/" + result._id,
+//           },
+//         },
+//       });
+//     })
+//     .catch((err) => {
+//       console.log(err);
+//       res.status(500).json({
+//         error: err,
+//       });
+//     });
+// });
 
+// app.post("/upload", async (req, res, next) => {
+//   //console.log("working");
+//   try {
+//     if (req.files === null) {
+//       return res.status(400).json({ msg: "No file uploaded" });
+//     }
+
+//     const file = req.files.file;
+
+//     file.mv(`${__dirname}/public/uploads/${file.name}`, (err) => {
+//       if (err) {
+//         console.error(err);
+//         return res.status(500).send(err);
+//       }
+//       res.json({ fileName: file.name, filePath: `/uploads/${file.name}` });
+//     });
+//   } catch (err) {
+//     res.status(500).json({ error: err });
+//   }
+// });
 app.use(cors());
+
+app.listen(5000, () => console.log("Server Started..."));
+// admin_server.listen(5000, () => console.log("admin"));
+
 
 //const port = 3000;
 //app.listen(port, () => console.log(`Server started on port ${port}`));
 // app.listen(5000, () => console.log("Server Started..."));
-// app.listen(3000, () => console.log("Server Started..."));
+
 module.exports = app;

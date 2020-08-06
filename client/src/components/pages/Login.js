@@ -62,7 +62,7 @@ class Login extends React.Component {
                     <Link to='/create-child-account' className="font-rubik font-medium text-blue-blue"> Sign up here </Link>
                     <br/><br/>
                     <form onSubmit={this.handleSubmit}>
-                        <label class="text-style"> 
+                        <label className="text-style"> 
                             <strong> Email Address </strong>
                             <br/>
                             <input
@@ -75,7 +75,7 @@ class Login extends React.Component {
                             />
                         </label>
                             <br/><br/>
-                        <label class="text-style"> 
+                        <label className="text-style"> 
                             <strong> Password </strong>
                             <br/>
                             <input

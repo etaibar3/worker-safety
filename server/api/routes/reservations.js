@@ -88,7 +88,6 @@ router.get("/", authenticateUser, async (req, res, next) => {
   const session = driver.session();
   const txc = session.beginTransaction();
   try {
-  
     const result = await txc.run( 'Match (a:Users {m_id: $id}) - [r:Reserved] - (b: Seat) return b, r.time', 
                                   {id: req.user._id});
     const records = result.records;
@@ -121,7 +120,6 @@ router.post("/", authenticateUser, async (req, res, next) => {
   // });
   const session = driver.session();
   const txc = session.beginTransaction();
-
   try {
    // const result = await reservation.save();
     var employee_id = req.user._id;
@@ -176,6 +174,7 @@ router.post("/", authenticateUser, async (req, res, next) => {
     });
   } catch (err) {
     await txc.rollback();
+    console.log(err);
     res.status(500).json({
       error: err,
     });

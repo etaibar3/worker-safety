@@ -7,25 +7,33 @@ const { authenticateAdmin, authenticateUser } = require("../middleware/auth");
 
 const driver = neo4j.driver(  "bolt://localhost", neo4j.auth.basic("neo4j", "123456"));
 
-router.get('/', authenticateUser, async (req, res) => {
+router.get('/:date', authenticateUser, async (req, res) => {
     const session = driver.session();
     const txc = session.beginTransaction();
-    const org = req.user.org
+    const org = req.user.org;
+    const date = req.params.date;
     try {
-        const result_pix = await txc.run('Match (a:Seat {org: $org}) RETURN a.pixel_location', {org: org})
-        const result_id = await txc.run('Match (a:Seat {org: $org}) RETURN a.name', {org: org})
-        const pix_records = result_pix.records;
-        const id_records = result_id.records;
-        const seats = pix_records.map((record, index) => {
-            const seat = {pix_x: record._fields[0].x,
-                          pix_y: record._fields[0].y,
-                          id: id_records[index]._fields[0],
+        const result = await txc.run('Match (a:Seat {org: $org}) RETURN a', {org: org})
+        const reserved_result = await txc.run('Match (a:Users)-[r:Reserved {time: date($date)} ]- (b:Seat {org: $org}) return b',
+                                    {date: date, org: org})
+      
+        const records = result.records;
+        const reserved_records = reserved_result.records;
+        const reserved_seats = reserved_records.map(record => {
+            return record._fields[0].properties.name;
+        });
+        const seats = records.map((record) => {
+            const seat = {pix_x: record._fields[0].properties.pixel_location.x,
+                          pix_y: record._fields[0].properties.pixel_location.y,
+                          id: record._fields[0].properties.name,
+                          isReserved: reserved_seats.includes(record._fields[0].properties.name),
             }
             return seat;
         });
         res.json({seats: seats})
     } catch (err) {
         res.status(500).json({error: err});
+        console.log(err)
     }
 })
 
@@ -57,15 +65,14 @@ router.post('/add', authenticateAdmin, async function(req, res){
               // const result3 = Seat.cypherQuery('MATCH (n:Seat {name: $firstParam}), (b:Seat {location: $point }) return distance(n.location, b.location) AS Distance', {firstParam: name, point: location })
               const records2 = (await result3).records;
               var distance = records2[0]._fields[0]; 
-             // console.log(distance);
-              
+
               if(distance > 0 && distance < 6){
                   const result4 =  txc.run('MATCH (n:Seat {name: $id}), (b:Seat {location: $point }) Create (n)-[r:Within_dist]->(b) Return b', {id: name, point: location_value })
               }
           }
 
       await txc.commit()
-      console.log('committed')
+      //console.log('committed')
       res.json({msg: "Okay"})
     } catch (error) {
       console.log(error)

@@ -25,25 +25,29 @@ class Reservations extends React.Component {
 
     componentDidMount() {
         {/* Get reservations here */}
-        const { desks, reservations } = this.state
         axios
             .get(`http://localhost:5000/reservations`)
             .then(response => {
                 console.log(response)
+                const reservationsPop = 
                 response.data.reservations.map((reservation, index) => {
                     const newReservation = {
                         deskNum: reservation.id,
                         date: reservation.date,
                     };
-                    reservations.push(newReservation)
+                    return newReservation
+                })
+                this.setState({
+                  reservations: reservationsPop
                 })
             })
             .catch(error => {
-              alert('error getting reservations')
                 console.log(error)
                 if(error.response !== undefined)  {
                     this.props.alert.error(error.response.data.error)
+                    console.log(error.response.data.error)
                 }
+
             })
       }
 
@@ -85,7 +89,7 @@ class Reservations extends React.Component {
         const { method, reservations } = this.state
         return (
             <div>
-                <p style={reservations}> Reservations </p>
+                <p style={reservationsStyle}> Reservations </p>
                 <button style={reserveBlue} onClick={this.routeChange}>Reserve</button> 
                     <p> What would you like to do? </p>
                     <form onSubmit={this.handleSubmit} value={method}>
@@ -112,7 +116,7 @@ class Reservations extends React.Component {
     }
 }
 
-const reservations = {
+const reservationsStyle = {
   width: 231,
   height: 41,
   fontFamily: "Rubik",
