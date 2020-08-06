@@ -44,7 +44,9 @@ class CreateRootAccount extends React.Component {
 				})
 				.catch(error => {
 					console.log(error)
-     			this.props.alert.error(error.response.data.error)
+					if(error.response !== undefined)  {
+						this.props.alert.error(error.response.data.error)
+					}
 				})
 			: alert(`This form cannot be submitted. Please make sure your passwords match and that you have checked the acknowledgement box at the bottom of the form, and try again.`)
             this.setState({

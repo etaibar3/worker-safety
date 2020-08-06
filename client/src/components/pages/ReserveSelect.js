@@ -99,7 +99,9 @@ class ReserveSelect extends React.Component {
                 console.log(error)
                 alert('error posting reservation')
                 //console.log(error.response.data.error)
-                //this.props.alert.error(error.response.data.error)
+                if(error.response !== undefined)  {
+                  this.props.alert.error(error.response.data.error)
+                }
             })
         }
         else {
