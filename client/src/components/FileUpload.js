@@ -41,6 +41,13 @@ const FileUpload = () => {
 
       setUploadedFile({ fileName, filePath });
 
+    var reader = new FileReader();
+      reader.readAsDataURL(e.target.files[0]);
+      reader.onloadend = function (e) {
+      setImg(reader.result); // imgSrc set here
+    };
+  };
+
       setMessage("File Uploaded");
     } catch (err) {
       if (err.response.status === 500) {
@@ -74,6 +81,7 @@ const FileUpload = () => {
           value="Upload"
           className="btn btn-primary btn-block mt-4"
         />
+      </form>
       </form>
       {uploadedFile ? (
         <div className="row mt-5">

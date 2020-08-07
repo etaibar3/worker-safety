@@ -68,7 +68,11 @@ class Reservations extends React.Component {
             })
             .catch(error => {
                 console.log(error)
-                console.log(error.response.data.error)
+                if(error.response !== undefined)  {
+                    this.props.alert.error(error.response.data.error)
+                    console.log(error.response.data.error)
+                }
+
             })
       }
 
@@ -98,7 +102,9 @@ class Reservations extends React.Component {
                 })
                 .catch(error => {
                     console.log(error)
-                    this.props.alert.error(error.response.data.error)
+                    if(error.response !== undefined)  {
+                        this.props.alert.error(error.response.data.error)
+                    }
                 })
         }
       */}

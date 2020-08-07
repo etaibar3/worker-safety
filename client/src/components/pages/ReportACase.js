@@ -50,14 +50,18 @@ class ReportACase extends React.Component {
         axios
             .post(`http://localhost:5000/report`, { 'date': this.state.earliest })
             .then(response => {
+				/* Response in data returns a message and emails, a list of user emails we sent alerts to*/
                 console.log(response);
                 alert(`case successfully reported for ${this.state.earliest}`)
             })
             .catch(error => {
-                console.log(error)
-                console.log(error.response.data.error)
+				console.log(error)
+				if(error.response !== undefined) {
+					console.log(error.response.data.error)
+					//this.props.alert.error(error.response.data.error)
+				}
                 alert(`error posting case on ${this.state.earliest}`)
-                //this.props.alert.error(error.response.data.error)
+                
             }) 
 
 
