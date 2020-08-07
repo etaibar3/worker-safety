@@ -14,8 +14,9 @@ class ReserveSelect extends React.Component {
             date: props.date,
             status: 400,
             numUpdates: 0,
-            validRes: true,
-            imgURL: ""
+            validRes: true, //validRes=true if the selected desk is available and the user is not double booking that date
+            imgURL: "",
+            userReservations: []
         }
         this.routeChangeBack = this.routeChangeBack.bind(this);
         this.handleClick = this.handleClick.bind(this)
@@ -23,7 +24,7 @@ class ReserveSelect extends React.Component {
     }
 
     componentDidMount() {
-        const { desks } = this.state
+        const { desks, userReservations } = this.state
       {/* Getting desk coordinates and numbers*/}
         axios
             .get(`http://localhost:5000/seats/${this.state.date}`)
@@ -41,7 +42,29 @@ class ReserveSelect extends React.Component {
             })
             .catch(error => {
                 console.log(error)
-            }) 
+            })
+
+      {/* Getting existing reservations to prevent double-booking on same day*/}
+        axios
+            .get(`http://localhost:5000/reservations`)
+            .then(response => {
+                console.log(response)
+                response.data.reservations.map((reservation, index) => {
+                    const newReservation = {
+                        day: reservation.date.day.low,
+                        month: reservation.date.month.low,
+                        year: reservation.date.year.low
+                    };
+                    userReservations.push(newReservation)
+                })
+                this.setState({
+                  userReservations: this.state.userReservations
+                })
+            })
+            .catch(error => {
+                console.log(error)
+                console.log(error.response.data.error)
+            })
 
       {/* Getting floorplan image from DB*/}
         axios
@@ -64,18 +87,15 @@ class ReserveSelect extends React.Component {
 
     handleClick(event) {
         const {name, value} = event.target
+        const { date, deskNum, desks, userReservations } = this.state
         this.setState({ 
           [name] : value,
         })
-    }
 
-
-    handleSubmit(event) {
-        const { date, deskNum, desks } = this.state
-        event.preventDefault()
         let intDesk = parseInt(deskNum, 10)
 
         let validDesk = true
+      {/* Check if the desk is available*/}
         desks.forEach((singleDesk) => {
           if (singleDesk.deskNum === intDesk) {
             if (singleDesk.isReserved === true) {
@@ -84,7 +104,54 @@ class ReserveSelect extends React.Component {
           }
         })
 
-        if (validDesk) {
+        {/* Check if the user has another reservation on that day*/}
+        let doubleBooking = false
+        if (validDesk === true) {
+          userReservations.forEach((reservation) => {
+            if (reservation.date === date) {  //fix formatting here this comp wont work
+                doubleBooking = true
+            }
+          })
+        }
+
+        if (validDesk && doubleBooking === false) {
+          this.setState({
+            validRes: true
+          })
+        }
+        else {
+          this.setState({
+            validRes: false
+          })
+        }
+    }
+
+    handleSubmit(event) {
+        const { date, deskNum, desks, userReservations } = this.state
+        event.preventDefault()
+        let intDesk = parseInt(deskNum, 10)
+
+        let validDesk = true
+      {/* Check if the desk is available*/}
+        desks.forEach((singleDesk) => {
+          if (singleDesk.deskNum === intDesk) {
+            if (singleDesk.isReserved === true) {
+              validDesk = false
+            }
+          }
+        })
+
+        {/* Check if the user has another reservation on that day*/}
+        let doubleBooking = false
+        if (validDesk === true) {
+          userReservations.forEach((reservation) => {
+            if (reservation.date === date) {  //fikx formatting here this comp wont work
+                doubleBooking = true
+            }
+          })
+        }
+
+        if (validDesk && doubleBooking === false) {
           // Posting desk reservation
           axios
             .post(`http://localhost:5000/reservations`, { 'date': date, 'seat_number': intDesk }) 
@@ -124,14 +191,14 @@ class ReserveSelect extends React.Component {
         if (canvas !== null) {
           const ctx = canvas.getContext("2d");
           const img = new Image();
-          //img.src = "https://external-preview.redd.it/vQmMvI6xk-2MHbkPDOJDO_HDDM_l2qR61gwd0nAC2go.jpg?auto=webp&s=f9fa784d471d0ed203fbf63530cc8f4db6454063"
-          img.src = this.state.imgURL
+          img.src = "https://external-preview.redd.it/vQmMvI6xk-2MHbkPDOJDO_HDDM_l2qR61gwd0nAC2go.jpg?auto=webp&s=f9fa784d471d0ed203fbf63530cc8f4db6454063"
+          //img.src = this.state.imgURL
           img.onload = () => {
               ctx.drawImage(img, 0, 0, 500, 500);
 
               // Creating all the desks
               desks.forEach((singleDesk) => {
-                  {(singleDesk.isReserved) ? ctx.fillStyle = "#a0a0a0" : ctx.fillStyle = "#2b60a6"}
+                  {(singleDesk.isReserved) ? ctx.fillStyle = "#a0a0a0" : ctx.fillStyle = "#007600"}
                   const sX = singleDesk.pixXcoord;
                   const sY = singleDesk.pixYcoord;
                   ctx.fillRect(sX - 15, sY - 15, 30, 30);
@@ -175,15 +242,16 @@ class ReserveSelect extends React.Component {
                                 <option value="9">9</option>
                     </select>
                     <br/>
-
-                    {( desks.length > 0 ) ?
-                        <canvas ref={this.canvasRef} style={canvasStyle} onClick={this.handleClick} width={500} height={500}/>
-                    : null}
-
+                    <canvas ref={this.canvasRef} style={canvasStyle} onClick={this.handleClick} width={500} height={500}/>
                     <br /><br />
                     {(deskNum <= 0) ?
                         <div>
-                            {(validRes === false) ? <p className="h6"><strong> Desk {deskNum} is not available on the date you selected </strong> </p> : null}
+                            {(validRes === false) ? 
+                              <p className="h6">
+                                <strong> 
+                                  Desk {deskNum} cannot be reserved on the date you selected. You may have another reservation on this date, or desk {deskNum} may already be booked.  
+                                </strong> 
+                              </p> : null}
                             <button style={back} onClick={this.state.routeChangeBack}>Back</button>
                             <button style={reserveButtonInactive}>Reserve</button>
                         </div>

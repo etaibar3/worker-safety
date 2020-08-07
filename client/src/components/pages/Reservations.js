@@ -5,6 +5,7 @@
 import React from 'react'
 import axios from 'axios'
 import { Redirect } from 'react-router';
+import { withAlert } from 'react-alert';
 
 
 class Reservations extends React.Component {
@@ -14,7 +15,7 @@ class Reservations extends React.Component {
             email: "",
             method: " ",
             status: 400,
-            reservations: []
+            userReservations: []
         }
         this.initialState = this.state
         this.handleChange = this.handleChange.bind(this)
@@ -25,20 +26,44 @@ class Reservations extends React.Component {
 
     componentDidMount() {
         {/* Get reservations here */}
-        axios
+        /*axios
             .get(`http://localhost:5000/reservations`)
             .then(response => {
                 console.log(response)
                 const reservationsPop = 
+                      response.data.reservations.map((reservation, index) => {
+                          const newReservation = {
+                              deskNum: reservation.id,
+                              date: reservation.date,
+                          };
+                          return newReservation
+                      })
+                this.setState({
+                  reservations: reservationsPop
+                })
+            })
+            .catch(error => {
+                console.log(error)
+                console.log(error.response.data.error)
+            })*/
+        const { userReservations } = this.state
+        //const formatter = new Intl.DateTimeFormat('en', { month: 'short' });
+        axios
+            .get(`http://localhost:5000/reservations`)
+            .then(response => {
+                console.log(response)
                 response.data.reservations.map((reservation, index) => {
                     const newReservation = {
                         deskNum: reservation.id,
-                        date: reservation.date,
+                        day: reservation.date.day.low,
+                        month: reservation.date.month.low,
+                        //month: formatter.format(new Date(reservation.date.month.low)),
+                        year: reservation.date.year.low
                     };
-                    return newReservation
+                    userReservations.push(newReservation)
                 })
                 this.setState({
-                  reservations: reservationsPop
+                  userReservations: this.state.userReservations
                 })
             })
             .catch(error => {
@@ -86,31 +111,46 @@ class Reservations extends React.Component {
     }
 
     render() {
-        const { method, reservations } = this.state
+        const { method, userReservations } = this.state
         return (
             <div>
-                <p style={reservationsStyle}> Reservations </p>
+                <p className="h1"><strong> Reservations </strong></p>
                 <button style={reserveBlue} onClick={this.routeChange}>Reserve</button> 
-                    <p> What would you like to do? </p>
+                    <p className="font-rubik leading-normal text-text"> What would you like to do? </p>
                     <form onSubmit={this.handleSubmit} value={method}>
                         <select name="method" onChange={this.handleMethodChange}>
                             <option value=" "> </option>
                             <option value="Reserve">Reserve a desk</option>
                             <option value="Cancel">Cancel a reservation</option>
-                            <option value="View">View my reservations</option>
                         </select>
                         {(method === "Reserve") ? <Redirect to = {{ pathname: "/reserve-date" }} /> : null}
-                     </form>
-                     <table align="center" style={rectangle3}>
-                          <thead>
-                                <tr>
-                                    <th> Date </th>
-                                    <th> Desk Number </th>
-                                </tr>
-                          </thead>
-                    </table>
-                   {(reservations.length > 0) ?
-                    <h1> THERE ARE RESERVATIONS TO DISPLAY </h1> : null }
+
+                   {(userReservations.length > 0) ?
+                    <div>
+                      <table align="center" >
+                        <thead>
+                          <tr>
+                            <th> Date (dd/mm/yyyy)</th>
+                            <th> Desk Number </th>
+                          </tr>
+                        </thead>
+                        <tbody>
+                          {userReservations.map(reservation => (
+                              <tr key={reservation.day} align="center">
+                                <td key={reservation.day}>
+                                    {reservation.day}{"/"}{reservation.month}{"/"}{reservation.year}
+                                </td>
+                                <td key={reservation.index}>
+                                    {reservation.deskNum}
+                                </td>
+                              </tr>      
+                          ))}
+                        </tbody>
+                      </table> 
+                      <br /><br /><br /><br /><br />
+                    </div>
+                    : <p className="font-rubik leading-normal text-text"> You don't have any upcoming reservations. </p> }
+                    </form>
             </div>
         )
     }
@@ -135,7 +175,7 @@ const reserveBlue = {
   color:"#ffffff"
 };
 
-const rectangle3 = {
+const rectangle3 = {   //for table
   width: 1080,
   height: 600,
   borderRadius: 5,
@@ -144,4 +184,4 @@ const rectangle3 = {
   borderColor: "#c4c4c4"
 };
 
-export default Reservations
+export default withAlert()(Reservations);
