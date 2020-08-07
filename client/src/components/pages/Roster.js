@@ -194,9 +194,9 @@ class Roster extends React.Component {
                             <br/> <br/>
                             {/* Display response from database */}
                             {(submitClicked && status !== 200) ? <div> <p> {email} is not currently on your company roster. </p> <p>You can add them through the "Add a user" option above.</p> </div>: null }
-                            {(submitClicked && status === 200 && name != "") ? 
+                            {(submitClicked && status === 200 && name !== "") ? 
                                 <p> {name}, {email}, is on your roster. {(isAdmin) ? <p>Account type: Administrator </p> : <p> Account type: Employee </p>} </p> : null }
-                            {(submitClicked && status === 200 && name == "") ? 
+                            {(submitClicked && status === 200 && name === "") ? 
                                 <p> {email} is on your roster but has not created an account yet. {(isAdmin) ? <p>Account type: Administrator </p> : <p> Account type: Employee </p>} </p> : null }
                         </div>
                     : null}
