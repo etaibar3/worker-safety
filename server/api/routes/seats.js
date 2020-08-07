@@ -12,8 +12,9 @@ router.get('/:date', authenticateUser, async (req, res) => {
     const txc = session.beginTransaction();
     const org = req.user.org;
     const date = req.params.date;
+    // var floorplan_id = req.body.floorplan_id;
     try {
-        const result = await txc.run('Match (a:Seat {org: $org}) RETURN a', {org: org})
+        const result = await txc.run('Match (a:Seat {org: $org, floorplan_id: ""}) RETURN a', {org: org})
         const reserved_result = await txc.run('Match (a:Users)-[r:Reserved {time: date($date)} ]- (b:Seat {org: $org}) return b',
                                     {date: date, org: org})
       
@@ -46,28 +47,31 @@ router.post('/add', authenticateAdmin, async function(req, res){
   var PXvalue = req.body.pixXcoord;
   var PYvalue = req.body.pixYcoord;
 
+//   var floorplan_id = req.body.floorplan_id;
+
+
       try{
           console.log(`Xval: ${Xvalue}`)
           console.log(`Yval: ${Yvalue}`)
           const result1 = await txc.run(
               'Create (n:Seat {name: $id,' +
               'location: point({ x: $Xcoord, y: $Ycoord, crs: "cartesian"}),' +
-              'pixel_location: point({x: $pixXcoord, y: $pixYcoord}), org: $org}) RETURN n.name', 
-              {id: name, Xcoord: Xvalue, Ycoord: Yvalue, pixXcoord: PXvalue, pixYcoord: PYvalue, org: req.user.org })
+              'pixel_location: point({x: $pixXcoord, y: $pixYcoord}), org: $org, floorplan_id: ""}) RETURN n.name', 
+              {id: name, Xcoord: Xvalue, Ycoord: Yvalue, pixXcoord: PXvalue, pixYcoord: PYvalue, org: req.user.org})
             
-          var result2 = await txc.run('Match (n:Seat) return n')
+          var result2 = await txc.run('Match (n:Seat {org: $org, floorplan_id: ""}) return n', {org: req.user.org})
           const records = result2.records
           // console.log(result2);
           for(let i = 0; i< records.length; i++){
               var location_value  = records[i].get(0).properties.location;
               // console.log(location_value);
-              const result3 =   txc.run('MATCH (n:Seat {name: $id}), (b:Seat {location: $point }) return distance(n.location, b.location ) AS Distance', {id: name, point: location_value })
+              const result3 =   txc.run('MATCH (n:Seat {name: $id, org: $org, floorplan_id: ""}), (b:Seat {location: $point }) return distance(n.location, b.location ) AS Distance', {id: name, point: location_value, org: req.user.org })
               // const result3 = Seat.cypherQuery('MATCH (n:Seat {name: $firstParam}), (b:Seat {location: $point }) return distance(n.location, b.location) AS Distance', {firstParam: name, point: location })
               const records2 = (await result3).records;
               var distance = records2[0]._fields[0]; 
 
               if(distance > 0 && distance < 6){
-                  const result4 =  txc.run('MATCH (n:Seat {name: $id}), (b:Seat {location: $point }) Create (n)-[r:Within_dist]->(b) Return b', {id: name, point: location_value })
+                  const result4 =  txc.run('MATCH (n:Seat {name: $id, name: $id, org: $org, floorplan_id: ""}), (b:Seat {location: $point }) Create (n)-[r:Within_dist]->(b) Return b', {id: name, point: location_value, org: req.user.org })
               }
           }
 
@@ -86,8 +90,62 @@ router.post('/add', authenticateAdmin, async function(req, res){
         }
   })
 
+  router.delete('/delete', authenticateAdmin, async function(req, res){
+    const session = driver.session();
+    const txc = session.beginTransaction()
+    var name = req.body.id;
+    // var floorplan_id = req.body.floorplan_id;
 
+        try{
+  
+            const result1 = await txc.run(
+                'Match (n:Seat {name: $id,' +
+                'org: $org, floorplan_id: ""}) Delete n', 
+                {id: name, org: req.user.org})
 
+  
+            await txc.commit()
+            //console.log('committed')
+            res.json({msg: "Seat Deleted"})
+        }     catch (error) {
+            console.log(error)
+            await txc.rollback()
+            console.log('rolled back')
+    }
+        
+  
+        finally {
+            await session.close()
+          }
+    })
+    router.delete('/delete-allseats', authenticateAdmin, async function(req, res){
+        const session = driver.session();
+        const txc = session.beginTransaction()
+        var name = req.body.id;
+        // var floorplan_id = req.body.floorplan_id;
+    
+            try{
+      
+                const result1 = await txc.run(
+                    'Match (n:Seat {org: $org, floorplan_id: ""}) Delete n', 
+                    {org: req.user.org})
+    
+      
+                await txc.commit()
+                //console.log('committed')
+                res.json({msg: "All Seats in Floorplan Deleted"})
+            }     catch (error) {
+                console.log(error)
+                await txc.rollback()
+                console.log('rolled back')
+        }
+            
+      
+            finally {
+                await session.close()
+              }
+        })
+        
 // router.post("/", async (req, res, next) => {
 //   try {
 //     const seat = new Seat(req.body);
