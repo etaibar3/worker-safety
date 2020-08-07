@@ -18,35 +18,12 @@ const FileUpload = () => {
     setFile(e.target.files[0]);
     setFilename(e.target.files[0].name);
 
-  };
-
-  const onSubmit = async (e) => {
-    e.preventDefault();
-    const formData = new FormData();
-    formData.append("floorplanImage", file);
-
-    try {
-      const res = await axios.post("/upload", formData, {
-        headers: {
-          "Content-Type": "multipart/form-data",
-          //"Content-Type": "false",
-        },
-        onUploadProgress: (progressEvent) => {
-          setUploadPercentage(
-            parseInt(
-              Math.round((progressEvent.loaded * 100) / progressEvent.total)
-            )
-          );
-
-
     var reader = new FileReader();
       reader.readAsDataURL(e.target.files[0]);
-
-
       reader.onloadend = function (e) {
-          setImg(reader.result); // imgSrc set here
-      };
+      setImg(reader.result); // imgSrc set here
     };
+  };
 
   const onSubmit = async (e) => {
     e.preventDefault();
@@ -125,6 +102,7 @@ const FileUpload = () => {
           // className="btn btn-primary btn-block mt-4"
           style={uploadStyle}
         />
+      </form>
       </form>
       {uploadedFile ? (
         <div className="row mt-5">

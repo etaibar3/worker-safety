@@ -225,7 +225,7 @@ app.use(fileUpload());
 // });
 app.use(cors());
 
-app.listen(5000, () => console.log("Server Started..."));
+// app.listen(5000, () => console.log("Server Started..."));
 // admin_server.listen(5000, () => console.log("admin"));
 
 
