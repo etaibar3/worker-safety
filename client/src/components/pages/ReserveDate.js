@@ -4,8 +4,6 @@
 //TODO: allow employees to make recurring reservations (select multiple dates at once)
 
 import React from 'react'
-import axios from 'axios'
-import { Redirect } from 'react-router';
 import ReserveSelect from './ReserveSelect'
 
 
@@ -13,7 +11,6 @@ class ReserveDate extends React.Component {
     constructor() {
         super()
         this.state = {
-            email: "",
             status: 400,
             date: new Date(),
             min: new Date(),
@@ -67,9 +64,8 @@ class ReserveDate extends React.Component {
 
 
     render() {
-
-        const { email, continueClicked, desk, status, date, min, dateChosen, maxDesk, redirect } = this.state
-
+        const { continueClicked, desk, status, date, min, dateChosen, redirect } = this.state
+      
         if (redirect) {
           return <Redirect to = {{ pathname: "/login" }} />
         }
