@@ -14,11 +14,13 @@ mongoose.connect(
     console.log("successfully connected to databasae");
     const tokenCollection = db.collection('tokens');
     tokenCollection.createIndex({'expiresAt': 1}, {expireAfterSeconds: 0});
+    const reservationCollection = db.collection('reservations');
+    reservationCollection.createIndex( {'date_created': 1}, {expireAfterSeconds: 1555200}); //18 days in seconds
   }
 );
 
 //app.get("/", function (req, res) {});
-server.listen(port);
+//server.listen(port);
 
 /*Add routes created in other files here*/
 

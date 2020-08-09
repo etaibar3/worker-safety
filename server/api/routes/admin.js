@@ -2,8 +2,11 @@ const express = require("express");
 const router = express.Router();
 const bcrypt = require("bcrypt");
 const Joi = require("@hapi/joi");
+const mongoose = require("mongoose");
 const User = require("../models/Users.js");
 const Org = require("../models/Orgs.js");
+const Employee = require('../models/employee');
+
 
 //Validate new admin acount data
 const adminValidation = Joi.object({
@@ -11,6 +14,8 @@ const adminValidation = Joi.object({
   password: Joi.string().min(6).required(),
   admin: Joi.bool(),
   org: Joi.string().required(),
+  firstName: Joi.string().required(),
+  lastName: Joi.string().required(),
 });
 
 /* Returns admins organization - or creates a new one */
@@ -49,7 +54,7 @@ router.post('/create-account', async (req, res) => {
         const org = await getOrg(req, res);
         const admin = await org.admins.find(a =>  a === req.body.email );
         if(await admin === undefined) {
-            res.status(401).json({error: 'You are not authorized to create an employee account with the organization ' + 
+            res.status(401).json({error: 'You are not authorized to create an administrative account with the organization ' + 
                 req.body.org});            
             return;
         }
@@ -58,10 +63,18 @@ router.post('/create-account', async (req, res) => {
             email: req.body.email,
             password: hashedPassword,
             admin: true,
-            org: req.body.org
+            org: req.body.org,
+            firstName: req.body.firstName,
+            lastName: req.body.lastName,
         })
         const savedUser = await user.save();
-        res.json(savedUser);
+        // const graph_admin = new Employee({
+        //     _id: new mongoose.Types.ObjectId(),
+        //     name: req.body.firstName + ' ' + req.body.lastName,
+        //     employee_id: savedUser._id
+        // })
+        // const savedAdmin = await graph_admin.save();
+        res.json({user: savedUser});
     } catch(err){ 
         res.status(500).json({error: "Failed to create account."});
 

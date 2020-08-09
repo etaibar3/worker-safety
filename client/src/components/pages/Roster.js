@@ -1,15 +1,10 @@
 // Component: Roster
 // Description: This component contains roster interactions.
 
-// TODO:
-//  --don't accept form submission unless confirm==true
-//  --remove from roster
-//      ->does this delete child account or detach from parent?
-//      ->are future reservations for child account canceled? delete acct from db?
 
 import React from 'react'
 import axios from 'axios'
-import ViewRosterTable from './ViewRosterTable';
+import ViewRoster from './ViewRoster';
 import { withAlert } from 'react-alert';
 
 
@@ -23,6 +18,7 @@ class Roster extends React.Component {
             submitClicked: false,
             permissions: "employee",
             status: 400,
+            name: ""
         }
         this.initialState = this.state
         this.handleChange = this.handleChange.bind(this)
@@ -44,6 +40,7 @@ class Roster extends React.Component {
 
     handleSubmit(event) {
         event.preventDefault()
+        this.setState({ name: "" })
         if (this.state.method === "Add") {
             axios
                 .post(`http://localhost:5000/org/manageRoster`, { 'email': this.state.email, 'admin': this.state.isAdmin})
@@ -76,7 +73,8 @@ class Roster extends React.Component {
                 console.log(response)
                 this.setState({
                     status: response.status,
-                    isAdmin: response.data.admin
+                    isAdmin: response.data.admin,
+                    name: response.data.name
                 })
              })
              .catch(error => {
@@ -107,7 +105,7 @@ class Roster extends React.Component {
 
 
     render() {
-        const { email, method, isAdmin, submitClicked, permissions, status } = this.state
+        const { email, method, isAdmin, submitClicked, permissions, status, name } = this.state
         return (
             <div>
                 <h1> Company Roster </h1>
@@ -177,7 +175,7 @@ class Roster extends React.Component {
                     : null}
 
                     {/* To view the company roster, admin just selects "view roster" from drop down*/}
-                    {(method === "View") ? <ViewRosterTable />: null}      
+                    {(method === "View") ? <ViewRoster />: null}      
 
                     {/* To view the company roster, admin must enter user's email*/}
                     {(method === "Lookup") ?
@@ -196,8 +194,10 @@ class Roster extends React.Component {
                             <br/> <br/>
                             {/* Display response from database */}
                             {(submitClicked && status !== 200) ? <div> <p> {email} is not currently on your company roster. </p> <p>You can add them through the "Add a user" option above.</p> </div>: null }
-                            {(submitClicked && status === 200) ? 
-                                <p> {email} is on your roster. {(isAdmin) ? <p>Account type: Administrator </p> : <p> Account type: Employee </p>} </p> : null }
+                            {(submitClicked && status === 200 && name !== "") ? 
+                                <p> {name}, {email}, is on your roster. {(isAdmin) ? <p>Account type: Administrator </p> : <p> Account type: Employee </p>} </p> : null }
+                            {(submitClicked && status === 200 && name === "") ? 
+                                <p> {email} is on your roster but has not created an account yet. {(isAdmin) ? <p>Account type: Administrator </p> : <p> Account type: Employee </p>} </p> : null }
                         </div>
                     : null}
 

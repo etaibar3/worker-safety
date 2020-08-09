@@ -12,6 +12,14 @@ const reservationSchema = mongoose.Schema({
     // neo_prop: true,
     neo_rel_name: "Made by",
   },
+  date_created: {
+    type: Date,
+    default: Date.now(),
+  },
+  org: {
+    type: String,
+    required: true,
+  }
 });
 
 reservationSchema.plugin(mongo4j.plugin());

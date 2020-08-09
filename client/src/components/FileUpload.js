@@ -18,14 +18,15 @@ const FileUpload = () => {
   const onSubmit = async (e) => {
     e.preventDefault();
     const formData = new FormData();
+
     formData.append("name", "test");
     formData.append("floorplanImage", file);
+
 
     try {
       const res = await axios.post("/upload", formData, {
         headers: {
           "Content-Type": "multipart/form-data",
-          //"Content-Type": "false",
         },
 
         onUploadProgress: (progressEvent) => {
@@ -44,6 +45,13 @@ const FileUpload = () => {
 
       setUploadedFile({ fileName, filePath });
 
+    var reader = new FileReader();
+      reader.readAsDataURL(e.target.files[0]);
+      reader.onloadend = function (e) {
+      setImg(reader.result); // imgSrc set here
+    };
+  };
+
       setMessage("File Uploaded");
     } catch (err) {
       if (err.response.status === 500) {
@@ -57,17 +65,11 @@ const FileUpload = () => {
   return (
     <Fragment>
       {message ? <Message msg={message} /> : null}
-      <form
-        action="fileupload"
-        method="POST"
-        onSubmit={onSubmit}
-        enctype="multipart/form-data"
-      >
+      <form onSubmit={onSubmit}>
         <div className="custom-file mb-4">
           <input
             type="file"
-            name="floorplanImage"
-            class="form-control"
+            className="custom-file-input"
             id="customFile"
             onChange={onChange}
           />
@@ -83,6 +85,7 @@ const FileUpload = () => {
           value="Upload"
           className="btn btn-primary btn-block mt-4"
         />
+      </form>
       </form>
       {uploadedFile ? (
         <div className="row mt-5">
