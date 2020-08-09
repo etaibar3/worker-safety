@@ -1,7 +1,10 @@
-import React, { Fragment, useState } from "react";
-import Message from "./Message";
-import Progress from "./Progress";
-import axios from "axios";
+import React, { Fragment, useState, useEffect } from 'react'
+import Message from './Message'
+import Progress from "./Progress"
+import HandleFloorPlan from './functionality/HandleFloorPlan'
+import axios from "axios"
+import { Redirect } from 'react-router'
+
 
 const FileUpload = () => {
   const [file, setFile] = useState("");
@@ -9,6 +12,15 @@ const FileUpload = () => {
   const [uploadedFile, setUploadedFile] = useState({});
   const [message, setMessage] = useState("");
   const [uploadPercentage, setUploadPercentage] = useState(0);
+  const [imgSrc, setImg] = useState('');
+  const [redirect, setRedirect] = useState(false);
+
+  useEffect(() => {
+    if (sessionStorage.getItem('loggedIn') === "false" ) {
+			console.log("not logged in");
+			setRedirect(true);
+		} 
+  })
 
   const onChange = (e) => {
     setFile(e.target.files[0]);
@@ -48,15 +60,48 @@ const FileUpload = () => {
     };
   };
 
-      setMessage("File Uploaded");
-    } catch (err) {
-      if (err.response.status === 500) {
-        setMessage("There was a problem with the server");
-      } else {
-        setMessage(err.response.data.msg);
+  const onSubmit = async (e) => {
+    e.preventDefault();
+    if (file != "") {
+      const formData = new FormData();
+      formData.append("name", filename);
+      formData.append("floorplanImage", file);
+  
+      try {
+        const res = await axios.post(`http://localhost:5000/upload/`, formData, {
+          headers: {
+            "Content-Type": "multipart/form-data",
+          },
+          onUploadProgress: (progressEvent) => {
+            setUploadPercentage(
+              parseInt(
+                Math.round((progressEvent.loaded * 100) / progressEvent.total)
+              )
+            );
+  
+            // Clear percentage
+            setTimeout(() => setUploadPercentage(0), 10000);
+          },
+        });
+  
+        const { fileName, filePath } = res.data;
+  
+        setUploadedFile({ fileName, filePath });
+  
+        setMessage("File Uploaded");
+      } catch (err) {
+        if (err.response.status === 500) {
+          setMessage("There was a problem with the server");
+        } else {
+          setMessage(err.response.data.msg);
+        }
       }
     }
   };
+
+  if (redirect) {
+    return <Redirect to = {{ pathname: "/login" }} />
+  }
 
   return (
     <Fragment>

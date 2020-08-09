@@ -3,17 +3,24 @@
 
 import React from 'react'
 import axios from 'axios'
+import { Redirect } from 'react-router'
 
 class CompanyRep extends React.Component {
     constructor() {
         super()
         this.state = {
-            adminEmail: null
+            adminEmail: null,
+            redirect: false
         }
         this.initialState = this.state
     }
 
     componentDidMount() {
+        if (sessionStorage.getItem('loggedIn') === "false" ) {
+			console.log("not logged in");
+			this.setState({redirect: true});
+		} 
+
         axios
             .get('http://localhost:5000/employee/companyrep')
             .then(response => {
@@ -26,7 +33,12 @@ class CompanyRep extends React.Component {
     }
 
     render() {
-        const { adminEmail } = this.state
+        const { adminEmail, redirect } = this.state
+
+        if (redirect) {
+			return <Redirect to = {{ pathname: "/login" }} />
+		}
+
         return (
             <div>
                 <h3> Please direct any questions or concerns towards your company
