@@ -14,10 +14,18 @@ class ReportACase extends React.Component {
 			earliest: new Date(),
 			cancel: false,
 			validDates: false,
+			redirect: false
 		}
 		this.handleChange = this.handleChange.bind(this)
 		this.handleSubmit = this.handleSubmit.bind(this)
 		this.cancelReport = this.cancelReport.bind(this)
+	}
+
+	componentDidMount() {
+		if (sessionStorage.getItem('loggedIn') === "false" ) {
+			console.log("not logged in");
+			this.setState({redirect: true});
+		}
 	}
 
     handleChange = async event => {
@@ -69,6 +77,12 @@ class ReportACase extends React.Component {
 
 	render() {
 		const { email, illDate, max, testDate, cancel, validDates } = this.state
+		const { redirect } = this.state;
+
+		if (redirect) {
+			return <Redirect to = {{ pathname: "/login" }} />
+		}
+
 		return (
 			<div>
 				{(cancel === true) ? <Redirect to = {{ pathname: "/root-menu" }} /> : null}

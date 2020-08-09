@@ -45,11 +45,22 @@ class Login extends React.Component {
             })
             .catch(error  => {
                 console.log(error)
-                // if(error.response !== undefined)  {
-                //     this.props.alert.error(error.response.data.error)
-                // }
-            })   
+                if(error.response !== undefined)  {
+                    this.props.alert.error(error.response.data.error)
+                }
+            }) 
     }
+    
+    componentDidUpdate() {
+        if (this.state.status === 200) {
+            sessionStorage.setItem('loggedIn', true);
+            console.log(sessionStorage.getItem('loggedIn'));
+        } else {
+            sessionStorage.setItem('loggedIn', false);
+            console.log(sessionStorage.getItem('loggedIn'));
+        }
+    }
+
 
     render() {
         const { email, password, status, isAdmin } = this.state

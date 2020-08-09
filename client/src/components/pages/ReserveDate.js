@@ -21,7 +21,8 @@ class ReserveDate extends React.Component {
             desk: null,
             image: new Image(),
             continueClicked: false,
-            maxDesk: 0
+            maxDesk: 0,
+            redirect: false
         }
         this.initialState = this.state
         this.handleChange = this.handleChange.bind(this)
@@ -30,6 +31,10 @@ class ReserveDate extends React.Component {
     }
 
     componentDidMount() {
+        if (sessionStorage.getItem('loggedIn') === "false" ) {
+          console.log("not logged in");
+          this.setState({redirect: true});
+        } 
         var today = new Date();
         var dd = String(today.getDate()).padStart(2, '0');
         var mm = String(today.getMonth() + 1).padStart(2, '0');
@@ -62,7 +67,13 @@ class ReserveDate extends React.Component {
 
 
     render() {
-        const { email, continueClicked, desk, status, date, min, dateChosen, maxDesk } = this.state
+
+        const { email, continueClicked, desk, status, date, min, dateChosen, maxDesk, redirect } = this.state
+
+        if (redirect) {
+          return <Redirect to = {{ pathname: "/login" }} />
+        }
+
         return (
             <div>
               {(continueClicked === false) ?

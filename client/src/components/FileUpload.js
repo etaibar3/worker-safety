@@ -1,8 +1,9 @@
-import React, { Fragment, useState } from "react";
-import Message from "./Message";
-import Progress from "./Progress";
+import React, { Fragment, useState, useEffect } from 'react'
+import Message from './Message'
+import Progress from "./Progress"
 import HandleFloorPlan from './functionality/HandleFloorPlan'
-import axios from "axios";
+import axios from "axios"
+import { Redirect } from 'react-router'
 
 const FileUpload = () => {
   const [file, setFile] = useState("");
@@ -11,6 +12,14 @@ const FileUpload = () => {
   const [message, setMessage] = useState("");
   const [uploadPercentage, setUploadPercentage] = useState(0);
   const [imgSrc, setImg] = useState('');
+  const [redirect, setRedirect] = useState(false);
+
+  useEffect(() => {
+    if (sessionStorage.getItem('loggedIn') === "false" ) {
+			console.log("not logged in");
+			setRedirect(true);
+		} 
+  })
 
   const onChange = (e) => {
     var input = document.getElementById('upload-btn');
@@ -29,7 +38,8 @@ const FileUpload = () => {
     e.preventDefault();
     if (file != "") {
       const formData = new FormData();
-      formData.append("file", file);
+      formData.append("name", filename);
+      formData.append("floorplanImage", file);
   
       try {
         const res = await axios.post(`http://localhost:5000/upload/`, formData, {
@@ -62,6 +72,10 @@ const FileUpload = () => {
       }
     }
   };
+
+  if (redirect) {
+    return <Redirect to = {{ pathname: "/login" }} />
+  }
 
   return (
     <Fragment>

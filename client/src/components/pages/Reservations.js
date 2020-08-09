@@ -14,7 +14,8 @@ class Reservations extends React.Component {
             email: "",
             method: " ",
             status: 400,
-            reservations: []
+            reservations: [],
+            redirect: false
         }
         this.initialState = this.state
         this.handleChange = this.handleChange.bind(this)
@@ -24,6 +25,11 @@ class Reservations extends React.Component {
     }
 
     componentDidMount() {
+        if (sessionStorage.getItem('loggedIn') === "false" ) {
+            console.log("not logged in");
+            this.setState({redirect: true});
+        } 
+
         {/* Get reservations here */}
         axios
             .get(`http://localhost:5000/reservations`)
@@ -86,7 +92,12 @@ class Reservations extends React.Component {
     }
 
     render() {
-        const { method, reservations } = this.state
+        const { method, reservations, redirect } = this.state
+
+		if (redirect) {
+			return <Redirect to = {{ pathname: "/login" }} />
+        }
+        
         return (
             <div>
                 <p style={reservationsStyle}> Reservations </p>

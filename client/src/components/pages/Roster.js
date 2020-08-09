@@ -4,8 +4,9 @@
 
 import React from 'react'
 import axios from 'axios'
-import ViewRoster from './ViewRoster';
-import { withAlert } from 'react-alert';
+import ViewRoster from './ViewRoster'
+import { withAlert } from 'react-alert'
+import { Redirect } from 'react-router'
 
 
 class Roster extends React.Component {
@@ -18,13 +19,21 @@ class Roster extends React.Component {
             submitClicked: false,
             permissions: "employee",
             status: 400,
-            name: ""
+            name: "",
+            redirect: false
         }
         this.initialState = this.state
         this.handleChange = this.handleChange.bind(this)
         this.handleMethodChange = this.handleMethodChange.bind(this)
         this.handleSubmit = this.handleSubmit.bind(this)
     }
+
+    componentDidMount() {
+		if (sessionStorage.getItem('loggedIn') === "false" ) {
+			console.log("not logged in");
+			this.setState({redirect: true});
+		} 
+	}
 
     handleChange(event) {
         this.setState({ submitClicked: false });   
@@ -105,7 +114,10 @@ class Roster extends React.Component {
 
 
     render() {
-        const { email, method, isAdmin, submitClicked, permissions, status, name } = this.state
+        const { email, method, isAdmin, submitClicked, permissions, status, name, redirect } = this.state
+        if (redirect) {
+			return <Redirect to = {{ pathname: "/login" }} />
+		}
         return (
             <div>
                 <h1> Company Roster </h1>
