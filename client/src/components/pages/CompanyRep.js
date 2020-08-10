@@ -10,7 +10,6 @@ class CompanyRep extends React.Component {
         this.state = {
             adminEmail: null
         }
-        this.initialState = this.state
     }
 
     componentDidMount() {
@@ -26,15 +25,25 @@ class CompanyRep extends React.Component {
     }
 
     render() {
-        const { adminEmail } = this.state
         return (
             <div>
-                <h3> Please direct any questions or concerns towards your company
-                     representative. You can email your company representative at <strong> {adminEmail}</strong>. </h3>
-                {/*<a href="mailto:`${this.state.adminEmail}`"> Email yourself </a>*/} 
+            {(this.state.adminEmail === null) ?
+                <h3> No company representative found.</h3> 
+            :
+                <div>
+                <h3> You can contact your company representative at {" "}
+                <a href={`mailto:${this.state.adminEmail}`} style={mailtoStyle}>{this.state.adminEmail}.</a> </h3>
+                </div>
+            }
             </div>
         )
     }
 }
+
+const mailtoStyle = {
+    textDecorationLine: 'underline',
+    color: "#2121ca",
+};
+
 
 export default CompanyRep

@@ -1,3 +1,7 @@
+// Component: ReserveSelect
+// Description: Component for employees to choose the desk they'd like to reserve
+//              while confirming that the desk is available on the date they selected
+
 import  React, { useRef } from 'react'
 import axios from 'axios'
 import { Redirect } from 'react-router';
@@ -14,7 +18,7 @@ class ReserveSelect extends React.Component {
             date: props.date,
             status: 400,
             numUpdates: 0,
-            validRes: true, //validRes=true if the selected desk is available and the user is not double booking that date
+            validRes: true, //validRes=true if the selected desk is available
             imgURL: "",
             userReservations: []
         }
@@ -42,28 +46,6 @@ class ReserveSelect extends React.Component {
             })
             .catch(error => {
                 console.log(error)
-            })
-
-      {/* Getting existing reservations to prevent double-booking on same day*/}
-        axios
-            .get(`http://localhost:5000/reservations`)
-            .then(response => {
-                console.log(response)
-                response.data.reservations.map((reservation, index) => {
-                    const newReservation = {
-                        day: reservation.date.day.low,
-                        month: reservation.date.month.low,
-                        year: reservation.date.year.low
-                    };
-                    userReservations.push(newReservation)
-                })
-                this.setState({
-                  userReservations: this.state.userReservations
-                })
-            })
-            .catch(error => {
-                console.log(error)
-                console.log(error.response.data.error)
             })
 
       {/* Getting floorplan image from DB*/}
@@ -103,27 +85,9 @@ class ReserveSelect extends React.Component {
             }
           }
         })
-
-        {/* Check if the user has another reservation on that day*/}
-        let doubleBooking = false
-        if (validDesk === true) {
-          userReservations.forEach((reservation) => {
-            if (reservation.date === date) {  //fix formatting here this comp wont work
-                doubleBooking = true
-            }
-          })
-        }
-
-        if (validDesk && doubleBooking === false) {
-          this.setState({
-            validRes: true
-          })
-        }
-        else {
-          this.setState({
-            validRes: false
-          })
-        }
+        this.setState({
+          validRes: validDesk
+        })
     }
 
     handleSubmit(event) {
@@ -131,28 +95,8 @@ class ReserveSelect extends React.Component {
         event.preventDefault()
         let intDesk = parseInt(deskNum, 10)
 
-        let validDesk = true
-      {/* Check if the desk is available*/}
-        desks.forEach((singleDesk) => {
-          if (singleDesk.deskNum === intDesk) {
-            if (singleDesk.isReserved === true) {
-              validDesk = false
-            }
-          }
-        })
-
-        {/* Check if the user has another reservation on that day*/}
-        let doubleBooking = false
-        if (validDesk === true) {
-          userReservations.forEach((reservation) => {
-            if (reservation.date === date) {  //fikx formatting here this comp wont work
-                doubleBooking = true
-            }
-          })
-        }
-
-        if (validDesk && doubleBooking === false) {
-          // Posting desk reservation
+      {/* Posting desk reservation */}
+        if (this.state.validRes) {
           axios
             .post(`http://localhost:5000/reservations`, { 'date': date, 'seat_number': intDesk }) 
             .then(response => {
@@ -172,9 +116,7 @@ class ReserveSelect extends React.Component {
             })
         }
         else {
-          this.setState({
-            validRes: false
-          })
+          alert(`This desk is already reserved. DELETE THIS MSG ReserveSelect`)
         }
     }
 
@@ -185,14 +127,14 @@ class ReserveSelect extends React.Component {
     
     componentDidUpdate() {
     {/* Displays all the desks */}
-      if (this.state.numUpdates < 1) {
+      //if (this.state.numUpdates < 1) {
         const { desks } = this.state
         const canvas = this.canvasRef.current;
         if (canvas !== null) {
           const ctx = canvas.getContext("2d");
           const img = new Image();
-          img.src = "https://external-preview.redd.it/vQmMvI6xk-2MHbkPDOJDO_HDDM_l2qR61gwd0nAC2go.jpg?auto=webp&s=f9fa784d471d0ed203fbf63530cc8f4db6454063"
-          //img.src = this.state.imgURL
+          //img.src = "https://external-preview.redd.it/vQmMvI6xk-2MHbkPDOJDO_HDDM_l2qR61gwd0nAC2go.jpg?auto=webp&s=f9fa784d471d0ed203fbf63530cc8f4db6454063"
+          img.src = this.state.imgURL
           img.onload = () => {
               ctx.drawImage(img, 0, 0, 500, 500);
 
@@ -207,11 +149,11 @@ class ReserveSelect extends React.Component {
                   ctx.fillText(singleDesk.deskNum, sX - 5, sY + 7);
               })
           }
-          this.setState({
-            numUpdates: 1
-          })
+          //this.setState({
+            //numUpdates: 1
+          //})
         }
-      }
+      //}
     }
 
 
@@ -249,11 +191,11 @@ class ReserveSelect extends React.Component {
                             {(validRes === false) ? 
                               <p className="h6">
                                 <strong> 
-                                  Desk {deskNum} cannot be reserved on the date you selected. You may have another reservation on this date, or desk {deskNum} may already be booked.  
+                                  Desk {deskNum} is not available on the date you selected.  
                                 </strong> 
                               </p> : null}
                             <button style={back} onClick={this.state.routeChangeBack}>Back</button>
-                            <button style={reserveButtonInactive}>Reserve</button>
+                            <button type="button" style={reserveButtonInactive}>Reserve</button>
                         </div>
                         :
                         <div>
