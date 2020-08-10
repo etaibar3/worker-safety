@@ -1,10 +1,9 @@
-const { authenticateUser} = require("../middleware/auth");
+const { authenticateUser, authenticateAdmin} = require("../middleware/auth");
 const express = require("express");
 const path = require("path");
 const router = express.Router();
 const mongoose = require("mongoose");
 const multer = require("multer");
-const upload = multer();
 const fs = require("fs-extra");
 //const upload = multer({ dest: "uploads/" });
 const Floorplan = require("../models/floorplan");
@@ -47,14 +46,14 @@ const upload = multer({
 //   fileFilter: fileFilter,
 // });
 
-router.get("/", (req, res, next) => {
-  Floorplan.find()
+router.get("/", authenticateUser, (req, res, next) => {
+  Floorplan.find( {org: req.user.org} )
     .select("name _id floorplanImage")
     .exec()
     .then((docs) => {
       const response = {
         count: docs.length,
-        products: docs.map((doc) => {
+        images: docs.map((doc) => {
           return {
             name: doc.name,
             _id: doc._id,
@@ -76,12 +75,13 @@ router.get("/", (req, res, next) => {
     });
 });
 
-router.post("/", upload.single("floorplanImage"), (req, res, next) => {
+router.post("/", authenticateAdmin, upload.single("floorplanImage"), (req, res, next) => {
   console.log(req.file);
   const floorplan = new Floorplan({
     _id: new mongoose.Types.ObjectId(),
     name: req.body.name,
     floorplanImage: req.file.path,
+    org: req.user.org
   });
   floorplan
     .save()

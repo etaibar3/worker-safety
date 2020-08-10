@@ -20,8 +20,10 @@ class ReserveSelect extends React.Component {
             numUpdates: 0,
             validRes: true, //validRes=true if the selected desk is available
             imgURL: "",
+            images: [],
             userReservations: [],
-            redirect: false
+            redirect: false,
+
         }
         this.routeChangeBack = this.routeChangeBack.bind(this);
         this.handleClick = this.handleClick.bind(this)
@@ -57,13 +59,20 @@ class ReserveSelect extends React.Component {
 
       {/* Getting floorplan image from DB*/}
         axios
-         .get(`http://localhost:5000/FLOORPLANURLHERE/`)
+         .get(`http://localhost:5000/floorplan`)
          .then(response => {
             console.log(response)
             alert('success requesting floorplan')
-            this.setState({
-                imgURL: response.image
+            response.data.images.forEach(i => {
+              const newImage = i.floorplanImage.split('/')[2];
+              this.state.images.push(newImage);
             })
+              
+            this.setState({
+                imgURL: response.image,
+                images: this.state.images,
+            })
+            console.log(this.state.images)
          })
          .catch(error => {
             console.log(error)
@@ -140,8 +149,9 @@ class ReserveSelect extends React.Component {
         if (canvas !== null) {
           const ctx = canvas.getContext("2d");
           const img = new Image();
-          //img.src = "https://external-preview.redd.it/vQmMvI6xk-2MHbkPDOJDO_HDDM_l2qR61gwd0nAC2go.jpg?auto=webp&s=f9fa784d471d0ed203fbf63530cc8f4db6454063"
-          img.src = this.state.imgURL
+          //<img src ="http:localhost:5000/public/uploads/" + {this.state.images[0]} /> 
+          img.src = "http:localhost:5000/public/uploads/" + this.state.images[0];
+          //img.src = this.state.imgURL
           img.onload = () => {
               ctx.drawImage(img, 0, 0, 500, 500);
 

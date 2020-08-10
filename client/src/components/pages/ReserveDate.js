@@ -6,6 +6,7 @@
 import React from 'react'
 import ReserveSelect from './ReserveSelect'
 import axios from 'axios'
+import { Redirect } from 'react-router';
 
 
 class ReserveDate extends React.Component {
@@ -18,7 +19,7 @@ class ReserveDate extends React.Component {
             validRes: true,   //validRes===true when the user is not double booking date
             image: new Image(),
             continueClicked: false,
-            userReservations: []
+            userReservations: [],
             redirect: false
         }
         this.initialState = this.state

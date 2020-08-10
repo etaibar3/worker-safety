@@ -47,9 +47,10 @@ mongo4j.init("neo4j://localhost", { user: "neo4j", pass: "123456" });
 
 mongoose.Promise = global.Promise;
 
+app.use(cors());
 app.use(morgan("dev"));
 // app.use("/uploads", express.static("uploads"));
-app.use(express.static("uploads"));
+app.use("/public/uploads", express.static("public/uploads"));
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: false }));
 app.use((req, res, next) => {
@@ -226,7 +227,7 @@ app.use(fileUpload());
 //     res.status(500).json({ error: err });
 //   }
 // });
-app.use(cors());
+
 
 
 app.listen(port, () => console.log("Server Started..."));
