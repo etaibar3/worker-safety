@@ -82,7 +82,7 @@ class Reservations extends React.Component {
           .then(response => {
               console.log(response)
               alert(`success deleting reservation`)
-              this.props.alert.success('Success')
+              this.props.alert.success('Reservation succesfully deleted.')
           })
           .catch(error => {
               console.log(error)

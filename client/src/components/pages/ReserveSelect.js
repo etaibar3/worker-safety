@@ -19,7 +19,7 @@ class ReserveSelect extends React.Component {
             status: 400,
             numUpdates: 0,
             validRes: true, //validRes=true if the selected desk is available
-            imgURL: "",
+            imgURL: [],
             images: [],
             userReservations: [],
             redirect: false,
@@ -64,12 +64,13 @@ class ReserveSelect extends React.Component {
             console.log(response)
             alert('success requesting floorplan')
             response.data.images.forEach(i => {
-              const newImage = i.floorplanImage.split('/')[2];
+              const newImage = i.floorplanImage.split('/')[5];
               this.state.images.push(newImage);
+              this.state.imgURL.push(i.floorplanImage)
             })
-              
+            console.log(response.data.images[0].floorplanImage)
             this.setState({
-                imgURL: response.image,
+                imgURL: this.state.imgURL,
                 images: this.state.images,
             })
             console.log(this.state.images)
@@ -149,9 +150,7 @@ class ReserveSelect extends React.Component {
         if (canvas !== null) {
           const ctx = canvas.getContext("2d");
           const img = new Image();
-          //<img src ="http:localhost:5000/public/uploads/" + {this.state.images[0]} /> 
-          img.src = "http:localhost:5000/public/uploads/" + this.state.images[0];
-          //img.src = this.state.imgURL
+          img.src = this.state.imgURL[0]
           img.onload = () => {
               ctx.drawImage(img, 0, 0, 500, 500);
 
