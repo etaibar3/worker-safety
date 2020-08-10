@@ -4,6 +4,7 @@ const path = require("path");
 const router = express.Router();
 const mongoose = require("mongoose");
 const multer = require("multer");
+const upload = multer();
 const fs = require("fs-extra");
 //const upload = multer({ dest: "uploads/" });
 const Floorplan = require("../models/floorplan");
