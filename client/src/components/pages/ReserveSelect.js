@@ -57,7 +57,7 @@ class ReserveSelect extends React.Component {
 
       {/* Getting floorplan image from DB*/}
         axios
-         .get(`http://localhost:5000/FLOORPLANURLHERE/`)
+         .get(`uploads/5f316bdf4ebc133838b4915d`)
          .then(response => {
             console.log(response)
             alert('success requesting floorplan')
