@@ -190,8 +190,10 @@ router.delete("/", authenticateUser, async (req, res, next) => {
   var reserv_date = req.body.date;
 
   try {
+    console.log(reserv_date)
     const result = await txc.run( 'Match (a:Users {m_id: $id}) - [r:Reserved {time: date($date)}] - (b: Seat) Delete r', 
                                   {id: req.user._id, date: reserv_date });
+
 
     res.json({msg: "Reservation Successfully Deleted"});
   } catch (err) {
