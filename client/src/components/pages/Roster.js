@@ -9,7 +9,6 @@ import { withAlert } from 'react-alert';
 import { Redirect } from 'react-router';
 import AddUser from './AddUser';
 
-
 class Roster extends React.Component {
     constructor() {
         super()
@@ -20,7 +19,8 @@ class Roster extends React.Component {
             submitClicked: false,
             permissions: "employee",
             status: 400,
-            name: ""
+            name: "",
+            redirect: false
         }
         this.initialState = this.state
         this.handleChange = this.handleChange.bind(this)
@@ -28,6 +28,13 @@ class Roster extends React.Component {
         this.handleSubmit = this.handleSubmit.bind(this)
         this.addRoute = this.addRoute.bind(this)
     }
+
+    componentDidMount() {
+		if (sessionStorage.getItem('loggedIn') === "false" ) {
+			console.log("not logged in");
+			this.setState({redirect: true});
+		} 
+	}
 
     handleChange(event) {
         this.setState({ submitClicked: false });   
@@ -90,7 +97,10 @@ class Roster extends React.Component {
 
 
     render() {
-        const { email, method, isAdmin, submitClicked, permissions, status, name } = this.state
+        const { email, method, isAdmin, submitClicked, permissions, status, name, redirect } = this.state
+        if (redirect) {
+			return <Redirect to = {{ pathname: "/login" }} />
+		}
         return (
             <div>
                 <h1> Company Roster </h1>

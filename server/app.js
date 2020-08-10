@@ -9,7 +9,9 @@ const mongoose = require("mongoose");
 const cors = require("cors");
 const fs = require("fs-extra");
 //var neo4j = require('neo4j-driver');
-require('dotenv').config()
+
+const port = process.env.PORT || 5000;
+
 
 const employeeRoutes = require("./api/routes/employees");
 const reservationRoutes = require("./api/routes/reservations");
@@ -46,7 +48,8 @@ mongo4j.init("neo4j://localhost", { user: "neo4j", pass: "123456" });
 mongoose.Promise = global.Promise;
 
 app.use(morgan("dev"));
-app.use("/uploads", express.static("uploads"));
+// app.use("/uploads", express.static("uploads"));
+app.use(express.static("uploads"));
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: false }));
 app.use((req, res, next) => {
@@ -225,7 +228,9 @@ app.use(fileUpload());
 // });
 app.use(cors());
 
-app.listen(5000, () => console.log("Server Started..."));
+
+app.listen(port, () => console.log("Server Started..."));
+
 // admin_server.listen(5000, () => console.log("admin"));
 
 

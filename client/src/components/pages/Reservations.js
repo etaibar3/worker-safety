@@ -13,7 +13,10 @@ class Reservations extends React.Component {
         super()
         this.state = {
             email: "",
-            userReservations: []
+            method: " ",
+            status: 400,
+            userReservations: [],
+            redirect: false
         }
         this.initialState = this.state
         this.handleChange = this.handleChange.bind(this)
@@ -21,6 +24,11 @@ class Reservations extends React.Component {
     }
 
     componentDidMount() {
+        if (sessionStorage.getItem('loggedIn') === "false" ) {
+            console.log("not logged in");
+            this.setState({redirect: true});
+        } 
+
         {/* Get reservations here */}
         const { userReservations } = this.state
         const monthNames = ["January", "February", "March", "April", "May", "June",
@@ -85,7 +93,10 @@ class Reservations extends React.Component {
     } 
 
     render() {
-        const { userReservations } = this.state
+        const { method, userReservations, redirect } = this.state
+        if (redirect) {
+          return <Redirect to = {{ pathname: "/login" }} />
+        }
         return (
             <div>
                 <p className="h1"><strong> Reservations </strong></p>

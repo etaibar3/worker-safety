@@ -20,7 +20,8 @@ class ReserveSelect extends React.Component {
             numUpdates: 0,
             validRes: true, //validRes=true if the selected desk is available
             imgURL: "",
-            userReservations: []
+            userReservations: [],
+            redirect: false
         }
         this.routeChangeBack = this.routeChangeBack.bind(this);
         this.handleClick = this.handleClick.bind(this)
@@ -28,7 +29,13 @@ class ReserveSelect extends React.Component {
     }
 
     componentDidMount() {
-        const { desks, userReservations } = this.state
+      if (sessionStorage.getItem('loggedIn') === "false" ) {
+        console.log("not logged in");
+        this.setState({redirect: true});
+      } 
+
+      const { desks, userReservations } = this.state
+
       {/* Getting desk coordinates and numbers*/}
         axios
             .get(`http://localhost:5000/seats/${this.state.date}`)
@@ -158,7 +165,12 @@ class ReserveSelect extends React.Component {
 
 
     render() {
-        const { deskNum, desks, status, date, validRes } = this.state
+        const { deskNum, desks, status, date, validRes, redirect } = this.state
+
+        if (redirect) {
+          return <Redirect to = {{ pathname: "/login" }} />
+        }
+
         return (
           <div>
             {(status >= 200 && status < 300) ? 
