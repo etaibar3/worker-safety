@@ -71,6 +71,7 @@ class CreateChildAccount extends React.Component {
                                 <input 
                                     type="text"
                                     value={company}
+                                    style = {rectangle4}
                                     name="company" 
                                     placeholder="Company" 
                                     onChange={this.handleChange}
@@ -83,6 +84,7 @@ class CreateChildAccount extends React.Component {
                             <input 
                                 type="text"
                                 value={first}
+                                style = {rectangle4}
                                 name="first" 
                                 placeholder="First" 
                                 onChange={this.handleChange}
@@ -94,6 +96,7 @@ class CreateChildAccount extends React.Component {
                             {" "}
                             <input 
                                 type="text"
+                                style = {rectangle4}
                                 value={last}
                                 name="last" 
                                 placeholder="Last" 
@@ -107,6 +110,7 @@ class CreateChildAccount extends React.Component {
                                 <input 
                                     type="email" 
                                     name="email"
+                                    style = {rectangle4}
                                     value={email}
                                     placeholder="example@company.com"
                                     onChange={this.handleChange}
@@ -119,6 +123,7 @@ class CreateChildAccount extends React.Component {
                                 <input
                                     type="password"
                                     name="password1"
+                                    style = {rectangle4}
                                     value={password1}
                                     placeholder="Password"
                                     onChange={this.handleChange}
@@ -131,13 +136,14 @@ class CreateChildAccount extends React.Component {
                                 <input
                                     type="password"
                                     name="password2"
+                                    style = {rectangle4}
                                     value={password2}
                                     placeholder="Password"
                                     onChange={this.handleChange}
                                 />
                             </label>
                                 <br/><br/>
-                            <button type="submit">Create Account</button>
+                            <button type="submit" style={submitActive}>Create Account</button>
                         </form>
                     </div>
                     }
@@ -145,5 +151,23 @@ class CreateChildAccount extends React.Component {
         )
     }
 }
+
+const rectangle4 = {
+  width: 280,
+  height: 49,
+  borderRadius: 5,
+  backgroundColor: "#ffffff",
+  borderStyle: "solid",
+  borderWidth: 2,
+};
+
+const submitActive = {
+  width: 131,
+  height: 59,
+  borderRadius: 5,
+  fontWeight: "500",
+  backgroundColor: "#2121ca",
+  color:"#ffffff"
+};
 
 export default withAlert()(CreateChildAccount);

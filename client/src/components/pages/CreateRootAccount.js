@@ -58,37 +58,13 @@ class CreateRootAccount extends React.Component {
 
 	render() {
 		const { company, email, password1, password2, adminChecked, status, first, last } = this.state
-		const pageTitle = {
-		  width: 167,
-		  height: 41,
-		  fontFamily: "Rubik",
-		  fontSize: 35,
-		  fontWeight: "bold",
-		  fontStyle: "normal",
-		  letterSpacing: 0,
-		};
-		const buttonprimarylarge = {
-		  width: 180,
-		  height: 59,
-		  borderRadius: 5,
-		  backgroundColor: "#2121ca",
-		  color: 'white'
-		};
-		const rectangle4 = {
-		  width: 280,
-		  height: 49,
-		  borderRadius: 5,
-		  backgroundColor: "#ffffff",
-		  borderStyle: "solid",
-		  borderWidth: 2,
-		};
 		return (
 			<div>
 				{(status === 200) ?
 				<Redirect to = {{ pathname: "/login" }} /> 
 				: 
 				<div>
-					<div style={pageTitle}> Create Account </div>
+					<h1> Create Account </h1>
 					<br /><br />
 					<p> By filling out this form, you are creating an administrative account for your organization.
 					Other administrators and employees can be added to your company roster through this account. If you are
@@ -184,7 +160,7 @@ class CreateRootAccount extends React.Component {
 								and will be responsible for managing my company roster and floor plan. 
 						</label> 
 							<br/><br/>
-						<button style={buttonprimarylarge} type="submit">Create Account</button>
+						<button style={submitActive} type="submit">Create Account</button>
 					</form>
 				<br/><br/><br/><br/><br/><br/><br/><br/> 
 				</div>
@@ -193,5 +169,24 @@ class CreateRootAccount extends React.Component {
 		)
 	}
 }
+
+
+const rectangle4 = {
+  width: 280,
+  height: 49,
+  borderRadius: 5,
+  backgroundColor: "#ffffff",
+  borderStyle: "solid",
+  borderWidth: 2,
+};
+
+const submitActive = {
+  width: 131,
+  height: 59,
+  borderRadius: 5,
+  fontWeight: "500",
+  backgroundColor: "#2121ca",
+  color:"#ffffff"
+};
 
 export default withAlert()(CreateRootAccount);

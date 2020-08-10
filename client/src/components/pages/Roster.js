@@ -4,10 +4,10 @@
 
 import React from 'react'
 import axios from 'axios'
-import ViewRoster from './ViewRoster'
-import { withAlert } from 'react-alert'
-import { Redirect } from 'react-router'
-
+import ViewRoster from './ViewRoster';
+import { withAlert } from 'react-alert';
+import { Redirect } from 'react-router';
+import AddUser from './AddUser';
 
 class Roster extends React.Component {
     constructor() {
@@ -26,6 +26,7 @@ class Roster extends React.Component {
         this.handleChange = this.handleChange.bind(this)
         this.handleMethodChange = this.handleMethodChange.bind(this)
         this.handleSubmit = this.handleSubmit.bind(this)
+        this.addRoute = this.addRoute.bind(this)
     }
 
     componentDidMount() {
@@ -47,34 +48,16 @@ class Roster extends React.Component {
         type === "checkbox" ? this.setState ({ [name]: checked }) : this.setState({ [name] : value })
     }
 
+    addRoute() {
+        this.setState({
+            method: "Add"
+        })
+    }
+
     handleSubmit(event) {
         event.preventDefault()
         this.setState({ name: "" })
-        if (this.state.method === "Add") {
-            axios
-                .post(`http://localhost:5000/org/manageRoster`, { 'email': this.state.email, 'admin': this.state.isAdmin})
-                .then(response => {
-                    console.log(response)
-                    this.props.alert.success('Success')
-                })
-                .catch(error => {
-                    console.log(error)
-                    this.props.alert.error(error.response.data.error)
-                })
-        }
-        else if (this.state.method === "Remove") {
-            axios
-                .delete(`http://localhost:5000/org/manageRoster`, {data: {email: this.state.email } })
-                .then(response => {
-                    console.log(response)
-                    this.props.alert.success('Success')
-                })
-                .catch(error => {
-                    console.log(error)
-                    this.props.alert.error(error.response.data.error)
-                })
-        }
-        else if (this.state.method === "Lookup") {
+        if (this.state.method === "Lookup") {
             this.setState({ submitClicked: true });   {/* Admin clicked submit */}
             axios
              .get('http://localhost:5000/org/manageRoster/' + this.state.email)
@@ -125,69 +108,14 @@ class Roster extends React.Component {
                 <form onSubmit={this.handleSubmit} value={method}>
                     <select name="method" onChange={this.handleMethodChange}>
                         <option value=" "> </option>
-                        <option value="Add">Add a user</option>
-                        <option value="Remove">Remove a user</option>
                         <option value="Lookup">Lookup a user</option>
                         <option value="Change type">Change user account type</option>
-                        <option value="View">View roster</option>
                     </select>
                     <br/><br/>
 
                     {/* To add a user, admin must choose user's account permissions (employee vs admin) */}
-                    {(method === "Add") ?
-                        <div>
-                        <label> 
-                            Employee email
-                            {" "}
-                            <input 
-                                type="email"
-                                name="email"
-                                value={email}
-                                placeholder="employee@company.com" 
-                                onChange={this.handleChange}
-                            />
-                        </label>
-                        <br/><br/>
-                        <h5> Select User Account Type </h5><p style={{ fontSize: "75%"}}> If you
-                        choose to add {email} as an administrator, they will
-                        be able to perform administrative tasks such as modifying floor plans and updating the company roster.
-                        If you are unsure, do not add as an administrator and {email} will be added as a regular employee.
-                        </p>
-                        <label> 
-                            Add as administrator
-                            {" "}
-                            <input 
-                                type="checkbox"
-                                name="isAdmin"
-                                value="Administrator"
-                                checked={isAdmin}
-                                onChange={this.handleChange}
-                            />
-                            <br/>
-                        </label>
-                        </div>
-                    : null}
-
-                    {/*To remove a user, admin must confirm that they want to remove this user*/}
-                    {(method === "Remove") ?
-                        <div>
-                            <label> 
-                                Employee email
-                                {" "}
-                                <input 
-                                    type="email"
-                                    name="email"
-                                    value={email}
-                                    placeholder="employee@company.com" 
-                                    onChange={this.handleChange}
-                                />
-                            </label>
-                            <br/><br/>
-                        </div>
-                    : null}
-
-                    {/* To view the company roster, admin just selects "view roster" from drop down*/}
-                    {(method === "View") ? <ViewRoster />: null}      
+                    <button type="submit" style={submitButtonActive} onClick={this.addRoute}>Add User</button>
+                    {(method === "Add") ? <Redirect to = {{ pathname: "/add-user" }} /> : null}
 
                     {/* To view the company roster, admin must enter user's email*/}
                     {(method === "Lookup") ?
@@ -253,14 +181,25 @@ class Roster extends React.Component {
                             <br/>
                         </div>
                     : null}
-                    
                     <br/>
-                    {(method !== "View") ? <button type="submit">Submit</button> : null}
+                    {(method !== " " & method !== "View" & method != "Add") ? <button type="submit" style={submitButtonActive} onSubmit={this.handleSubmit}>Submit</button> : null}
+                    <br/><br/>
                 </form>
-                <br/>
+                <ViewRoster /> 
+                <br/><br/>
             </div>
         )
     }
 }
+
+
+const submitButtonActive = {
+  width: 131,
+  height: 59,
+  borderRadius: 5,
+  fontWeight: "500",
+  backgroundColor: "#2121ca",
+  color:"#ffffff"
+};
 
 export default withAlert()(Roster)

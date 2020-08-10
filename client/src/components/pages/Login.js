@@ -34,7 +34,6 @@ class Login extends React.Component {
         axios
             .post(`http://localhost:5000/login`, { 'email': this.state.email, 'password': this.state.password })
             .then(response => {
-                (response.status !== 200) ? console.log(response.data.error) : console.log(response.data.message)
                 axios.defaults.headers.common['auth'] = response.data.token
                 console.log(response)
                 this.setState({ 
@@ -69,8 +68,8 @@ class Login extends React.Component {
             {( status !== 200) ?
                 <div>
                     <p className="h2"> Safe Return </p>
-                    <p className="font-rubik leading-normal text-text-light"> Don't have an account? </p>
-                    <Link to='/create-child-account' className="font-rubik font-medium text-blue-blue"> Sign up here </Link>
+                    <p style={lightFont}> Don't have an account? </p>
+                    <Link to='/create-child-account' style={hyperlink}> Sign up here </Link>
                     <br/><br/>
                     <form onSubmit={this.handleSubmit}>
                         <label className="text-style"> 
@@ -99,9 +98,12 @@ class Login extends React.Component {
                             />
                         </label>
                         <br/>
-                        <Link to='/forgotyourpassword' className="font-rubik font-medium text-#2121ca"> Forgot your password? </Link>
+                        <Link to='/forgotyourpassword' style={hyperlink}> Forgot your password? </Link>
                         <br/><br/>
-                        <button style={submit} type="submit">Login </button>
+                        {(email !== "" & password != "") ?
+                          <button style={submitActive} type="submit">Login </button>
+                          : 
+                          <button style={submitInactive} type="button">Login </button>}
                     </form>
             </div> : null}
 
@@ -129,6 +131,10 @@ const logo = {
   height: 45,
   backgroundColor: "#c4c4c4"
 };
+const lightFont = {
+  color: "#6C6C6C"
+}
+
 const inputLabel = {
   width: 109,
   height: 19,
@@ -139,11 +145,18 @@ const inputLabel = {
   letterSpacing: 0,
   color: "#222831"
 };
-const submit = {
+const submitActive = {
   width: 280,
   height: 59,
   borderRadius: 5,
   backgroundColor: "#2121ca",
+  color: "#ffffff"
+};
+const submitInactive = {
+  width: 280,
+  height: 59,
+  borderRadius: 5,
+  backgroundColor: "#c4c4c4",
   color: "#ffffff"
 };
 const inputBox = {
@@ -155,7 +168,7 @@ const inputBox = {
   borderWidth: 1,
   borderColor: "#c4c4c4"
 };
-const SignUpForgotPass = {
+const hyperlink = {
   width: 177,
   height: 19,
   fontFamily: "Rubik",

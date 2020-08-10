@@ -20,13 +20,13 @@ import Reservations from "./components/pages/Reservations";
 import CompanyRep from "./components/pages/CompanyRep";
 import ResetPassword from "./components/pages/ResetPassword";
 import ForgotYourPassword from "./components/pages/ForgotYourPassword";
+import AddUser from "./components/pages/AddUser";
 import FileUpload from "./components/FileUpload";
 
 class App extends React.Component {
   componentDidMount(){
     sessionStorage.setItem('loggedIn', false);
   }
-
 
   render() {
     return (
@@ -53,6 +53,7 @@ class App extends React.Component {
             <Route exact path="/resetpassword/:token" component={ResetPassword} />
             <Route exact path="/forgotyourpassword" component={ForgotYourPassword} />
             <Route exact path="/upload-floor-plan" component={FileUpload} />
+            <Route exact path="/add-user" component={AddUser} />
           </div>
         </div>
       </Router>

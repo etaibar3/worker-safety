@@ -10,7 +10,6 @@ class ResetPassword extends React.Component {
     constructor() {
         super()
         this.state = {
-            email: "",
             password1: null,
             password2: null,
             status: 400,
@@ -28,7 +27,7 @@ class ResetPassword extends React.Component {
 
     handleSubmit(event) {
         event.preventDefault()
-        const { email, password1, password2, status } = this.state
+        const { password1, password2, status } = this.state
         {(password1 === password2) ? 
             axios
                 .patch(`http://localhost:5000/forgot-password/reset`, { 'resetToken': this.props.match.params.token, 'newPass': password1 })
@@ -50,7 +49,7 @@ class ResetPassword extends React.Component {
     }
 
     render() {
-        const { email, password1, password2, status } = this.state
+        const { password1, password2, status } = this.state
         return (
             <div>
             {( status === 200 ) ?
