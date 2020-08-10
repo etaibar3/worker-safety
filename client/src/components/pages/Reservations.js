@@ -77,8 +77,15 @@ class Reservations extends React.Component {
 
     deleteRes(event) {
       alert(`Day: ${event.day} Month: ${event.month} Year: ${event.year} Desk: ${event.deskNum}`)
+      const monthNames = ["January", "February", "March", "April", "May", "June",
+        "July", "August", "September", "October", "November", "December"]
+      //let dateString = monthNames[event.month - 1] + " " + event.day.toString() + "," + event.year.toString()
+      //let dateObj = new Date(dateString)
+
+      let dateString = event.year.toString() + "-" + event.month.toString() + "-" + event.day.toString()
+      alert(dateString)
       axios
-          .delete(`http://localhost:5000/ULRHERE`)
+          .delete(`http://localhost:5000/reservations`, {data: {'date': dateString }})
           .then(response => {
               console.log(response)
               alert(`success deleting reservation`)
@@ -87,7 +94,7 @@ class Reservations extends React.Component {
           .catch(error => {
               console.log(error)
               alert(`error deleting reservation`)
-              this.props.alert.error(error.response.data.error)
+              //this.props.alert.error(error.response.data.error)
           })
       return false
     } 
