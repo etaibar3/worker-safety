@@ -1,4 +1,5 @@
-const { authenticateUser, authenticateAdmin } = require("../middleware/auth");
+
+const { authenticateUser, authenticateAdmin} = require("../middleware/auth");
 const express = require("express");
 const path = require("path");
 const router = express.Router();
@@ -46,18 +47,18 @@ const upload = multer({
 //   fileFilter: fileFilter,
 // });
 
-router.get("/", (req, res, next) => {
-  Floorplan.find()
+router.get("/", authenticateUser, (req, res, next) => {
+  Floorplan.find( {org: req.user.org} )
     .select("name _id floorplanImage")
     .exec()
     .then((docs) => {
       const response = {
         count: docs.length,
-        products: docs.map((doc) => {
+        images: docs.map((doc) => {
           return {
             name: doc.name,
             _id: doc._id,
-            floorplanImage: doc.floorplanImage,
+            floorplanImage: "http://localhost:5000/" + doc.floorplanImage,
             request: {
               type: "GET",
               url: "http://localhost:3000/floorplan/" + doc._id,
