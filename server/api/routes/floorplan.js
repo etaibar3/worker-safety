@@ -1,3 +1,4 @@
+
 const { authenticateUser, authenticateAdmin} = require("../middleware/auth");
 const express = require("express");
 const path = require("path");
@@ -83,6 +84,7 @@ router.post("/", authenticateAdmin, upload.single("floorplanImage"), (req, res, 
     floorplanImage: req.file.path,
     org: req.user.org
   });
+  console.log(floorplan._id)
   floorplan
     .save()
     .then((result) => {
