@@ -8,6 +8,7 @@ const bodyParser = require("body-parser");
 const mongoose = require("mongoose");
 const cors = require("cors");
 const fs = require("fs-extra");
+const cookieParser = require('cookie-parser')
 //var neo4j = require('neo4j-driver');
 
 const port = process.env.PORT || 5000;
@@ -48,12 +49,14 @@ mongo4j.init("neo4j://localhost", { user: "neo4j", pass: "123456" });
 mongoose.Promise = global.Promise;
 
 app.use(morgan("dev"));
+app.use(cookieParser())
 // app.use("/uploads", express.static("uploads"));
 app.use(express.static("uploads"));
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: false }));
 app.use((req, res, next) => {
-  res.header("Access-Control-Allow-Origin", "*");
+  res.header("Access-Control-Allow-Origin", req.headers.origin);
+  res.header("Access-Control-Allow-Credentials", "true");
   res.header(
     "Access-Control-Allow-Headers",
     "Origin, X-Requested-With,Content-Type, Accept, Authorization, auth"

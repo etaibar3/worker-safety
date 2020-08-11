@@ -4,10 +4,15 @@ const jwt = require('jsonwebtoken')
 const Token = require('../models/Tokens');
 
 
+
+
+
 /* Verifies with JWT that user logged in as admin, and retireves their info */
  async function authenticateAdmin (req, res, next) {
     try {
+        console.log(req.cookies)
         const token = await req.headers['auth'];
+        console.log(token)
         if(token === null) return res.status(401).json({error: 'No Token Provided'});
 
         const invalidToken = await Token.findOne( {"key": token} )
