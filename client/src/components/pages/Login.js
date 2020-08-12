@@ -37,8 +37,7 @@ class Login extends React.Component {
                 withCredentials: true,
                 })
             .then(response => {
-                axios.defaults.headers.common['auth'] = response.data.token
-                console.log(response.headers);
+                //axios.defaults.headers.common['auth'] = response.data.token
                 console.log(response)
                 this.setState({ 
                     status: response.status,
