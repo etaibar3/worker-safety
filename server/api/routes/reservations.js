@@ -88,7 +88,7 @@ router.get("/", authenticateUser, async (req, res, next) => {
   const session = driver.session();
   const txc = session.beginTransaction();
   try {
-    const result = await txc.run( 'Match (a:Users {m_id: $id}) - [r:Reserved] - (b: Seat) return b, r.time', 
+    const result = await txc.run( 'Match (a:Users {m_id: $id}) - [r:Reserved] - (b: Seat) return b, r.time ORDER BY r.time DESC ', 
                                   {id: req.user._id});
     const records = result.records;
     const reservations = await Promise.all(records.map(async (record) => {
