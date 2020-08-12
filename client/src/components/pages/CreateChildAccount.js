@@ -62,88 +62,89 @@ class CreateChildAccount extends React.Component {
                 {(status === 200) ?
                     <Redirect to = {{ pathname: "/login" }} /> 
                     : <div>
-                        <h1> Create Employee Account </h1>
-                        <p align="center"> Please fill out the form to finish setting up your account. </p>
+                        <h4 style = {textStyle}> <strong> Welcome to Safe Return! </strong> </h4>
+                        <h2 style = {textStyle}> Create your account </h2>
+                        <br />
+                        <p style = {textLtStyle}> To complete your registration, please fill out the form below.</p>
+                        <br/><br/>
                         <form onSubmit={this.handleSubmit}>
-                            <label> 
-                                Company
-                                {" "}
-                                <input 
-                                    type="text"
-                                    value={company}
-                                    style = {rectangle4}
-                                    name="company" 
-                                    placeholder="Company" 
-                                    onChange={this.handleChange}
-                                />   
-                            </label>
-                                <br/><br/>
-                        <label> 
-                            First name
-                            {" "}
-                            <input 
+                        <label className="text-style"> 
+                            <strong> Company Name </strong><br/>
+                            <input
+                                style={inputBox}
+                                type="text"
+                                value={company}
+                                name="company" 
+                                placeholder="Enter your company's name" 
+                                onChange={this.handleChange}
+                            />   
+                        </label>
+                            <br/><br/>
+                        <label className="text-style"> 
+                            <strong> First name </strong><br/>
+                            <input
+                                style={inputBox}
                                 type="text"
                                 value={first}
-                                style = {rectangle4}
                                 name="first" 
-                                placeholder="First" 
+                                placeholder="Enter your first name" 
                                 onChange={this.handleChange}
                             />   
                         </label>
                             <br/><br/>
-                        <label> 
-                            Last name
-                            {" "}
-                            <input 
-                                type="text"
-                                style = {rectangle4}
+                        <label className="text-style"> 
+                            <strong> Last name </strong><br/>
+                            <input
+                                style={inputBox}
                                 value={last}
                                 name="last" 
-                                placeholder="Last" 
+                                placeholder="Enter your last name" 
                                 onChange={this.handleChange}
                             />   
                         </label>
                             <br/><br/>
-                            <label> 
-                                Work Email
-                                {" "} 
-                                <input 
-                                    type="email" 
-                                    name="email"
-                                    style = {rectangle4}
-                                    value={email}
-                                    placeholder="example@company.com"
-                                    onChange={this.handleChange}
-                                />
-                            </label>
-                                <br/><br/>
-                            <label> 
-                                Password (min. 6 characters)
-                                {" "} 
-                                <input
-                                    type="password"
-                                    name="password1"
-                                    style = {rectangle4}
-                                    value={password1}
-                                    placeholder="Password"
-                                    onChange={this.handleChange}
-                                />
-                            </label>
-                                <br/><br/>
-                            <label> 
-                                Confirm Password
-                                {" "} 
-                                <input
-                                    type="password"
-                                    name="password2"
-                                    style = {rectangle4}
-                                    value={password2}
-                                    placeholder="Password"
-                                    onChange={this.handleChange}
-                                />
-                            </label>
-                                <br/><br/>
-                            <button type="submit" style={submitActive}>Create Account</button>
+                        <label className="text-style"> 
+                            <strong> Email Address</strong><br/>
+                            <input
+                                style={inputBox}
+                                type="email" 
+                                name="email"
+                                value={email}
+                                placeholder="Enter your email address"
+                                onChange={this.handleChange}
+                            />
+                        </label>
+                            <br/><br/>
+                        <label className="text-style"> 
+                            <strong> Password (min. 6 characters) </strong><br/>
+                            <input
+                                style={inputBox}
+                                type="password"
+                                name="password1"
+                                value={password1}
+                                placeholder="Enter a password"
+                                onChange={this.handleChange}
+                            />
+                        </label>
+                            <br/><br/>
+                        <label className="text-style"> 
+                            <strong> Re-enter Password </strong><br/>
+                            <input
+                                style={inputBox}
+                                type="password"
+                                name="password2"
+                                value={password2}
+                                placeholder="Re-enter password"
+                                onChange={this.handleChange}
+                            />
+                        </label>
+                        <br/><br/>
+                        {(company != "" && email.length >=3 && password1.length > 5 && password1 === password2 && first !== "" && last !== "")
+                        ?
+                        <button style={submitActive} type="submit">Create Account</button>
+                        :
+                        <button style={submitInactive} type="button">Create Account</button>
+                        }
                         </form>
                     </div>
                     }
@@ -152,22 +153,42 @@ class CreateChildAccount extends React.Component {
     }
 }
 
-const rectangle4 = {
-  width: 280,
-  height: 49,
+const inputBox = {
+  width: 230,
+  height: 50,
+  padding: 8,
   borderRadius: 5,
   backgroundColor: "#ffffff",
   borderStyle: "solid",
-  borderWidth: 2,
+  borderWidth: 1,
+  borderColor: "#c4c4c4"
+};
+
+const submitInactive = {
+  width: 160,
+  height: 59,
+  borderRadius: 5,
+  backgroundColor: "#c4c4c4",
+  color: "#ffffff"
 };
 
 const submitActive = {
-  width: 131,
+  width: 160,
   height: 59,
   borderRadius: 5,
   fontWeight: "500",
   backgroundColor: "#2121ca",
   color:"#ffffff"
+};
+
+const textStyle = {
+    color: "#222831",
+    textAlign: "left"
+};
+
+const textLtStyle = {
+    color: "#6C6C6C",
+    textAlign: "left"
 };
 
 export default withAlert()(CreateChildAccount);

@@ -100,7 +100,7 @@ class Login extends React.Component {
                         <br/>
                         <Link to='/forgotyourpassword' style={hyperlink}> Forgot your password? </Link>
                         <br/><br/>
-                        {(email !== "" & password != "") ?
+                        {(email.length >=3 & password.length >= 6) ?
                           <button style={submitActive} type="submit">Login </button>
                           : 
                           <button style={submitInactive} type="button">Login </button>}
@@ -146,22 +146,23 @@ const inputLabel = {
   color: "#222831"
 };
 const submitActive = {
-  width: 280,
+  width: 235,
   height: 59,
   borderRadius: 5,
   backgroundColor: "#2121ca",
   color: "#ffffff"
 };
 const submitInactive = {
-  width: 280,
+  width: 235,
   height: 59,
   borderRadius: 5,
   backgroundColor: "#c4c4c4",
   color: "#ffffff"
 };
 const inputBox = {
-  width: 280,
-  height: 59,
+  width: 230,
+  height: 50,
+  padding: 8,
   borderRadius: 5,
   backgroundColor: "#ffffff",
   borderStyle: "solid",

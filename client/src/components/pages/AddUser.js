@@ -199,6 +199,7 @@ const submitButtonActive = {
 const inputBox = {
   width: 280,
   height: 59,
+  padding: 8,
   borderRadius: 5,
   backgroundColor: "#ffffff",
   borderStyle: "solid",
