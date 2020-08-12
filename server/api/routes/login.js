@@ -35,14 +35,20 @@ router.post('/', async (req, res) => {
         const serialize = {email: user.email, admin: user.admin, _id: user._id, org: user.org}
         const token = generateToken(serialize);
         /* Cookies won't work rn, since clinet and server are on different domains */
-        // res.cookie('token', token, {
-        //     maxAge: 60 * 60 * 1000,
-        //     httpOnly: true
-        // });
-        //console.log(token)
-        res.header('auth-token',token).send({ token: token, isAdmin: user.admin });
-        
+        res.set('Access-Control-Allow-Origin', req.headers.origin)
+        res.set('Access-Control-Allow-Credentials', 'true')
+        //res.set('Access-Control-Expose-Headers', 'set-cookie, date, etag')
+        res.cookie('token', token, {
+            maxAge: 60 * 30 * 1000,
+            httpOnly: true,
+            //secure: true,  /* Uncomment when we add https */
+            path: '/',
+            sameSite: 'None',
+            withCredentials: true
+        });
+        res.send({ message: "User is logged in.", isAdmin: user.admin });
     } catch(err) {
+        console.log(err)
         res.status(500).json({error: err});
     }
 

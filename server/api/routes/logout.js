@@ -7,7 +7,7 @@ const { authenticateUser } = require('../middleware/auth.js');
 
 router.delete('/', authenticateUser, async (req, res) => {
     try {
-        const token = await req.headers['auth'];
+        const token = req.cookies.token;
         const { exp } = await jwt.decode(token);
 
         const invalidateToken = new Token({

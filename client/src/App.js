@@ -22,10 +22,13 @@ import ResetPassword from "./components/pages/ResetPassword";
 import ForgotYourPassword from "./components/pages/ForgotYourPassword";
 import AddUser from "./components/pages/AddUser";
 import FileUpload from "./components/FileUpload";
+import axios from 'axios'
 
 class App extends React.Component {
   componentDidMount(){
-    sessionStorage.setItem('loggedIn', false);
+    //sessionStorage.setItem('loggedIn', false);
+    axios.defaults.withCredentials = true;
+    //axios.defaults.baseURL = 'http://localhost:5000'
   }
 
   render() {
