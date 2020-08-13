@@ -53,6 +53,3 @@ Update 7/29:
 run "npm install tailwindcss postcss-cli autoprefixer -D"
 //run "npm install tailwindcss --save-dev"
 
-Update 8/11:
-npm install reactjs-popup --save
-npm install react-modal --save

@@ -1,7 +1,5 @@
 // Component: AddUser
 // Description: Functionality for adding a user to the company roster
-
-
 import React from 'react'
 import axios from 'axios'
 import { withAlert } from 'react-alert';
@@ -14,11 +12,19 @@ class AddUser extends React.Component {
         this.state = {
             email: "",
             status: 400,
-            permissions: ""
+            permissions: "",
+            redirect: false
         }
         this.handleChange = this.handleChange.bind(this)
         this.handleSubmit = this.handleSubmit.bind(this)
         this.routeChangeCancel = this.routeChangeCancel.bind(this)       
+    }
+
+    componentDidMount() {
+        if (sessionStorage.getItem('loggedIn') === "false" ) {
+            console.log("not logged in");
+            this.setState({redirect: true});
+        }
     }
 
     handleChange(event) {
@@ -54,6 +60,10 @@ class AddUser extends React.Component {
     }
 
     render () {
+        if (this.state.redirect) {
+            return <Redirect to = {{ pathname: "/login" }} />
+        }
+
         return (
             <div>
             <h1> Add User </h1>

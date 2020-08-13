@@ -1,8 +1,9 @@
 import React from 'react'
 import axios from 'axios'
+import { Redirect } from 'react-router';
 import { withAlert } from 'react-alert';
 import './Roster.css'
-import Modal from 'react-modal';
+import ChangeUser from './ChangeUser';
 
 
 class ViewRoster extends React.Component {
@@ -12,13 +13,15 @@ class ViewRoster extends React.Component {
             admins: [],      //array of admin user with email and name field for view roster
             employees: [],
             permissions: "",
-            show: null
+            editRedirect: false,
+            email: "",
+            currType: ""
         }
         this.initialState = this.state
         this.handleChange = this.handleChange.bind(this)
         this.handleClose = this.handleClose.bind(this)
-        this.openModal = this.openModal.bind(this)
-        //this.editUser = this.editUser.bind(this)
+        this.editEmployee = this.editEmployee.bind(this)
+        this.editAdmin = this.editAdmin.bind(this)
     }
 
     componentDidMount() {
@@ -64,24 +67,20 @@ class ViewRoster extends React.Component {
         })
     }
 
-    openModal() {
+    editEmployee(event) {
         this.setState({
-            show: true
+            editRedirect: true,
+            currType: "employee",
+            email: event.email
         })
-        {/* Set user account type to admin or employee 
-        //create popup here to select admin or employee
-        let admin
-        {(this.state.permissions === "administrator") ? admin = true : admin = false}
-        axios
-         .patch(`http://localhost:5000/org/manageRoster`, { 'email': this.state.email, 'admin': admin })
-         .then(response => {
-             console.log(response)
-             this.props.alert.success('Success')
-         })
-         .catch(error => {
-             console.log(error)
-             this.props.alert.error(error.response.data.error)
-         })*/}
+    }
+
+    editAdmin(event) {
+        this.setState({
+            editRedirect: true,
+            currType: "admin",
+            email: event.email
+        })
     }
 
     removeUser(event) {
@@ -104,9 +103,19 @@ class ViewRoster extends React.Component {
     }
 
     render() {
-        const { admins, employees, show } = this.state
+        const { admins, employees, editRedirect, currType, email } = this.state
         return (
             <div>
+            {(this.state.editRedirect) ? 
+                <Redirect to={{
+                    pathname: '/change-user',
+                    state: { 
+                        currType: `${currType}`,
+                        email: `${email} `
+                    }
+                }}/>
+                :
+                <div>
                 { (admins.length > 0 || employees.length > 0) ? 
                     <div>
                         <table align="center" >
@@ -123,7 +132,7 @@ class ViewRoster extends React.Component {
                                 {admins.map(user => (
                                     <tr key={user.email} align="center">
                                         <td key={user.name}> 
-                                            {(user.name === "" || user.name === " ") ? <p> User has not yet created their account. </p>: user.name}
+                                            {(user.name === "" || user.name === " ") ? <p> Awaiting user sign up. </p>: user.name}
                                         </td>
                                         <td key={user.index} style={adminStyle} text-align="left">
                                             ADMIN
@@ -135,14 +144,14 @@ class ViewRoster extends React.Component {
                                             <button onClick={() => this.removeUser(user)} style={EditButtonStyle}>Remove </button>
                                         </td>
                                         <td>
-                                            <button onClick={() => this.editUser(user)} style={EditButtonStyle}> Edit </button>
+                                            <button onClick={() => this.editAdmin(user)} style={EditButtonStyle}> Edit </button>
                                         </td>
                                     </tr>
                                 ))}
                                 {employees.map(user => (
                                     <tr key={user.email} align="center">
                                         <td key={user.name}>
-                                            {(user.name === "" || user.name === " ") ? <p> User has not yet created their account. </p>: user.name}
+                                            {(user.name === "" || user.name === " ") ? <p> Awaiting user sign up. </p>: user.name}
                                         </td>
                                         <td key={user.index}> 
                                         </td>
@@ -153,41 +162,7 @@ class ViewRoster extends React.Component {
                                             <button onClick={() => this.removeUser(user)} style={EditButtonStyle}>Remove </button>
                                         </td>
                                         <td>
-                                            <button onClick={this.openModal} style={EditButtonStyle}> Edit</button>
-                                            {(show) ?
-                                            <div>
-                                                <Modal 
-                                                    isOpen={show} 
-                                                    onRequestClose={() => this.handleClose()}
-                                                    style = {modalStyle}
-                                                    >
-                                                    <button onClick={this.handleClose} style={EditButtonStyle}> X </button>
-                                                    <h2 align="center"> Change User Type </h2>
-                                                    <form onSubmit={this.handleSubmit}>
-                                                        <label style={radioContainerSelected}>
-                                                            <input 
-                                                                type="radio" 
-                                                                name="permissions"
-                                                                value="employee"
-                                                                checked={this.state.permissions === "employee"}
-                                                                onChange={this.handleChange}
-                                                                /> <strong> Employee </strong>
-                                                        </label>
-                                                        <br />
-                                                        <label style={radioContainerSelected}>
-                                                            <input 
-                                                                type="radio" 
-                                                                name="permissions"
-                                                                value="admin"
-                                                                checked={this.state.permissions === "admin"}
-                                                                onChange={this.handleChange}
-                                                                /> <strong> Admin </strong>
-                                                        </label>
-                                                        <br/><br/>
-                                                        <button type="submit">Submit</button>
-                                                    </form>
-                                                </Modal> 
-                                            </div> : null}
+                                            <button onClick={() => this.editEmployee(user)} style={EditButtonStyle}> Edit</button>
                                         </td>
                                     </tr>
                                 ))}
@@ -195,6 +170,7 @@ class ViewRoster extends React.Component {
                         </table>
                     </div>
                  : <p> You cannot currently view your organization's roster. Make sure you are logged in. </p>}
+                </div> }
             </div>
         )
     }
@@ -258,35 +234,3 @@ const modalStyle = {
 
 export default withAlert()(ViewRoster)
 
-/*
-
-                                            <Popup contentStyle={{width: "30%", height: "400px"}} trigger={<button onClick={() => this.editUser(user)} style={EditButtonStyle}> Edit</button>
-                                            <div>
-                                                <h4> Change User Type </h4>
-                                                <form onSubmit={this.handleSubmit}>
-                                                    <label style={radioContainerSelected}>
-                                                        <input 
-                                                            type="radio" 
-                                                            name="permissions"
-                                                            value="employee"
-                                                            checked={this.state.permissions === "employee"}
-                                                            onChange={this.handleChange}
-                                                            /> <strong> Employee </strong>
-                                                    </label>
-                                                    <br />
-                                                    <label style={radioContainerSelected}>
-                                                        <input 
-                                                            type="radio" 
-                                                            name="permissions"
-                                                            value="admin"
-                                                            checked={this.state.permissions === "admin"}
-                                                            onChange={this.handleChange}
-                                                            /> <strong> Admin </strong>
-                                                    </label>
-                                                    <br/><br/>
-                                                    <button type="submit">Submit</button>
-                                                </form>
-                                            </div>
-                                            </Popup>
-
-*/
