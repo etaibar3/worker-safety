@@ -24,6 +24,8 @@ import AddUser from "./components/pages/AddUser";
 import FileUpload from "./components/FileUpload";
 import axios from 'axios'
 
+require('dotenv').config()
+
 class App extends React.Component {
   componentDidMount(){
     //sessionStorage.setItem('loggedIn', false);
