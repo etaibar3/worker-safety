@@ -1,5 +1,4 @@
-
-const { authenticateUser, authenticateAdmin} = require("../middleware/auth");
+const { authenticateUser, authenticateAdmin } = require("../middleware/auth");
 const express = require("express");
 const path = require("path");
 const router = express.Router();
@@ -47,48 +46,47 @@ const upload = multer({
 //   fileFilter: fileFilter,
 // });
 
-router.get("/", authenticateUser, (req, res, next) => {
-  Floorplan.find( {org: req.user.org} )
-    .select("name _id floorplanImage")
-    .exec()
-    .then((docs) => {
-      const response = {
-        count: docs.length,
-        images: docs.map((doc) => {
-          return {
-            name: doc.name,
-            _id: doc._id,
-            floorplanImage: "http://localhost:5000/" + doc.floorplanImage,
-            request: {
-              type: "GET",
-              url: "http://localhost:3000/floorplan/" + doc._id,
-            },
-          };
-        }),
-      };
-      res.status(200).json(response);
-    })
-    .catch((err) => {
-      console.log(err);
-      res.status(500).json({
-        error: err,
-      });
-    });
+router.get("/", authenticateUser, async (req, res, next) => {
+  try {
+    const results = await Floorplan.find();
+    const response = {
+      count: results.length,
+      products: results.map((result) => {
+        return {
+          name: result.name,
+          _id: result._id,
+          floorplanImage: result.floorplanImage,
+          request: {
+            type: "GET",
+            url: "http://localhost:3000/floorplan/" + result._id,
+          },
+        };
+      }),
+    };
+    res.status(200).json(response);
+  } catch (err) {
+    res.status(500).json({ error: err });
+  }
 });
 
-router.post("/", authenticateAdmin, upload.single("floorplanImage"), (req, res, next) => {
-  console.log(req.file);
-  const floorplan = new Floorplan({
-    _id: new mongoose.Types.ObjectId(),
-    name: req.body.name,
-    floorplanImage: req.file.path,
-    org: req.user.org
-  });
-  console.log(floorplan._id)
-  floorplan
-    .save()
-    .then((result) => {
-      console.log(result);
+router.post(
+  "/",
+  authenticateAdmin,
+  upload.single("floorplanImage"),
+  async (req, res, next) => {
+    const floorplan = new Floorplan({
+      _id: new mongoose.Types.ObjectId(),
+      name: req.body.name,
+      floorplanImage: req.file.path,
+      org: req.body.org,
+      floorNumber: req.body.floorNumber,
+    });
+    try {
+      const result = await floorplan.save();
+      fs.rename(
+        result.floorplanImage,
+        "public/uploads/" + req.body.org + "-" + req.body.floorNumber + ".jpeg"
+      );
       res.status(201).json({
         message: "Image uploaded successfully",
         createdFloorplan: {
@@ -101,14 +99,11 @@ router.post("/", authenticateAdmin, upload.single("floorplanImage"), (req, res, 
           },
         },
       });
-    })
-    .catch((err) => {
-      console.log(err);
-      res.status(500).json({
-        error: err,
-      });
-    });
-});
+    } catch (err) {
+      res.status(500).json({ error: err });
+    }
+  }
+);
 
 router.get("/:floorplanId", async (req, res, next) => {
   const id = req.params.floorplanId;
