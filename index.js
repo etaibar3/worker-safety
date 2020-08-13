@@ -19,15 +19,6 @@ mongoose.connect(
   }
 );
 
-if (process.env.NODE_ENV === 'production') {
-  /* in app.js file after we add all the routes*/
-  app.use(express.static( './client/build'))
-  //Do const path = require(‘path’) at top of file
-  app.get ('*', (req, res) => {
-    res.sendFile(path.join(__dirname, 'client', 'build', 'index.html'));
-  });
-}
-
 //app.get("/", function (req, res) {});
 //server.listen(port);
 
@@ -44,3 +35,12 @@ app.get("/",(req,res)=>{
 app.listen(port,()=>{
   console.log("index.js message prints here")
 })
+
+if (process.env.NODE_ENV === 'production') {
+  /* in app.js file after we add all the routes*/
+  app.use(express.static( './client/build'))
+  //Do const path = require(‘path’) at top of file
+  app.get ('*', (req, res) => {
+    res.sendFile(path.join(__dirname, 'client', 'build', 'index.html'));
+  });
+}
