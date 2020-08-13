@@ -24,7 +24,7 @@ import AddUser from "./components/pages/AddUser";
 import FileUpload from "./components/FileUpload";
 import axios from 'axios'
 
-require('dotenv').config()
+require('dotenv').config().load()
 
 class App extends React.Component {
   componentDidMount(){
