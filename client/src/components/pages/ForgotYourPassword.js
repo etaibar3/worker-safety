@@ -26,7 +26,7 @@ class ForgotYourPassword extends React.Component {
     handleSubmit(event) {
         event.preventDefault()
         axios
-            .patch(`http://localhost:5000/forgot-password`, { 'email': this.state.email })
+            .patch(`/forgot-password`, { 'email': this.state.email })
             .then(response => {
                 console.log(response)
             })

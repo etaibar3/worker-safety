@@ -40,7 +40,7 @@ class ReserveSelect extends React.Component {
 
       {/* Getting desk coordinates and numbers*/}
         axios
-            .get(`http://localhost:5000/seats/${this.state.date}`)
+            .get(`/seats/${this.state.date}`)
             .then(response => {
                 console.log(response)
                 response.data.seats.map((seat, index) => {
@@ -59,7 +59,7 @@ class ReserveSelect extends React.Component {
 
       {/* Getting floorplan image from DB*/}
         axios
-         .get(`http://localhost:5000/floorplan`)
+         .get(`/floorplan`)
          .then(response => {
             console.log(response)
             alert('success requesting floorplan')
