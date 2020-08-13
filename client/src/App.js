@@ -29,6 +29,7 @@ class App extends React.Component {
     //sessionStorage.setItem('loggedIn', false);
     axios.defaults.withCredentials = true;
     axios.defaults.baseURL = process.env.MONGODB_URI || 'http://localhost:5000'
+    console.log(process.env.MONGODB_URI)
   }
 
   render() {
