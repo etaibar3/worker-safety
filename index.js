@@ -30,13 +30,6 @@ mongoose.connect(
 //     console.log('server started');
 // });
 
-app.get("/",(req,res)=>{
-  res.send("Test");
-})
-app.listen(port,()=>{
-  console.log("index.js message prints here")
-})
-
 if (process.env.NODE_ENV === 'production') {
   /* in app.js file after we add all the routes*/
   app.use(express.static( './client/build'))
@@ -45,3 +38,11 @@ if (process.env.NODE_ENV === 'production') {
     res.sendFile(path.join(__dirname, 'client', 'build', 'index.html'));
   });
 }
+
+app.get("/",(req,res)=>{
+  res.send("Test");
+})
+app.listen(port,()=>{
+  console.log("index.js message prints here")
+})
+
