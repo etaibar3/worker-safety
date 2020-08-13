@@ -38,13 +38,13 @@ const reportRoutes = require("./api/routes/report");
 app.set("view engine", "ejs");
 const neo4j = require("neo4j-driver");
 const driver = neo4j.driver(
-  "bolt://localhost",
-  neo4j.auth.basic("neo4j", "123456")
+  GRAPHENEDB_BOLT_URL || "bolt://localhost",
+  neo4j.auth.basic(GRAPHENEDB_BOLT_USER  || "neo4j", GRAPHENEDB_BOLT_PASSWORD || "123456")
 );
 
 const session = driver.session();
 const mongo4j = require("mongo4j");
-mongo4j.init("neo4j://localhost", { user: "neo4j", pass: "123456" });
+mongo4j.init(GRAPHENEDB_URL || "neo4j://localhost", { user: GRAPHENEDB_BOLT_USER || "neo4j", pass: GRAPHENEDB_BOLT_PASSWORD || "123456" });
 
 mongoose.Promise = global.Promise;
 
