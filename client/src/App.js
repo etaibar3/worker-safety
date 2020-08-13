@@ -23,8 +23,9 @@ import ForgotYourPassword from "./components/pages/ForgotYourPassword";
 import AddUser from "./components/pages/AddUser";
 import FileUpload from "./components/FileUpload";
 import axios from 'axios'
+import {} from 'dotenv/config'
 
-require('dotenv').load()
+//require('dotenv').config()
 
 class App extends React.Component {
   componentDidMount(){
