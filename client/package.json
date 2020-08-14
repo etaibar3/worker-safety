@@ -11,6 +11,7 @@
     "bcrypt": "^5.0.0",
     "cors": "^2.8.5",
     "dotenv": "^8.2.0",
+    "env-cmd": "^10.1.0",
     "jsonwebtoken": "^8.5.1",
     "react": "^16.13.1",
     "react-alert": "^7.0.2",
@@ -25,8 +26,8 @@
   },
   "proxy": "http://localhost:5000",
   "scripts": {
-    "start": "webpack --config ../envconfig.js && npm run watch:css && react-scripts start",
-    "build": "webpack --config ../envconfig.js && npm run build:css && react-scripts build",
+    "start": "env-cmd npm run watch:css && react-scripts start",
+    "build": "env-cmd npm run build:css && react-scripts build",
     "test": "react-scripts test",
     "eject": "react-scripts eject"
   },
