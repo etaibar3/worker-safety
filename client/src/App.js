@@ -22,14 +22,18 @@ import ResetPassword from "./components/pages/ResetPassword";
 import ForgotYourPassword from "./components/pages/ForgotYourPassword";
 import AddUser from "./components/pages/AddUser";
 import FileUpload from "./components/FileUpload";
-import axios from 'axios'
+import axios from 'axios';
+// import { databaseURI } from '../envconfig.js';
+const { databaseURI } = require('../envconfig.js');
+
+
 
 class App extends React.Component {
   componentDidMount(){
     //sessionStorage.setItem('loggedIn', false);
     axios.defaults.withCredentials = true;
-    axios.defaults.baseURL = process.env.REACT_APP_MONGODB_URI || 'http://localhost:5000'
-    console.log(process.env.REACT_APP_MONGODB_URI)
+    axios.defaults.baseURL = databaseURI || 'http://localhost:5000'
+    console.log(databaseURI)
   }
 
   render() {
