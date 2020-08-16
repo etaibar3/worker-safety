@@ -34,7 +34,7 @@ class Login extends React.Component {
         axios
             .post(`/login`, { 'email': this.state.email, 'password': this.state.password },
                 {
-                withCredentials: true,
+                withCredentials: false,
                 })
             .then(response => {
                 //axios.defaults.headers.common['auth'] = response.data.token
