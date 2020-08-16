@@ -48,7 +48,7 @@ mongo4j.init(process.env.GRAPHENEDB_URL || "neo4j://localhost", { user: process.
 
 mongoose.Promise = global.Promise;
 
-app.use(cors());
+app.use(cors({credentials: true, origin: "https://safereturn.herokuapp.com"}));
 app.use(morgan("dev"));
 app.use(cookieParser())
 // app.use("/uploads", express.static("uploads"));
