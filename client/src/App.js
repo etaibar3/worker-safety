@@ -29,7 +29,8 @@ class App extends React.Component {
   componentDidMount(){
     //sessionStorage.setItem('loggedIn', false);
     //axios.defaults.withCredentials = true;
-    axios.defaults.baseURL = 'https://safereturn.herokuapp.com:${process.env.PORT}' || 'http://localhost:5000'
+    console.log(process.env.PORT)
+    axios.defaults.baseURL = 'https://safereturn.herokuapp.com/' || 'http://localhost:5000'
     console.log(process.env.REACT_APP_MONGODB_URI)
   }
 

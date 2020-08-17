@@ -32,7 +32,7 @@ class Login extends React.Component {
     handleSubmit(event) {
         event.preventDefault()
         axios
-            .post(`/login`, { 'email': this.state.email, 'password': this.state.password },
+            .post(`/api/login`, { 'email': this.state.email, 'password': this.state.password },
                 {
                 withCredentials: false,
                 })
