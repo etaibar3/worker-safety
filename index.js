@@ -42,6 +42,7 @@ if (process.env.NODE_ENV === 'production') {
 app.get("/",(req,res)=>{
   res.send("Test");
 })
+console.log(port);
 app.listen(port,()=>{
   console.log("index.js message prints here")
 })
