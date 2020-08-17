@@ -37,7 +37,7 @@
   },
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "start": "http-server . -o",
+    "start": "node index.js",
     "db": "nodemon server.js",
     "heroku-postbuild": "cd client && npm install && npm run build"
   },
