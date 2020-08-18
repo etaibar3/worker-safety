@@ -41,7 +41,7 @@ router.post('/', async (req, res) => {
         res.cookie('token', token, {
             maxAge: 60 * 30 * 1000,
             httpOnly: true,
-            //secure: true,  /* Uncomment when we add https */
+            secure: true,  /* Uncomment when we add https */
             path: '/',
             sameSite: 'None',
             withCredentials: true
