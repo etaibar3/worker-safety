@@ -33,6 +33,7 @@ class Login extends React.Component {
         event.preventDefault()
         axios
             .post(`/routes/login`, { 'email': this.state.email, 'password': this.state.password },
+            //.post(`/api/login`, { 'email': this.state.email, 'password': this.state.password },
                 {
                 withCredentials: false, //RESET THIS TO TRUE
                 })

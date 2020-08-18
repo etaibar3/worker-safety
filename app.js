@@ -76,7 +76,7 @@ app.use("/floorplan", floorplanRoutes);
 app.use("/upload", floorplanRoutes);
 
 app.use("/employee", employeeAccRoutes);
-app.use("/login", loginRoutes);
+app.use("/api/login", loginRoutes);
 app.use("/org", orgRoutes);
 app.use("/admin", adminAccRotues);
 app.use("/logout", logoutRoutes);
