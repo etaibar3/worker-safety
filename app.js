@@ -44,7 +44,7 @@ const driver = neo4j.driver(
 
 const session = driver.session();
 const mongo4j = require("mongo4j");
-mongo4j.init(process.env.GRAPHENEDB_URL || "neo4j://localhost", { user: process.env.GRAPHENEDB_BOLT_USER || "neo4j", pass: process.env.GRAPHENEDB_BOLT_PASSWORD || "123456" });
+mongo4j.init(process.env.GRAPHENEDB_BOLT_URL || "neo4j://localhost", { user: process.env.GRAPHENEDB_BOLT_USER || "neo4j", pass: process.env.GRAPHENEDB_BOLT_PASSWORD || "123456" });
 
 mongoose.Promise = global.Promise;
 
