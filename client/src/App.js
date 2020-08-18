@@ -33,7 +33,6 @@ class App extends React.Component {
     axios.defaults.baseURL = 'https://safereturn.herokuapp.com/' || 'http://localhost:5000'
     console.log(process.env.REACT_APP_MONGODB_URI)
     console.log(axios.defaults.baseURL)
-    console.log(process.env.PORT)
   }
 
   render() {
