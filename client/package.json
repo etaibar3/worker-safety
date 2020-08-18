@@ -24,6 +24,7 @@
     "react-scripts": "^3.4.1",
     "start": "^5.1.0"
   },
+  "proxy": "http://localhost:5000",
   "scripts": {
     "start": "react-scripts start",
     "build": "npm run build:css && react-scripts build",

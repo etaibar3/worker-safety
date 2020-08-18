@@ -32,9 +32,9 @@ class Login extends React.Component {
     handleSubmit(event) {
         event.preventDefault()
         axios
-            .post(`/login`, { 'email': this.state.email, 'password': this.state.password },
+            .post(`/routes/login`, { 'email': this.state.email, 'password': this.state.password },
                 {
-                withCredentials: false,
+                withCredentials: false, //RESET THIS TO TRUE
                 })
             .then(response => {
                 //axios.defaults.headers.common['auth'] = response.data.token
