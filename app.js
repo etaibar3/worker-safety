@@ -35,18 +35,18 @@ const reportRoutes = require("./api/routes/report");
 
 // app.set("view", path.join(__dirname, "views"));
 // app.set("view engine", "ejs");
-app.set("view engine", "ejs");
-const neo4j = require("neo4j-driver");
-const driver = neo4j.driver(
-  process.env.GRAPHENEDB_BOLT_URL || "bolt://localhost",
-  neo4j.auth.basic(process.env.GRAPHENEDB_BOLT_URL  || "neo4j", process.env.GRAPHENEDB_BOLT_PASSWORD || "123456")
-);
+// app.set("view engine", "ejs");
+// const neo4j = require("neo4j-driver");
+// const driver = neo4j.driver(
+//   process.env.GRAPHENEDB_BOLT_URL || "bolt://localhost",
+//   neo4j.auth.basic(process.env.GRAPHENEDB_BOLT_URL  || "neo4j", process.env.GRAPHENEDB_BOLT_PASSWORD || "123456")
+// );
 
-const session = driver.session();
-const mongo4j = require("mongo4j");
-mongo4j.init(process.env.GRAPHENEDB_URL || "neo4j://localhost", { user: process.env.GRAPHENEDB_BOLT_URL || "neo4j", pass: process.env.GRAPHENEDB_BOLT_PASSWORD || "123456" });
+// const session = driver.session();
+// const mongo4j = require("mongo4j");
+// mongo4j.init(process.env.GRAPHENEDB_URL || "neo4j://localhost", { user: process.env.GRAPHENEDB_BOLT_URL || "neo4j", pass: process.env.GRAPHENEDB_BOLT_PASSWORD || "123456" });
 
-mongoose.Promise = global.Promise;
+// mongoose.Promise = global.Promise;
 
 app.use(cors());
 app.use(morgan("dev"));
