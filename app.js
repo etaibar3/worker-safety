@@ -70,18 +70,18 @@ app.use((req, res, next) => {
   next();
 });
 
-app.use("/employees", employeeRoutes);
-app.use("/reservations", reservationRoutes);
-app.use("/floorplan", floorplanRoutes);
-app.use("/upload", floorplanRoutes);
+app.use("/api/employees", employeeRoutes);
+app.use("/api/reservations", reservationRoutes);
+app.use("/api/floorplan", floorplanRoutes);
+app.use("/api/upload", floorplanRoutes);
 
-app.use("/employee", employeeAccRoutes);
+app.use("/api/employee", employeeAccRoutes);
 app.use("/api/login", loginRoutes);
-app.use("/org", orgRoutes);
-app.use("/admin", adminAccRotues);
-app.use("/logout", logoutRoutes);
-app.use("/forgot-password", resetPassRoutes);
-app.use("/seats", seatRoutes);
+app.use("/api/org", orgRoutes);
+app.use("/api/admin", adminAccRotues);
+app.use("/api/logout", logoutRoutes);
+app.use("/api/forgot-password", resetPassRoutes);
+app.use("/api/seats", seatRoutes);
 
 // app.use(fileUpload());
 
