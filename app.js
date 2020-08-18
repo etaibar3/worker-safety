@@ -48,6 +48,8 @@ mongo4j.init(process.env.GRAPHENEDB_BOLT_URL || "neo4j://localhost", { user: pro
 
 mongoose.Promise = global.Promise;
 
+console.log(process.env.GRAPHENEDB_BOLT_URL);
+
 app.use(cors());
 app.use(morgan("dev"));
 app.use(cookieParser())
