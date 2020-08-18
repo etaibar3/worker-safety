@@ -36,12 +36,15 @@
     "http-proxy-middleware": "^1.0.5"
   },
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1",
-    "begin": "npm install --only=dev && npm install && npm run build && node index.js",
-    "start": "node index.js",
-    "db": "nodemon server.js",
+    "begin": "npm run build && node server.js",
+    "start": "node server.js",
+    "start:original": "if-env NODE_ENV=production && npm run start:prod || npm run start:dev",
+    "start:prod": "node server.js",
+    "start:dev": "concurrently \"nodemon --ignore 'client/*'\" \"npm run client\"",
+    "client": "cd client && npm run start",
+    "install": "cd client && npm install",
     "build": "cd client && npm run build"
-  },
+},
   "keywords": [],
   "author": "",
   "license": "ISC"
