@@ -79,8 +79,9 @@ const {authenticateUser } = require("../middleware/auth");
 // })
 
 const driver = neo4j.driver(
-  "bolt://localhost",
-  neo4j.auth.basic("neo4j", "123456")
+  process.env.GRAPHENEDB_BOLT_URL || "bolt://localhost",
+  neo4j.auth.basic(process.env.GRAPHENEDB_BOLT_USER || "neo4j", process.env.GRAPHENEDB_BOLT_PASSWORD || "123456"),
+  {encrypted: 'ENCRYPTION_ON', trust: 'TRUST_ALL_CERTIFICATES'}
 );
 
 
