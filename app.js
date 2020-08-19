@@ -48,7 +48,7 @@ const mongo4j = require("mongo4j");
 mongo4j.init(process.env.GRAPHENEDB_BOLT_URL || "neo4j://localhost", { user: process.env.GRAPHENEDB_BOLT_USER || "neo4j", pass: process.env.GRAPHENEDB_BOLT_PASSWORD || "123456" });
 //mongo4j.init(process.env.GRAPHENEDB_URL)
 mongoose.Promise = global.Promise;
-const txc = session.beginTransaction();
+
 // const result1 = txc.run(
 //   'Create (n:Seat {name: $id,' +
 //   'location: point({ x: $Xcoord, y: $Ycoord, crs: "cartesian"}),' +

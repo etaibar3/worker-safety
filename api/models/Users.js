@@ -4,6 +4,8 @@
 
 const mongo4j = require("mongo4j");
 const mongoose = require("mongoose");
+mongo4j.init(process.env.GRAPHENEDB_BOLT_URL || "neo4j://localhost", { user: process.env.GRAPHENEDB_BOLT_USER || "neo4j", pass: process.env.GRAPHENEDB_BOLT_PASSWORD || "123456" });
+
 
 const UserSchema = mongoose.Schema({
   email: {
