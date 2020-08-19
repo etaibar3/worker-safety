@@ -58,7 +58,7 @@ router.get("/", authenticateUser, (req, res, next) => {
           return {
             name: doc.name,
             _id: doc._id,
-            floorplanImage: "http://localhost:5000/" + doc.floorplanImage,
+            floorplanImage: "https://safereturn.herokuapp.com/" + doc.floorplanImage,
             request: {
               type: "GET",
               url: "http://localhost:3000/floorplan/" + doc._id,
