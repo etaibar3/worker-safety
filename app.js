@@ -40,7 +40,7 @@ const neo4j = require("neo4j-driver");
 const driver = neo4j.driver(
   process.env.GRAPHENEDB_BOLT_URL || "bolt://localhost",
   neo4j.auth.basic(process.env.GRAPHENEDB_BOLT_USER || "neo4j", process.env.GRAPHENEDB_BOLT_PASSWORD || "123456"),
-  {encrypted: 'ENCRYPTION_ON'}
+  {encrypted: 'ENCRYPTION_ON', trust: 'TRUST_ALL_CERTIFICATES'}
 );
 
 const session = driver.session();
