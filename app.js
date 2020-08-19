@@ -49,12 +49,12 @@ mongo4j.init(process.env.GRAPHENEDB_BOLT_URL || "neo4j://localhost", { user: pro
 //mongo4j.init(process.env.GRAPHENEDB_URL)
 mongoose.Promise = global.Promise;
 const txc = session.beginTransaction();
-const result1 = txc.run(
-  'Create (n:Seat {name: $id,' +
-  'location: point({ x: $Xcoord, y: $Ycoord, crs: "cartesian"}),' +
-  'pixel_location: point({x: $pixXcoord, y: $pixYcoord}), org: $org, floorplan_id: ""}) RETURN n.name', 
-  {id: 'a', Xcoord: 1, Ycoord: 1, pixXcoord: 1, pixYcoord: 1, org: 'Tufts'})
-console.log(result1);
+// const result1 = txc.run(
+//   'Create (n:Seat {name: $id,' +
+//   'location: point({ x: $Xcoord, y: $Ycoord, crs: "cartesian"}),' +
+//   'pixel_location: point({x: $pixXcoord, y: $pixYcoord}), org: $org, floorplan_id: ""}) RETURN n.name', 
+//   {id: 'a', Xcoord: 1, Ycoord: 1, pixXcoord: 1, pixYcoord: 1, org: 'Tufts'})
+// console.log(result1);
 
 app.use(cors());
 app.use(morgan("dev"));
