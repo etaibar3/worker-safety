@@ -49,7 +49,7 @@ mongo4j.init(process.env.GRAPHENEDB_BOLT_URL || "neo4j://localhost", { user: pro
 //mongo4j.init(process.env.GRAPHENEDB_URL)
 mongoose.Promise = global.Promise;
 const txc = session.beginTransaction();
-const result1 = await txc.run(
+const result1 = txc.run(
   'Create (n:Seat {name: $id,' +
   'location: point({ x: $Xcoord, y: $Ycoord, crs: "cartesian"}),' +
   'pixel_location: point({x: $pixXcoord, y: $pixYcoord}), org: $org, floorplan_id: ""}) RETURN n.name', 
