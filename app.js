@@ -38,15 +38,15 @@ app.set("view engine", "ejs");
 app.set("view engine", "ejs");
 const neo4j = require("neo4j-driver");
 const driver = neo4j.driver(
-  process.env.GRAPHENEDB_BOLT_URL
-  /* process.env.GRAPHENEDB_BOLT_URL || "bolt://localhost",
-  neo4j.auth.basic(process.env.GRAPHENEDB_BOLT_USER || "neo4j", process.env.GRAPHENEDB_BOLT_PASSWORD || "123456")
-  */
+  process.env.GRAPHENEDB_BOLT_URL || "bolt://localhost",
+  neo4j.auth.basic(process.env.GRAPHENEDB_BOLT_USER || "neo4j", process.env.GRAPHENEDB_BOLT_PASSWORD || "123456"),
+  {encrypted: 'ENCRYPTION_ON'}
+  
 );
 
 const session = driver.session();
 const mongo4j = require("mongo4j");
-//mongo4j.init(process.env.GRAPHENEDB_BOLT_URL || "neo4j://localhost", { user: process.env.GRAPHENEDB_BOLT_USER || "neo4j", pass: process.env.GRAPHENEDB_BOLT_PASSWORD || "123456" });
+mongo4j.init(process.env.GRAPHENEDB_BOLT_URL || "neo4j://localhost", { user: process.env.GRAPHENEDB_BOLT_USER || "neo4j", pass: process.env.GRAPHENEDB_BOLT_PASSWORD || "123456" });
 mongo4j.init(process.env.GRAPHENEDB_URL)
 mongoose.Promise = global.Promise;
 
