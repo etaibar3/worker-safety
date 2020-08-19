@@ -78,6 +78,7 @@ router.post('/create-account', async (req, res) => {
         })
         const savedUser = await user.save();
         const result1 = await txc.run('Create (n:Users {m_id: $id})', {id: savedUser._id});
+        console.log(result1);
         await txc.commit();
         res.json({user: savedUser});
     } catch(err){ 

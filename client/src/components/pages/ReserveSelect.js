@@ -115,7 +115,7 @@ class ReserveSelect extends React.Component {
       {/* Posting desk reservation */}
         if (this.state.validRes) {
           axios
-            .post(`http://localhost:5000/reservations`, { 'date': date, 'seat_number': intDesk }) 
+            .post(`/reservations`, { 'date': date, 'seat_number': intDesk }) 
             .then(response => {
                 console.log(response)
                 this.props.alert.success('Success')
