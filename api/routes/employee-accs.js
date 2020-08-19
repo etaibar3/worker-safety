@@ -7,12 +7,6 @@ const User = require('../models/Users.js');
 const Employee = require('../models/employee');
 const Org = require('../models/Orgs.js');
 const { authenticateUser } = require('../middleware/auth.js');
-const neo4j = require("neo4j-driver");
-const driver = neo4j.driver(
-  process.env.GRAPHENEDB_BOLT_URL || "bolt://localhost",
-  neo4j.auth.basic(process.env.GRAPHENEDB_BOLT_USER || "neo4j", process.env.GRAPHENEDB_BOLT_PASSWORD || "123456"),
-  {encrypted: 'ENCRYPTION_ON', trust: 'TRUST_ALL_CERTIFICATES'}
-);
 
 //Validate new employee acount data 
 const employeeValidation = Joi.object ({
@@ -27,8 +21,6 @@ const employeeValidation = Joi.object ({
 
 /* Post a new employee to db - for account creation*/
 router.post('/create-account', async (req, res) => {
-    const session = driver.session();
-    const txc = session.beginTransaction();
     try {//Data Validation
         const { error } = await employeeValidation.validateAsync(req.body);
     } catch (error){
@@ -61,8 +53,6 @@ router.post('/create-account', async (req, res) => {
             lastName: req.body.lastName,
         })
         const savedUser = await user.save();
-        const result1 = await txc.run('Create (n:Users {m_id: $id})', {id: savedUser._id});
-        await txc.commit();
         // const graph_employee = new Employee({
         //     _id: new mongoose.Types.ObjectId(),
         //     name: req.body.firstName + ' ' + req.body.lastName,
@@ -73,9 +63,7 @@ router.post('/create-account', async (req, res) => {
 
     } catch(err){
         res.status(500).json({error: err});
-    } finally {
-        await session.close();
-    }
+    } 
 });
 
 router.get('/companyrep', authenticateUser, async (req, res) => {

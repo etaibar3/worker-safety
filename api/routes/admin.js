@@ -7,12 +7,6 @@ const User = require("../models/Users.js");
 const Org = require("../models/Orgs.js");
 const Employee = require('../models/employee');
 const neo4j = require("neo4j-driver");
-const driver = neo4j.driver(
-  process.env.GRAPHENEDB_BOLT_URL || "bolt://localhost",
-  neo4j.auth.basic(process.env.GRAPHENEDB_BOLT_USER || "neo4j", process.env.GRAPHENEDB_BOLT_PASSWORD || "123456"),
-  {encrypted: 'ENCRYPTION_ON', trust: 'TRUST_ALL_CERTIFICATES'}
-);
-
 
 //Validate new admin acount data
 const adminValidation = Joi.object({
@@ -46,9 +40,6 @@ async function getOrg (req, res) {
 /* Post a new admin to db - for account creation*/
 
 router.post('/create-account', async (req, res) => {
-    const session = driver.session();
-    const txc = session.beginTransaction();
-
     try {//Data Validation
         const { error } = await adminValidation.validateAsync(req.body);
     } catch (error){
@@ -78,16 +69,11 @@ router.post('/create-account', async (req, res) => {
         })
         const savedUser = await user.save();
         console.log('id: ' + savedUser._id);
-        const result1 = await txc.run('Create (n:Users {m_id: $id}) Return n', {id: savedUser._id});
-        console.log(result1);
-        await txc.commit();
+   
         res.json({user: savedUser});
     } catch(err){ 
         res.status(500).json({error: "Failed to create account."});
-    } finally {
-        await session.close();
-    }
-
+    } 
 });
 
 module.exports = router; 
