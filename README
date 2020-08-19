@@ -52,3 +52,6 @@ npm install --save react-alert react-alert-template-basic
 Update 7/29:
 run "npm install tailwindcss postcss-cli autoprefixer -D"
 //run "npm install tailwindcss --save-dev"
+
+Update 8/13:
+npm install --save-dev webpack webpack-cli

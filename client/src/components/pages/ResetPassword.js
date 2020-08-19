@@ -30,7 +30,7 @@ class ResetPassword extends React.Component {
         const { password1, password2, status } = this.state
         {(password1 === password2) ? 
             axios
-                .patch(`http://localhost:5000/forgot-password/reset`, { 'resetToken': this.props.match.params.token, 'newPass': password1 })
+                .patch(`/forgot-password/reset`, { 'resetToken': this.props.match.params.token, 'newPass': password1 })
                 .then(response => {
                     console.log(response)
                     this.setState({ 

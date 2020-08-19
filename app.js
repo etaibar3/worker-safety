@@ -33,20 +33,31 @@ const fileUpload = require("express-fileupload");
 const reportRoutes = require("./api/routes/report");
 
 
-// app.set("view", path.join(__dirname, "views"));
-// app.set("view engine", "ejs");
+app.set("view", path.join(__dirname, "views"));
+app.set("view engine", "ejs");
 app.set("view engine", "ejs");
 const neo4j = require("neo4j-driver");
 const driver = neo4j.driver(
-  "bolt://localhost",
-  neo4j.auth.basic("neo4j", "123456")
+  process.env.GRAPHENEDB_BOLT_URL || "bolt://localhost",
+  neo4j.auth.basic(process.env.GRAPHENEDB_BOLT_USER || "neo4j", process.env.GRAPHENEDB_BOLT_PASSWORD || "123456"),
+  {encrypted: 'ENCRYPTION_ON', trust: 'TRUST_ALL_CERTIFICATES'}
 );
 
 const session = driver.session();
 const mongo4j = require("mongo4j");
-mongo4j.init("neo4j://localhost", { user: "neo4j", pass: "123456" });
+mongo4j.init(process.env.GRAPHENEDB_BOLT_URL || "neo4j://localhost", 
+{ user: process.env.GRAPHENEDB_BOLT_USER || "neo4j", pass: process.env.GRAPHENEDB_BOLT_PASSWORD || "123456" },
+{encrypted: 'ENCRYPTION_ON', trust: 'TRUST_ALL_CERTIFICATES'});
 
+//mongo4j.init(process.env.GRAPHENEDB_URL)
 mongoose.Promise = global.Promise;
+
+// const result1 = txc.run(
+//   'Create (n:Seat {name: $id,' +
+//   'location: point({ x: $Xcoord, y: $Ycoord, crs: "cartesian"}),' +
+//   'pixel_location: point({x: $pixXcoord, y: $pixYcoord}), org: $org, floorplan_id: ""}) RETURN n.name', 
+//   {id: 'a', Xcoord: 1, Ycoord: 1, pixXcoord: 1, pixYcoord: 1, org: 'Tufts'})
+// console.log(result1);
 
 app.use(cors());
 app.use(morgan("dev"));
@@ -56,31 +67,32 @@ app.use("/public/uploads", express.static("public/uploads"));
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: false }));
 app.use((req, res, next) => {
-  res.header("Access-Control-Allow-Origin", req.headers.origin);
-  res.header("Access-Control-Allow-Credentials", "true");
-  res.header(
+  res.setHeader("Access-Control-Allow-Origin", "https://safereturn.herokuapp.com");
+  res.setHeader("Access-Control-Allow-Credentials", true);
+  res.setHeader(
     "Access-Control-Allow-Headers",
-    "Origin, X-Requested-With,Content-Type, Accept, Authorization, auth"
+    "Origin, X-Requested-With, Content-Type, Accept, Authorization, auth, Access-Control-Allow-Origin"
   );
-  if (req.method === "OPTIONS") {
-    res.header("Access-Control-Allow-Methods", "PUT,POST,PATCH,DELETE,Get");
-    return res.status(200).json({});
-  }
+  res.setHeader("Access-Control-Allow-Methods", "OPTIONS,PUT,POST,PATCH,DELETE,GET");
+   // if (req.method === "OPTIONS") {
+   //   res.setHeader("Access-Control-Allow-Methods", "PUT,POST,PATCH,DELETE,GET");
+   //   return res.status(200).json({});
+   // }
   next();
 });
 
-app.use("/employees", employeeRoutes);
-app.use("/reservations", reservationRoutes);
-app.use("/floorplan", floorplanRoutes);
-app.use("/upload", floorplanRoutes);
+app.use("/api/employees", employeeRoutes);
+app.use("/api/reservations", reservationRoutes);
+app.use("/api/floorplan", floorplanRoutes);
+app.use("/api/upload", floorplanRoutes);
 
-app.use("/employee", employeeAccRoutes);
-app.use("/login", loginRoutes);
-app.use("/org", orgRoutes);
-app.use("/admin", adminAccRotues);
-app.use("/logout", logoutRoutes);
-app.use("/forgot-password", resetPassRoutes);
-app.use("/seats", seatRoutes);
+app.use("/api/employee", employeeAccRoutes);
+app.use("/api/login", loginRoutes);
+app.use("/api/org", orgRoutes);
+app.use("/api/admin", adminAccRotues);
+app.use("/api/logout", logoutRoutes);
+app.use("/api/forgot-password", resetPassRoutes);
+app.use("/api/seats", seatRoutes);
 
 // app.use(fileUpload());
 
@@ -233,7 +245,7 @@ app.use(fileUpload());
 
 
 
-app.listen(port, () => console.log("Server Started..."));
+//app.listen(port, () => console.log("Server Started..."));
 
 // admin_server.listen(5000, () => console.log("admin"));
 

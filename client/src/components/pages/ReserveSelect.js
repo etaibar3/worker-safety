@@ -40,7 +40,7 @@ class ReserveSelect extends React.Component {
 
       {/* Getting desk coordinates and numbers*/}
         axios
-            .get(`http://localhost:5000/seats/${this.state.date}`)
+            .get(`/seats/${this.state.date}`)
             .then(response => {
                 console.log(response)
                 response.data.seats.map((seat, index) => {
@@ -59,7 +59,7 @@ class ReserveSelect extends React.Component {
 
       {/* Getting floorplan image from DB*/}
         axios
-         .get(`http://localhost:5000/floorplan`)
+         .get(`/floorplan`)
          .then(response => {
             console.log(response)
             alert('success requesting floorplan')
@@ -115,7 +115,7 @@ class ReserveSelect extends React.Component {
       {/* Posting desk reservation */}
         if (this.state.validRes) {
           axios
-            .post(`http://localhost:5000/reservations`, { 'date': date, 'seat_number': intDesk }) 
+            .post(`/reservations`, { 'date': date, 'seat_number': intDesk }) 
             .then(response => {
                 console.log(response)
                 this.props.alert.success('Success')

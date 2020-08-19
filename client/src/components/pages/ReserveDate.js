@@ -45,7 +45,7 @@ class ReserveDate extends React.Component {
         {/* Getting existing reservations to prevent double-booking on same day*/}
         const { userReservations } = this.state
         axios
-            .get(`http://localhost:5000/reservations`)
+            .get(`/reservations`)
             .then(response => {
                 console.log(response)
                 response.data.reservations.map((reservation, index) => {

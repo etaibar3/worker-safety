@@ -39,7 +39,7 @@ class AddUser extends React.Component {
             isAdmin = true
         }
         axios
-            .post(`http://localhost:5000/org/manageRoster`, { 'email': this.state.email, 'admin': isAdmin})
+            .post(`/org/manageRoster`, { 'email': this.state.email, 'admin': isAdmin})
             .then(response => {
                 console.log(response)
                 this.props.alert.success('Success')

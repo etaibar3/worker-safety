@@ -34,7 +34,7 @@ class CreateChildAccount extends React.Component {
         const alert = this.props.alert;
         {(password1 === password2) ? 
             axios
-                .post(`http://localhost:5000/employee/create-account`, { 'email': email, 'password': password1, 'org': company, 'firstName': first, 'lastName': last })
+                .post(`/employee/create-account`, { 'email': email, 'password': password1, 'org': company, 'firstName': first, 'lastName': last })
                 .then(response => {
                     console.log(response)
                     this.props.alert.success('Success')

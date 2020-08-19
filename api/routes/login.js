@@ -27,7 +27,7 @@ router.post('/', async (req, res) => {
     try {
         const user = await User.findOne( {"email": req.body.email} );
         if(user === null) {
-            res.status(404).json({error: 'There is no user with this email'});
+            res.status(404).json({error: 'User name and password do not match'});
             return;
         }
         const validPass = await bcrypt.compare(req.body.password, user.password);
@@ -41,7 +41,7 @@ router.post('/', async (req, res) => {
         res.cookie('token', token, {
             maxAge: 60 * 30 * 1000,
             httpOnly: true,
-            //secure: true,  /* Uncomment when we add https */
+            secure: true,  /* Uncomment when we add https */
             path: '/',
             sameSite: 'None',
             withCredentials: true

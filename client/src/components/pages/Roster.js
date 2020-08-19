@@ -60,7 +60,7 @@ class Roster extends React.Component {
         if (this.state.method === "Lookup") {
             this.setState({ submitClicked: true });   {/* Admin clicked submit */}
             axios
-             .get('http://localhost:5000/org/manageRoster/' + this.state.email)
+             .get('/org/manageRoster/' + this.state.email)
              .then(response => {
                 console.log(response)
                 this.setState({
@@ -80,7 +80,7 @@ class Roster extends React.Component {
             let admin
             {(this.state.permissions === "administrator") ? admin = true : admin = false}
             axios
-             .patch(`http://localhost:5000/org/manageRoster`, { 'email': this.state.email, 'admin': admin })
+             .patch(`/org/manageRoster`, { 'email': this.state.email, 'admin': admin })
              .then(response => {
                  console.log(response)
                  this.props.alert.success('Success')
