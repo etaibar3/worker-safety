@@ -25,6 +25,7 @@
     "start": "^5.1.0"
   },
   "scripts": {
+    "start:dev": "react-scripts start",
     "start": "npm install --only=dev && npm install && react-scripts start",
     "build": "npm install --only=dev && npm install && react-scripts build",
     "test": "react-scripts test",

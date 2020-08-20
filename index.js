@@ -16,8 +16,8 @@ mongoose.connect(
     console.log("successfully connected to databasae");
     const tokenCollection = db.collection('tokens');
     tokenCollection.createIndex({'expiresAt': 1}, {expireAfterSeconds: 0});
-    const reservationCollection = db.collection('reservations');
-    reservationCollection.createIndex( {'date_created': 1}, {expireAfterSeconds: 1555200}); //18 days in seconds
+    // const reservationCollection = db.collection('reservations');
+    // reservationCollection.createIndex( {'date_created': 1}, {expireAfterSeconds: 1555200}); //18 days in seconds
   }
 );
 
@@ -40,10 +40,10 @@ if (process.env.NODE_ENV === 'production') {
   });
 }
 
-app.get("/",(req,res)=>{
-  res.send("Test");
-})
-console.log(port);
+// app.get("/",(req,res)=>{
+//   res.send("Test");
+// })
+
 app.listen(port,()=>{
   console.log("index.js message prints here")
 })

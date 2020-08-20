@@ -47,7 +47,7 @@ class Login extends React.Component {
             })
             .catch(error  => {
                 console.log(error)
-                if(error.response.data !== undefined)  {
+                if(error.response !== undefined)  {
                     this.props.alert.error(error.response.data.error)
                 }
             }) 
