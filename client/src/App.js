@@ -30,6 +30,8 @@ class App extends React.Component {
     //sessionStorage.setItem('loggedIn', false);
     axios.defaults.withCredentials = true;
     axios.defaults.baseURL = 'https://safereturn.herokuapp.com/api/' || 'http://localhost:5000'
+    console.log(process.env.HOST)
+    console.log(process.env.REACT_APP_HOST)
   }
 
   render() {
