@@ -29,8 +29,8 @@ class App extends React.Component {
   componentDidMount(){
     //sessionStorage.setItem('loggedIn', false);
     axios.defaults.withCredentials = true;
-    axios.defaults.baseURL =  'http://localhost:5000/api'
-    console.log(process.env.HOST)
+    axios.defaults.baseURL =  process.env.REACT_APP_HOST || 'http://localhost:5000/api'
+  
   }
 
   render() {
