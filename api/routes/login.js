@@ -35,7 +35,7 @@ router.post('/', async (req, res) => {
         const serialize = {email: user.email, admin: user.admin, _id: user._id, org: user.org}
         const token = generateToken(serialize);
         /* Cookies won't work rn, since clinet and server are on different domains */
-        res.set('Access-Control-Allow-Origin', req.headers.origin)
+        res.set('Access-Control-Allow-Origin', process.env.HOST || 'http://localhost:3000')
         res.set('Access-Control-Allow-Credentials', 'true')
         //res.set('Access-Control-Expose-Headers', 'set-cookie, date, etag')
         res.cookie('token', token, {
