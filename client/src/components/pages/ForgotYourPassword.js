@@ -42,27 +42,61 @@ class ForgotYourPassword extends React.Component {
             {( status === 200 ) ?
                 <h4> You have been sent an email with directions to reset your password. </h4>
             :   <div>
-                    <h1> Forgot Your Password</h1>
-                    <p style={{ fontSize:"85%" }}> Please enter your work email to be emailed directions on how to reset your password. </p>
+                    <h2> Reset password</h2>
+                    <br />
+                    <p> Please enter the email associated with your account, and we'll send you a link to reset your password! </p>
+                    <br />
                     <form onSubmit={this.handleSubmit}>
-                        <label> 
-                            Work Email 
-                            {" "}
+                        <label className="text-style"> 
+                            <strong> Email </strong>
+                            <br/>
                             <input
                                 type="email"
                                 name="email"
+                                style={inputBox}
                                 value={email}
-                                placeholder="example@company.com"
+                                placeholder="Enter your email address"
                                 onChange={this.handleChange}
                             />
                         </label>
                             <br/><br/>
-                        <button type="submit">Send </button>
+                        {(email.length > 0) ?
+                          <button style={submitActive} type="submit">Send Link </button>
+                          : 
+                          <button style={submitInactive} type="button">Send Link </button>}
                     </form>
                 </div>}
             </div>
         )
     }
 }
+
+
+const inputBox = {
+  width: 230,
+  height: 50,
+  padding: 8,
+  borderRadius: 5,
+  backgroundColor: "#ffffff",
+  borderStyle: "solid",
+  borderWidth: 1,
+  borderColor: "#c4c4c4"
+};
+
+const submitActive = {
+  width: 200,
+  height: 59,
+  borderRadius: 5,
+  backgroundColor: "#2121ca",
+  color: "#ffffff"
+};
+
+const submitInactive = {
+  width: 200,
+  height: 59,
+  borderRadius: 5,
+  backgroundColor: "#c4c4c4",
+  color: "#ffffff"
+};
 
 export default ForgotYourPassword;

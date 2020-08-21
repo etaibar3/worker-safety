@@ -62,7 +62,6 @@ class ReserveSelect extends React.Component {
          .get(`/floorplan`)
          .then(response => {
             console.log(response)
-            alert('success requesting floorplan')
             response.data.images.forEach(i => {
               const newImage = i.floorplanImage.split('/')[5];
               this.state.images.push(newImage);
@@ -77,7 +76,6 @@ class ReserveSelect extends React.Component {
          })
          .catch(error => {
             console.log(error)
-            alert('floorplan request failed')
             this.setState({
                 status: error.response.status
             })
@@ -125,7 +123,7 @@ class ReserveSelect extends React.Component {
             })
             .catch(error => {
                 console.log(error)
-                alert('error posting reservation')
+                alert(`ja`)
                 //console.log(error.response.data.error)
                 if(error.response !== undefined)  {
                   this.props.alert.error(error.response.data.error)

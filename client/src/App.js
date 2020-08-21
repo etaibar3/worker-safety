@@ -21,6 +21,7 @@ import CompanyRep from "./components/pages/CompanyRep";
 import ResetPassword from "./components/pages/ResetPassword";
 import ForgotYourPassword from "./components/pages/ForgotYourPassword";
 import AddUser from "./components/pages/AddUser";
+import ChangeUser from "./components/pages/ChangeUser";
 import FileUpload from "./components/FileUpload";
 import axios from 'axios';
 const dotenv = require('dotenv').config(); 
@@ -59,6 +60,7 @@ class App extends React.Component {
             <Route exact path="/forgotyourpassword" component={ForgotYourPassword} />
             <Route exact path="/upload-floor-plan" component={FileUpload} />
             <Route exact path="/add-user" component={AddUser} />
+            <Route exact path="/change-user" component={ChangeUser} />
           </div>
         </div>
       </Router>

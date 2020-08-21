@@ -1,7 +1,10 @@
 import React from 'react'
 import axios from 'axios'
+import { Redirect } from 'react-router';
 import { withAlert } from 'react-alert';
 import './Roster.css'
+import ChangeUser from './ChangeUser';
+
 
 class ViewRoster extends React.Component {
     constructor() {
@@ -9,8 +12,16 @@ class ViewRoster extends React.Component {
         this.state = {
             admins: [],      //array of admin user with email and name field for view roster
             employees: [],
+            permissions: "",
+            editRedirect: false,
+            email: "",
+            currType: ""
         }
         this.initialState = this.state
+        this.handleChange = this.handleChange.bind(this)
+        this.handleClose = this.handleClose.bind(this)
+        this.editEmployee = this.editEmployee.bind(this)
+        this.editAdmin = this.editAdmin.bind(this)
     }
 
     componentDidMount() {
@@ -44,21 +55,32 @@ class ViewRoster extends React.Component {
             })
     }
 
-    editUser(event) {
-        {/* Set user account type to admin or employee 
-        //create popup here to select admin or employee
-        let admin
-        {(this.state.permissions === "administrator") ? admin = true : admin = false}
-        axios
-         .patch(`http://localhost:5000/org/manageRoster`, { 'email': this.state.email, 'admin': admin })
-         .then(response => {
-             console.log(response)
-             this.props.alert.success('Success')
-         })
-         .catch(error => {
-             console.log(error)
-             this.props.alert.error(error.response.data.error)
-         })*/}
+    handleChange(event) {
+        this.setState({ submitClicked: false });   
+        const {name, value, type, checked} = event.target
+        type === "checkbox" ? this.setState ({ [name]: checked }) : this.setState({ [name] : value })
+    }
+
+    handleClose() {
+        this.setState({
+            show: false
+        })
+    }
+
+    editEmployee(event) {
+        this.setState({
+            editRedirect: true,
+            currType: "employee",
+            email: event.email
+        })
+    }
+
+    editAdmin(event) {
+        this.setState({
+            editRedirect: true,
+            currType: "admin",
+            email: event.email
+        })
     }
 
     removeUser(event) {
@@ -75,10 +97,25 @@ class ViewRoster extends React.Component {
             })
     }
 
+    handleSubmit(event) {
+        event.preventDefault()
+        alert(event)
+    }
+
     render() {
-        const { admins, employees, editClicked } = this.state
+        const { admins, employees, editRedirect, currType, email } = this.state
         return (
             <div>
+            {(this.state.editRedirect) ? 
+                <Redirect to={{
+                    pathname: '/change-user',
+                    state: { 
+                        currType: `${currType}`,
+                        email: `${email} `
+                    }
+                }}/>
+                :
+                <div>
                 { (admins.length > 0 || employees.length > 0) ? 
                     <div>
                         <table align="center" >
@@ -95,7 +132,7 @@ class ViewRoster extends React.Component {
                                 {admins.map(user => (
                                     <tr key={user.email} align="center">
                                         <td key={user.name}> 
-                                            {(user.name === "" || user.name === " ") ? <p> User has not yet created their account. </p>: user.name}
+                                            {(user.name === "" || user.name === " ") ? <p> Awaiting user sign up. </p>: user.name}
                                         </td>
                                         <td key={user.index} style={adminStyle} text-align="left">
                                             ADMIN
@@ -107,14 +144,14 @@ class ViewRoster extends React.Component {
                                             <button onClick={() => this.removeUser(user)} style={EditButtonStyle}>Remove </button>
                                         </td>
                                         <td>
-                                            <button onClick={() => this.editUser(user)} style={EditButtonStyle}> Edit </button>
+                                            <button onClick={() => this.editAdmin(user)} style={EditButtonStyle}> Edit </button>
                                         </td>
                                     </tr>
                                 ))}
                                 {employees.map(user => (
                                     <tr key={user.email} align="center">
                                         <td key={user.name}>
-                                            {(user.name === "" || user.name === " ") ? <p> User has not yet created their account. </p>: user.name}
+                                            {(user.name === "" || user.name === " ") ? <p> Awaiting user sign up. </p>: user.name}
                                         </td>
                                         <td key={user.index}> 
                                         </td>
@@ -125,7 +162,7 @@ class ViewRoster extends React.Component {
                                             <button onClick={() => this.removeUser(user)} style={EditButtonStyle}>Remove </button>
                                         </td>
                                         <td>
-                                            <button onClick={() => this.editUser(user)} style={EditButtonStyle}> Edit </button>
+                                            <button onClick={() => this.editEmployee(user)} style={EditButtonStyle}> Edit</button>
                                         </td>
                                     </tr>
                                 ))}
@@ -133,6 +170,7 @@ class ViewRoster extends React.Component {
                         </table>
                     </div>
                  : <p> You cannot currently view your organization's roster. Make sure you are logged in. </p>}
+                </div> }
             </div>
         )
     }
@@ -155,16 +193,44 @@ const EditButtonStyle = {
     fontWeight: "350",
 };
 
+const radioContainerSelected = {
+  width: 112,
+  height: 39,
+  lineHeight: 2,
+  backgroundColor: "#ECEFFF",
+  borderColor: "#2121ca",
+  borderWidth: 1,
+  borderStyle: "solid",
+  borderRadius: 5,
+};
+
+const modalStyle = {
+    overlay: {
+      position: 'fixed',
+      top: "20%",
+      left: "20%",
+      right: "20%",
+      bottom: "20%",
+      backgroundColor: '#ECEFFF',
+      borderRadius: '10px'
+    },
+    content: {
+      position: 'absolute',
+      top: '40px',
+      left: '40px',
+      right: '40px',
+      bottom: '40px',
+      border: '1px solid #ccc',
+      background: '#fff',
+      overflow: 'auto',
+      WebkitOverflowScrolling: 'touch',
+      borderRadius: '4px',
+      outline: 'none',
+      textAlign: 'center',
+      padding: '20px'
+    }
+};
+
+
 export default withAlert()(ViewRoster)
 
-
-
-/*                                            {(editClicked === user.index) ?
-                                                <div>
-                                                    <button onClick={() => this.editUser(user)} style={EditButtonStyle}>Remove </button>
-                                                    {" "}
-                                                    <button onClick={() => this.editUser(user)} style={EditButtonStyle}>Change User Type </button>
-                                                </div>
-                                            :
-                                                <button onClick={() => this.editUser(user)} style={EditButtonStyle}> Edit </button>
-                                            }*/

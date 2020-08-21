@@ -63,6 +63,7 @@ class ResetPassword extends React.Component {
                             <input
                                 type="password"
                                 name="password1"
+                                style={inputBox}
                                 value={password1}
                                 placeholder="Password"
                                 onChange={this.handleChange}
@@ -75,6 +76,7 @@ class ResetPassword extends React.Component {
                             <input
                                 type="password"
                                 name="password2"
+                                style={inputBox}
                                 value={password2}
                                 placeholder="Password"
                                 onChange={this.handleChange}
@@ -88,5 +90,16 @@ class ResetPassword extends React.Component {
         )
     }
 }
+
+const inputBox = {
+  width: 230,
+  height: 50,
+  padding: 8,
+  borderRadius: 5,
+  backgroundColor: "#ffffff",
+  borderStyle: "solid",
+  borderWidth: 1,
+  borderColor: "#c4c4c4"
+};
 
 export default ResetPassword;
