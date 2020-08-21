@@ -11,6 +11,7 @@
     "bcrypt": "^5.0.0",
     "cors": "^2.8.5",
     "dotenv": "^8.2.0",
+    "env-cmd": "^10.1.0",
     "jsonwebtoken": "^8.5.1",
     "react": "^16.13.1",
     "react-alert": "^7.0.2",
@@ -23,14 +24,12 @@
     "react-scripts": "^3.4.1",
     "start": "^5.1.0"
   },
-  "proxy": "http://localhost:5000",
   "scripts": {
-    "start": "npm run watch:css && react-scripts start",
-    "build": "npm run build:css && react-scripts build",
+    "start:dev": "react-scripts start",
+    "start": "npm install --only=dev && npm install && react-scripts start",
+    "build": "npm install --only=dev && npm install && react-scripts build",
     "test": "react-scripts test",
-    "eject": "react-scripts eject",
-    "build:css": "postcss src/assets/tailwind.css -o src/assets/main.css",
-    "watch:css": "postcss src/assets/tailwind.css -o src/assets/main.css"
+    "eject": "react-scripts eject"
   },
   "eslintConfig": {
     "extends": "react-app"
@@ -48,9 +47,9 @@
     ]
   },
   "devDependencies": {
-    "autoprefixer": "^9.8.5",
+    "autoprefixer": "^9.8.6",
     "postcss-cli": "^7.1.1",
     "postcss-import": "^12.0.1",
-    "tailwindcss": "^1.6.0"
+    "tailwindcss": "^1.6.2"
   }
 }

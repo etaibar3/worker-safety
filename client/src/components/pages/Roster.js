@@ -81,7 +81,6 @@ class Roster extends React.Component {
         this.setState({
             submitClicked: true
         })
-
     }
 
 

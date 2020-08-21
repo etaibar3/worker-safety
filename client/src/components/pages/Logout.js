@@ -15,7 +15,7 @@ class Logout extends React.Component {
     handleSubmit(event) {
         event.preventDefault()
         axios
-            .delete(`http://localhost:5000/logout`)
+            .delete(`/logout`)
             .then(response => {
                 axios.defaults.headers.common['auth'] = ''
                 console.log(response)

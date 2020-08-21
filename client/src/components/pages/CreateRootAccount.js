@@ -34,7 +34,7 @@ class CreateRootAccount extends React.Component {
 		event.preventDefault()
     	{(password1 === password2) ? 
 			axios
-				.post(`http://localhost:5000/admin/create-account`, { 'email': email, 'password': password1, 'org': company, 'firstName': first, 'lastName': last })
+				.post(`/admin/create-account`, { 'email': email, 'password': password1, 'org': company, 'firstName': first, 'lastName': last })
 				.then(response => {
 					console.log(response)
                     this.props.alert.success('Success')

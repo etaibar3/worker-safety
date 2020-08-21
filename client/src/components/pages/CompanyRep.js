@@ -21,7 +21,7 @@ class CompanyRep extends React.Component {
 		} 
 
         axios
-            .get('http://localhost:5000/employee/companyrep')
+            .get('/employee/companyrep')
             .then(response => {
                 console.log(response)
                 this.setState({ adminEmail: response.data.rep })

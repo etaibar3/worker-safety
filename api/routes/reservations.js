@@ -79,8 +79,9 @@ const {authenticateUser } = require("../middleware/auth");
 // })
 
 const driver = neo4j.driver(
-  "bolt://localhost",
-  neo4j.auth.basic("neo4j", "123456")
+  process.env.GRAPHENEDB_BOLT_URL || "bolt://localhost",
+  neo4j.auth.basic(process.env.GRAPHENEDB_BOLT_USER || "neo4j", process.env.GRAPHENEDB_BOLT_PASSWORD || "123456"),
+  {encrypted: 'ENCRYPTION_ON', trust: 'TRUST_ALL_CERTIFICATES'}
 );
 
 
@@ -88,7 +89,7 @@ router.get("/", authenticateUser, async (req, res, next) => {
   const session = driver.session();
   const txc = session.beginTransaction();
   try {
-    const result = await txc.run( 'Match (a:Users {m_id: $id}) - [r:Reserved] - (b: Seat) return b, r.time', 
+    const result = await txc.run( 'Match (a:Users {m_id: $id}) - [r:Reserved] - (b: Seat) return b, r.time ORDER BY r.time DESC ', 
                                   {id: req.user._id});
     const records = result.records;
     const reservations = await Promise.all(records.map(async (record) => {

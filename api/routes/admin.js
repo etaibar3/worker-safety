@@ -6,7 +6,7 @@ const mongoose = require("mongoose");
 const User = require("../models/Users.js");
 const Org = require("../models/Orgs.js");
 const Employee = require('../models/employee');
-
+const neo4j = require("neo4j-driver");
 
 //Validate new admin acount data
 const adminValidation = Joi.object({
@@ -68,18 +68,12 @@ router.post('/create-account', async (req, res) => {
             lastName: req.body.lastName,
         })
         const savedUser = await user.save();
-        // const graph_admin = new Employee({
-        //     _id: new mongoose.Types.ObjectId(),
-        //     name: req.body.firstName + ' ' + req.body.lastName,
-        //     employee_id: savedUser._id
-        // })
-        // const savedAdmin = await graph_admin.save();
+        console.log('id: ' + savedUser._id);
+   
         res.json({user: savedUser});
     } catch(err){ 
         res.status(500).json({error: "Failed to create account."});
-
-    }
-
+    } 
 });
 
 module.exports = router; 

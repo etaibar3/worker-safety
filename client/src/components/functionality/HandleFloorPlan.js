@@ -83,7 +83,7 @@ export const HandleFloorPlan = (props) => {
            
             // Posting all desks
             allDesks.map((singleDesk) => 
-                axios.post(`http://localhost:5000/seats/add`, {"id": singleDesk.seat_number, "Xcoord": singleDesk.coordinates[0], "Ycoord": singleDesk.coordinates[1], "pixXcoord": singleDesk.pix_coordinates[0], "pixYcoord": singleDesk.pix_coordinates[1]})
+                axios.post(`/seats/add`, {"id": singleDesk.seat_number, "Xcoord": singleDesk.coordinates[0], "Ycoord": singleDesk.coordinates[1], "pixXcoord": singleDesk.pix_coordinates[0], "pixYcoord": singleDesk.pix_coordinates[1]})
                     .then(response => {
                         console.log(response)
                     })

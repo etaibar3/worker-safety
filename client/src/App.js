@@ -23,10 +23,15 @@ import ForgotYourPassword from "./components/pages/ForgotYourPassword";
 import AddUser from "./components/pages/AddUser";
 import ChangeUser from "./components/pages/ChangeUser";
 import FileUpload from "./components/FileUpload";
+import axios from 'axios';
+const dotenv = require('dotenv').config(); 
 
 class App extends React.Component {
   componentDidMount(){
-    sessionStorage.setItem('loggedIn', false);
+    //sessionStorage.setItem('loggedIn', false);
+    axios.defaults.withCredentials = true;
+    axios.defaults.baseURL =  process.env.REACT_APP_HOST || 'http://localhost:5000/api'
+  
   }
 
   render() {

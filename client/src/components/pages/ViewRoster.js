@@ -28,7 +28,7 @@ class ViewRoster extends React.Component {
         {/* user.name is empty string post invite and pre account creation */ }
         const { admins, employees } = this.state
         axios
-            .get(`http://localhost:5000/org/manageRoster`)
+            .get(`/org/manageRoster`, {withCredentials: true})
             .then(response => {
             	console.log(response)
                 response.data.admins.map((a_email, index) => {
@@ -86,7 +86,7 @@ class ViewRoster extends React.Component {
     removeUser(event) {
         {/* Delete user from company roster */}
         axios
-            .delete(`http://localhost:5000/org/manageRoster`, {data: {email: event.email } })
+            .delete(`/org/manageRoster`, {data: {email: event.email } })
             .then(response => {
                 console.log(response)
                 this.props.alert.success('Success')

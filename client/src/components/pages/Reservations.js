@@ -35,7 +35,7 @@ class Reservations extends React.Component {
         "July", "August", "September", "October", "November", "December"]
         const dayNames= ["Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"]
         axios
-            .get(`http://localhost:5000/reservations`)
+            .get(`/reservations`)
             .then(response => {
                 console.log(response)
                 response.data.reservations.map((reservation, index) => {
@@ -85,7 +85,7 @@ class Reservations extends React.Component {
       let dateString = event.year.toString() + "-" + event.month.toString() + "-" + event.day.toString()
       //alert(dateString)
       axios
-          .delete(`http://localhost:5000/reservations`, {data: {'date': dateString }})
+          .delete(`/reservations`, {data: {'date': dateString }})
           .then(response => {
               console.log(response)
               this.props.alert.success('Reservation succesfully deleted.')

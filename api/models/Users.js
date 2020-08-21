@@ -1,7 +1,6 @@
 /* Worker Safter server/Users.js
  * Holds model for User schema in db
  */
-
 const mongo4j = require("mongo4j");
 const mongoose = require("mongoose");
 

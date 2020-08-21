@@ -55,7 +55,7 @@ class ReportACase extends React.Component {
 
         {/* Post the case here and send email alerts */}
         axios
-            .post(`http://localhost:5000/report`, { 'date': this.state.earliest })
+            .post(`/report`, { 'date': this.state.earliest })
             .then(response => {
 				/* Response in data returns a message and emails, a list of user emails we sent alerts to*/
                 console.log(response);

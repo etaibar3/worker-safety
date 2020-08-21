@@ -27,7 +27,7 @@ router.post('/', async (req, res) => {
     try {
         const user = await User.findOne( {"email": req.body.email} );
         if(user === null) {
-            res.status(404).json({error: 'There is no user with this email'});
+            res.status(404).json({error: 'User name and password do not match'});
             return;
         }
         const validPass = await bcrypt.compare(req.body.password, user.password);
@@ -35,14 +35,20 @@ router.post('/', async (req, res) => {
         const serialize = {email: user.email, admin: user.admin, _id: user._id, org: user.org}
         const token = generateToken(serialize);
         /* Cookies won't work rn, since clinet and server are on different domains */
-        // res.cookie('token', token, {
-        //     maxAge: 60 * 60 * 1000,
-        //     httpOnly: true
-        // });
-        //console.log(token)
-        res.header('auth-token',token).send({ token: token, isAdmin: user.admin });
-        
+        res.set('Access-Control-Allow-Origin', process.env.HOST || 'http://localhost:3000')
+        res.set('Access-Control-Allow-Credentials', 'true')
+        //res.set('Access-Control-Expose-Headers', 'set-cookie, date, etag')
+        res.cookie('token', token, {
+            maxAge: 60 * 30 * 1000,
+            httpOnly: true,
+            secure: true,  /* Uncomment when we add https */
+            path: '/',
+            sameSite: 'None',
+            withCredentials: true
+        });
+        res.send({ message: "User is logged in.", isAdmin: user.admin });
     } catch(err) {
+        console.log(err)
         res.status(500).json({error: err});
     }
 

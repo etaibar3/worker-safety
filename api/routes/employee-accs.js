@@ -63,7 +63,7 @@ router.post('/create-account', async (req, res) => {
 
     } catch(err){
         res.status(500).json({error: err});
-    }
+    } 
 });
 
 router.get('/companyrep', authenticateUser, async (req, res) => {
