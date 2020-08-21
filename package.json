@@ -33,8 +33,7 @@
     "react-alert": "^7.0.2",
     "react-alert-template-basic": "^1.0.0"
   },
-  "devDependencies": {
-  },
+  "devDependencies": {},
   "scripts": {
     "begin": "npm run build && node index.js",
     "start": "node index.js",
