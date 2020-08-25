@@ -77,7 +77,7 @@ router.post('/', authenticateUser, async function(req, res){
         console.log('committed')
         exposed_persons.forEach(email => {
           const msg = generateEmail(email);
-          //sgMail.send(msg);
+          sgMail.send(msg);
         })
         res.json({message: 'These people were alerted of their possible exposure by email',
                   emails: exposed_persons})
