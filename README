@@ -1,58 +1,60 @@
-To run you will need to have mongodb and npm downloaded globally on your computer. 
-Also you will need install nodemon, which you can do after installing npm with the 
-command "npm install -g nodemon".
+# Safe Return
+## Description of the app:
+Safe Return allows companies to track and manage desk reservations as employees return to the 
+office after the COVID-19 pandemic.
 
-To run boilerplate:
-Run server - cd into server folder and run "npm run db" - leave this open in the background.
-Run frontend code - in a new terminal window cd into client folder and and run "npm start".
+Safe Return is built using MongoDB, neo4j database, Express.js, React.js, and Node.js. 
 
-You'll know it was successfull if it says
-"server started successfully connceted to database" in ternminal you ran surver in.
-And if it opens a new web tab on http://localhost:3000 that displays react logo 
-after running frontend.
+## List of supported features:
+Creating accounts - each account is linked to a company. A single admin creates an organization, 
+and then they can add other admins and employees to that organization for account creation. 
+There are two types of users - admins and employees. 
 
+Floor plan creation - Admins can upload floor plan images and mark the locations of desk. The
+second step of floor plan creation is setting the scale of the image. 
 
-The client folder was created using create-react-app.
-The server folder just has an index.js file (like a main). We will need to add
-sub directories in ./server to organize routes and schemas I think. 
+Desk reservations - Individual accounts (both admins and employees) can reserve a desk for
+a specific day. Desk reservations must be 6 feet from one another. Safe Return keeps track
+of where everyone has been sitting. 
 
-
-Note as of 6/20/20: need to install react-router-dom package
-'npm i react-router-dom'
-
-Update 6/23:
-Install packages @hapi/joi, bcrypt, jsonwebtoken, dotenv
-run npm i @hapi/joi bcrypt jsonwebtoken dotenv
-Updates 6/25:
-Install cors in server.
-npm i cors
-
-Install axios in client.
-npm install axios --save
+Report a case - if someone reports a positive COVID-19 case, which they can do anonymously, 
+other employees who sat near that person are notified via email that they may be at risk. 
+This feature uses SendGrid to send emails automatically. 
 
 
-Update 7/8
-Installed sendgrid in server to enable email sending.
-npm install --save @sendgrid/mail
+## Future Improvements: 
+Accouting for walls - desk that are in different rooms / separated by a wall can currently be 
+viewed as too close to each other (within 6 feet) for a desk reservation. 
 
-Update 7/4:
-Install Docker Desktop on you computer.
-Keep Docker running.
-Run `docker-compose up -d`, this will start and run all services for mongodb and neo4j
+Attendance - giving the admin an overview of a specific day's desk reservations. 
 
+Reserving multiple days - making group reservations for multiple days more convenient. 
 
-Update 7/14:
-Install react datepicker for report a case and reserve a desk functionality.
-run `npm install react-datepicker --save`
+Clarifying instructions - making a tutorial for creating a floor plan and setting the scale 
+of the image
 
-Update 7/15:
-Install react-alert for client error notifications.
-npm install --save react-alert react-alert-template-basic
+Multiple floors - having the ability to create multiple floor plans per organization
 
-Update 7/29:
-run "npm install tailwindcss postcss-cli autoprefixer -D"
-//run "npm install tailwindcss --save-dev"
+Confirming email - confirming the email of the first account created for security purposes
 
-Update 8/13:
-npm install --save-dev webpack webpack-cli
+General security improvements - threat modeling session / captcha 
 
+## How to run:
+The website is live! Link: https://safereturn.herokuapp.com/
+
+-run "npm install" in the root directory
+-run "npm start" in the root directory to start the server
+-cd into the client directory and run "npm start" to start the frontend
+
+## About us:
+We are a group of Tufts students who created this project as part of the Tufts Code for 
+Good program in summer 2020. 
+
+Developers: 
+Etai Barash
+Erin Yilmaz
+Prahalath Anbu Bharathi
+Jinglun Jasper Zhou
+Ben Bodine
+
+Mentor: Deanna Baris
