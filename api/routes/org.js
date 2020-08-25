@@ -59,16 +59,16 @@ router.post('/manageRoster', authenticateAdmin, async (req, res) => {
         //console.log(process.env.SENDGRID_API_KEY)
         if(await req.body.admin === true || req.body.admin === "true")  {
             await Org.updateOne({_id: org._id}, {$push: {admins: req.body.email}});
-            //const msg = generateEmail(req.body.email, true, req.user.org);
-            //sgMail.send(msg);
+            const msg = generateEmail(req.body.email, true, req.user.org);
+            sgMail.send(msg);
             res.json(org.admins);
         }
         else {
            await Org.updateOne({_id: org._id}, {$push: {employees: req.body.email}});
            await Org.updateOne({_id: org._id}, 
             {$push: {parentAccounts: {user: req.body.email, rep: req.user.email}}});
-           //const msg = generateEmail(req.body.email, false, req.user.org);
-           //sgMail.send(msg);
+           const msg = generateEmail(req.body.email, false, req.user.org);
+           sgMail.send(msg);
            res.json(org.employees);
         }
     } catch (err){
