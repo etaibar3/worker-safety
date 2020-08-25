@@ -51,10 +51,10 @@ We are a group of Tufts students who created this project as part of the Tufts C
 Good program in summer 2020. 
 
 Developers: 
-Etai Barash
-Erin Yilmaz
-Prahalath Anbu Bharathi
-Jinglun Jasper Zhou
+Etai Barash,
+Erin Yilmaz,
+Prahalath Anbu Bharathi,
+Jinglun Jasper Zhou,
 Ben Bodine
 
 Mentor: Deanna Baris
