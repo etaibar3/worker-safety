@@ -24,6 +24,7 @@ import AddUser from "./components/pages/AddUser";
 import ChangeUser from "./components/pages/ChangeUser";
 import FileUpload from "./components/FileUpload";
 import axios from 'axios';
+import AdminNavBar from "./components/layout/AdminNavBar"
 const dotenv = require('dotenv').config(); 
 
 class App extends React.Component {
@@ -39,8 +40,6 @@ class App extends React.Component {
       <Router>
         <div className="App">
           <div className="container">
-            <Header />
-            <NavBar />
             <Route exact path="/" component={Home} />
             <Route exact path="/learn-more" component={LearnMore} />
             <Route exact path="/know-your-rights" component={KnowYourRights} />

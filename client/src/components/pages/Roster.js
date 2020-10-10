@@ -8,6 +8,8 @@ import ViewRoster from './ViewRoster';
 import { withAlert } from 'react-alert';
 import { Redirect } from 'react-router';
 import AddUser from './AddUser';
+import AdminNavBar from "../layout/AdminNavBar"
+
 
 class Roster extends React.Component {
     constructor() {
@@ -83,7 +85,6 @@ class Roster extends React.Component {
         })
     }
 
-
     render() {
         const { email, method, isAdmin, submitClicked, permissions, status, name, redirect } = this.state
         if (redirect) {
@@ -91,6 +92,9 @@ class Roster extends React.Component {
 		}
         return (
             <div>
+                <br />
+                <AdminNavBar />
+                <br /><br />
                 <h1> Company Roster </h1>
                     <br/><br/>
                     <button type="button" style={submitButtonActive} onClick={this.addRoute}>Add User</button>

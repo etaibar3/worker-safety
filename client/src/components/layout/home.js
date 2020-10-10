@@ -1,68 +1,113 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
+import { Redirect } from 'react-router';
+import { Grid } from "@material-ui/core";
+import BigShoes from "../../assets/icons/BigShoes.PNG";
+import socialDistance from "../../assets/icons/socialDistance.PNG";
+import AdminNavBar from "./AdminNavBar"
+import NavBar from "./navbar";
 
-function Home() {
-    return(
-        <div class="wrapper" style={wrapperStyle}>
-            <Link style={tileStyle}>
-                <h2>Get Started</h2>
-                <p>Worker safety is our top priority. Our service allows 
-                    companies to track and manage desk reservations as 
-                    employees return to the office after the COVID-19 
-                    pandemic. If you are an employee at a company that is already
-                    using Safe Return, please ask your company administrator to 
-                    add you to the company roster. If you are a company representative and
-                    would like to sign your company up for Safe Return, you can get started 
-                    {" "}
-                    <Link to='/create-root-account'><strong>here.</strong> </Link>
-                </p> 
-            </Link>
-            <div class="wrapper2" style={row2Style}>
-                <Link to="/learn-more" style={tileStyle}>
-                    <h3>About Us</h3>
-                    <p>Created in the summer of 2020, this website is the 
-                        work of 6 Tufts students who recognized the 
-                        challenges companies would face while getting their 
-                        workers to return to the office after the COVID-19 
-                        pandemic...
-                    </p>
-                </Link>
-                <Link to="/learn-more" style={tileStyle}>
-                    <h3>Learn More</h3>
-                    <p>Check our page of frequently asked questions to
-                        understand our service more and how we can help
-                        your company return to the office in a safe
-                        manner.
-                    </p>
-                </Link>
-                <Link to="know-your-rights" style={tileStyle}>
-                    <h3>Know Your Rights</h3>
-                    <p>Worried that your rights as a worker are being 
-                        violated or that your company is not taking
-                        the threat of COVID-19 seriously? Visit our
-                        know your rights page in order to learn more.
-                    </p>
-                </Link>
-            </div>
-        </div>
-    )
+class Home extends React.Component {
+    constructor() {
+        super()
+        this.state = {
+            getStartedRedirect: false
+        };
+        this.routeChange = this.routeChange.bind(this)     
+    }
+
+    routeChange() {
+        this.setState({
+            getStartedRedirect: true
+        })
+    }
+
+    render() {
+        if (this.state.getStartedRedirect) {
+            return (<Redirect to = {{ pathname: "/create-root-account" }} />)
+        }
+        else {
+            return (
+                <div>
+                <br />
+                <AdminNavBar />
+                <br /><br />
+                    <Grid container style={gridStyleMain} direction="row" justify="space-evenly" alignItems="left" >
+                        <Grid item xs={4} style={boxStyle1}>
+                            <h1> Worker safety is our top priority </h1>
+                            <br />
+                            <p> 
+                                Safe Return allows companies to track and manage desk 
+                                reservations as employees return to the office after the
+                                COVID-19 pandemic.
+                            </p>
+                            <br />
+                            <button type="button" style={getStartedStyle} onClick={() => this.routeChange()}>
+                                Get Started
+                            </button>
+                        </Grid>
+                        <Grid item xs={7}>
+                            <br /><br /><br />
+                            <img src={BigShoes} width="53%" height="40%"/>
+                        </Grid>
+                    </Grid>
+                    <Grid container style={gridStyleCenter} direction="column" justify="space-evenly" alignItems="center" >
+                        <br /><br /><br />
+                        <Grid item xs={4} alignItems="center">
+                            <h3> <strong>Social distancing made easy </strong></h3>
+                            <br />
+                            <p> 
+                                Upload your office floor plan into our desk reservation system,
+                                and we will make sure all available desks are at least 6 feet apart.
+                            </p>
+                        </Grid>
+                        <Grid item xs={7}>
+                            <br /><br /><br />
+                            <img src={socialDistance} width="90%" height="40%" borderWidth="5px" borderColor="#555" borderRadius="1px" />
+                        </Grid>
+                    </Grid>
+                </div>
+            )
+        }
+    }
 }
 
-const wrapperStyle = {
-    display: 'grid',
-}
+const getStartedStyle = {
+  width: 125,
+  height: 50,
+  borderRadius: 5,
+  fontWeight: "500",
+  backgroundColor: "#2121ca",
+  color:"#ffffff",
+  lineHeight: 3,
+};
 
-const row2Style = {
-    display: 'grid',
-    gridTemplateColumns: '33% 33% 33%'
-}
+const gridStyleMain = {
+    gridGap: "15px",
+    padding: "15px",
+    justify: "center",
+    alignItems: "left",
+    paddingLeft: "25%"
+};
 
-const tileStyle = {
-    background: '#eee',
-    color: 'black',
-    padding: '10px',
-    margin: '10px',
-    textDecoration: 'none'
-}
+const gridStyleCenter = {
+    gridGap: "15px",
+    padding: "15px",
+    justify: "center",
+    alignItems: "left",
+};
+
+const boxStyle1 = {
+    justifyItems: "left",
+    padding: "15px",
+    alignText: "flex-start"
+};
+
+const boxStyle2 = {
+    display: "flex",
+    justifyContent: "center",
+    alignItems: "center",
+    padding: "15px"
+};
 
 export default Home;

@@ -74,12 +74,10 @@ class ReserveDate extends React.Component {
         })
 
         var requestedResDate = new Date(this.state.date)
-        //alert(`You are trying to make a reservation for: ${requestedResDate}`)
         let doubleBooking = false
         
         this.state.userReservations.forEach((reservation) => {
           var existingResDate = new Date(reservation.year, reservation.month - 1, reservation.day)
-          //alert(`You have a reservation on: ${existingResDate}`)
           if (existingResDate === requestedResDate) {
               doubleBooking = true
           }
@@ -106,7 +104,7 @@ class ReserveDate extends React.Component {
     render() {
         const { continueClicked, date, min, dateChosen, validRes, redirect } = this.state
         if (redirect) {
-          return <Redirect to = {{ pathname: "/login" }} />
+         return <Redirect to = {{ pathname: "/login" }} />
         }
         return (
             <div>

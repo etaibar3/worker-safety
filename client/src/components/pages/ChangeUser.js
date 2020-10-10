@@ -2,6 +2,7 @@ import React from 'react'
 import axios from 'axios'
 import { withAlert } from 'react-alert';
 import { Redirect } from 'react-router';
+import AdminNavBar from "../layout/AdminNavBar"
 
 
 class ChangeUser extends React.Component {
@@ -68,6 +69,9 @@ class ChangeUser extends React.Component {
         }
         return (
 		    <div>
+          <br />
+          <AdminNavBar />
+          <br /><br />
 		    	<h1> Edit User </h1>
 		    	<br />
 		    	<p style={textStyle}> You are setting the account type for <strong>{email}</strong>.</p>

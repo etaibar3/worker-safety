@@ -4,6 +4,7 @@ import React from 'react'
 import axios from 'axios'
 import { withAlert } from 'react-alert';
 import { Redirect } from 'react-router';
+import AdminNavBar from "../layout/AdminNavBar"
 
 
 class AddUser extends React.Component {
@@ -66,6 +67,9 @@ class AddUser extends React.Component {
 
         return (
             <div>
+            <br />
+            <AdminNavBar />
+            <br /><br />
             <h1> Add User </h1>
             <br/>
             <p> To add a new user to your team, fill in their email address and user type,

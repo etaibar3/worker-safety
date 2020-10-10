@@ -5,6 +5,7 @@
 import React from 'react'
 import { Link } from "react-router-dom"
 import { Redirect } from 'react-router'
+import AdminNavBar from "../layout/AdminNavBar"
 
 class RootMenu extends React.Component {
 	state = {
@@ -27,6 +28,9 @@ class RootMenu extends React.Component {
 
 		return (
 			<div>
+                <br />
+                <AdminNavBar />
+                <br /><br />
 				<h2> Administrative Menu </h2>
 				<Link to='/roster'> View Company Roster </Link>
 				<br/><br/>

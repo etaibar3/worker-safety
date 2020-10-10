@@ -1,9 +1,12 @@
-import React from 'react'
-import axios from 'axios'
+import React from 'react';
+import axios from 'axios';
 import { Redirect } from 'react-router';
 import { withAlert } from 'react-alert';
-import './Roster.css'
+import './Roster.css';
+import { Link } from 'react-router-dom';
 import ChangeUser from './ChangeUser';
+import emptyRosterReservations from "../../assets/icons/emptyRosterReservations.PNG";
+
 
 
 class ViewRoster extends React.Component {
@@ -169,12 +172,42 @@ class ViewRoster extends React.Component {
                             </tbody>
                         </table>
                     </div>
-                 : <p> You cannot currently view your organization's roster. Make sure you are logged in. </p>}
+                 : 
+                 <div>
+                     <table align="center" >
+                                <thead>
+                                    <tr>
+                                        <th> Name </th>
+                                        <th/>
+                                        <th> Email </th>
+                                        <th/>
+                                        <th/>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <img src={emptyRosterReservations} width="30%" height="30%" /> 
+                                    <p> You haven't added any teammates yet! </p>
+                                    <br /><br />
+                                    <Link to='/add-user' style={addUserStyle}> Add User </Link>
+                                    <br /><br /><br /><br />
+                                </tbody>
+                    </table>
+                </div>
+                }
                 </div> }
             </div>
         )
     }
 }
+
+const addUserStyle = {
+  width: 113,
+  height: 59,
+  borderRadius: 5,
+  fontWeight: "500",
+  backgroundColor: "#ffffff",
+  color: "#2121ca"
+};
 
 const adminStyle = {
   width: 45,
@@ -203,34 +236,6 @@ const radioContainerSelected = {
   borderStyle: "solid",
   borderRadius: 5,
 };
-
-const modalStyle = {
-    overlay: {
-      position: 'fixed',
-      top: "20%",
-      left: "20%",
-      right: "20%",
-      bottom: "20%",
-      backgroundColor: '#ECEFFF',
-      borderRadius: '10px'
-    },
-    content: {
-      position: 'absolute',
-      top: '40px',
-      left: '40px',
-      right: '40px',
-      bottom: '40px',
-      border: '1px solid #ccc',
-      background: '#fff',
-      overflow: 'auto',
-      WebkitOverflowScrolling: 'touch',
-      borderRadius: '4px',
-      outline: 'none',
-      textAlign: 'center',
-      padding: '20px'
-    }
-};
-
 
 export default withAlert()(ViewRoster)
 

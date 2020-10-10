@@ -1,8 +1,6 @@
 // Component: Login
 // Description: This component handles the front end login functionality. 
 
-//Where should sign up here link to-->root or child acct creation
-
 import React from 'react';
 import axios from 'axios';
 import { Redirect } from 'react-router';
@@ -68,6 +66,7 @@ class Login extends React.Component {
         const { email, password, status, isAdmin } = this.state
         return (
             <div>
+            <br /><br /><br /><br />
             {( status !== 200) ?
                 <div>
                     <p className="h2"> Safe Return </p>

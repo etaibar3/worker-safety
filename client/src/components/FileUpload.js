@@ -3,6 +3,7 @@ import Message from "./Message";
 import Progress from "./Progress";
 import HandleFloorPlan from './functionality/HandleFloorPlan'
 import axios from "axios";
+import AdminNavBar from "./layout/AdminNavBar"
 
 const FileUpload = () => {
   const [file, setFile] = useState("");
@@ -65,6 +66,10 @@ const FileUpload = () => {
   };
 
   return (
+    <div>
+    <br />
+    <AdminNavBar />
+    <br /><br />
     <Fragment>
       {message ? <Message msg={message} /> : null}
 
@@ -112,6 +117,7 @@ const FileUpload = () => {
         </div>
       ) : null}
     </Fragment>
+    </div>
   );
 };
 

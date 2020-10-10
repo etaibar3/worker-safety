@@ -5,7 +5,9 @@
 import React from 'react'
 import axios from 'axios'
 import { Redirect } from 'react-router';
+import { Link } from 'react-router-dom';
 import { withAlert } from 'react-alert';
+import emptyRosterReservations from "../../assets/icons/emptyRosterReservations.PNG";
 
 
 class Reservations extends React.Component {
@@ -140,7 +142,26 @@ class Reservations extends React.Component {
                     </table> 
                     <br /><br /><br /><br /><br />
                   </div>
-                : <p className="font-rubik leading-normal text-text"> You don't have any upcoming reservations. </p> }
+                :
+                <div>
+                     <table align="center" >
+                                <thead>
+                                    <tr>
+                                        <th> Date </th>
+                                        <th/>
+                                        <th> Desk Number </th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <img src={emptyRosterReservations} width="30%" height="30%" /> 
+                                    <p> You haven't made any reservations yet! </p>
+                                    <br /><br />
+                                    <Link to='/add-user' style={ReserveStyle}> Reserve A Desk </Link>
+                                    <br /><br /><br /><br />
+                                </tbody>
+                    </table>
+                </div>
+              }
             </div>
         )
     }
@@ -149,6 +170,15 @@ class Reservations extends React.Component {
 const removeButtonStyle = {
     textAlign: 'center',
     color: "#2121ca",
+};
+
+const ReserveStyle = {
+  width: 113,
+  height: 59,
+  borderRadius: 5,
+  fontWeight: "500",
+  backgroundColor: "#ffffff",
+  color: "#2121ca"
 };
 
 
