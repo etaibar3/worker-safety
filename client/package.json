@@ -21,7 +21,7 @@
     "react-mailto": "^0.4.0",
     "react-router-dom": "^5.2.0",
     "react-script": "^2.0.5",
-    "react-scripts": "^3.4.1",
+    "react-scripts": "^5.0.1",
     "start": "^5.1.0"
   },
   "scripts": {
